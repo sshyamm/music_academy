@@ -1,0 +1,604 @@
+@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap');
+
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand img {
+  max-height: 60px;
+}
+
+.navbar-nav .nav-link {
+  font-size: 1.1rem;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #007bff;
+}
+
+.navbar-nav .additional-nav-link {
+  margin-right: 20px;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #333;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.my-account-button {
+  background-color: orange;
+  color: white;
+}
+
+.head.container {
+  height: 85px;
+}
+
+.nav-item {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.nav-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary, .btn-success {
+  border: none;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover, .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-collapse {
+  z-index: 1000;
+  background-color: white;
+}
+
+.img-container {
+  position: relative;
+  overflow: hidden;
+  height: 600px;
+}
+
+.img-container img {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 1;
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  font-family: 'Century Gothic', sans-serif;
+}
+
+.class-card {
+  margin-bottom: 30px;
+}
+
+.class-card img {
+  width: 100%;
+  height: auto;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 0.9rem;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 70%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-control-prev {
+    left: 20px;
+}
+
+.carousel-control-next {
+    right: 20px;
+}
+
+.comment-section {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.comment-section h3 {
+  margin-bottom: 20px;
+}
+
+.comment {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.comment .meta {
+  font-size: 14px;
+  color: #999;
+}
+
+.comment .content {
+  margin-top: 10px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 9px;
+}
+.container-detail {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+}
+
+.detail-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.detail-description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.form-group-detail {
+  margin-bottom: 20px;
+}
+
+.label-detail {
+  font-weight: bold;
+  color: #333;
+}
+
+.select-detail {
+  font-size: 16px;
+}
+.profile.profile-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 3px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  overflow: hidden;
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-details {
+  text-align: center;
+}
+
+.profile-details h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.profile-details p {
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.profile-details a.btn-edit {
+  color: white;
+  background-color: #007bff;
+  border: none;
+}
+
+.profile-details a.btn-edit:hover {
+  color: black;
+  background-color: #0056b3;
+}
+.crs-inf {
+  margin-top: 50px;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: yellow;
+  border: 1px solid #ced4da;
+  font-family: 'Didact Gothic', sans-serif;
+}
+
+.crs-inf h2 {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.lst-grp-itm {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid blue;
+  font-size: 1.2rem;
+  padding: 10px 0;
+}
+
+.lst-grp-itm:last-child {
+  border-bottom: none;
+}
+
+.enl-btn {
+  margin-top: 20px;
+}
+
+.enl-btn:hover {
+  background-color: #1e88e5;
+  border-color: #1e88e5;
+}
+
+.enl-btn:hover:focus {
+  background-color: #1565c0;
+  border-color: #1565c0;
+}
+
+.enl-btn:hover:active {
+  background-color: #0d47a1;
+  border-color: #0d47a1;
+}
+
+.centered-column-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.task.custom-heading {
+  text-align: center;
+  margin-top: 50px;
+  color: black;
+}
+
+.task-list {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.task-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease;
+  width: calc(33.33% - 40px);
+}
+
+.task-card:hover {
+  transform: translateY(-10px);
+}
+
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+}
+
+.task-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.task-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.task-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.task-description {
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.login-card {
+  border-radius: 40px;
+  height: 430px;
+}
+
+.login-btn {
+  border-radius: 20px;
+}
+
+.jumbotron {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0;
+  text-align: center;
+  z-index: 1;
+}
+
+.jumbotron::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.jumbotron h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  font-family: "Century Gothic", sans-serif;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.breadcrumb {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item a {
+  color: #fff;
+  font-family: "Century Gothic", sans-serif;
+}
+
+.breadcrumb-item.active {
+  color: #fff;
+  font-family: "Century Gothic", sans-serif;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+  color: #fff;
+  padding: 0 5px;
+}
+.jumbotron1 {
+    background-image: url('img/jumbotron1.jpg');
+}
+
+.jumbotron2 {
+    background-image: url('img/jumbotron2.jpg');
+}
+.jumbotron3 {
+  background-image: url('img/jumbotron3.jpg');
+}
+.jumbotron4 {
+  background-image: url('img/jumbotron4.jpg');
+}
+.jumbotron5 {
+  background-image: url('img/jumbotron5.jpg');
+}
+.jumbotron6 {
+  background-image: url('img/jumbotron6.jpg');
+}
+.jumbotron7 {
+  background-image: url('img/jumbotron7.jpg');
+}
+.jumbotron8 {
+  background-image: url('img/jumbotron8.jpg');
+}
+.jumbotron9 {
+  background-image: url('img/jumbotron9.jpg');
+}
+.jumbotron10 {
+  background-image: url('img/jumbotron10.jpg');
+}
+.jumbotron11 {
+  background-image: url('img/jumbotron11.jpg');
+}
+/* Custom Styles */
+.custom-body {
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+font-family: 'Didact Gothic', sans-serif;
+}
+
+.custom-main {
+flex: 1;
+}
+
+footer.footer {
+    background-color: yellow;
+    padding: 50px 0;
+    color: #333; 
+    width: 100%;
+}
+
+footer.footer .col-lg-4 h5 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+    font-family: 'Didact Gothic', sans-serif; 
+    font-weight: bold; 
+}
+
+footer.footer .list-unstyled li {
+    padding-bottom: 10px;
+}
+
+footer.footer .list-unstyled li a {
+    color: #777; 
+    text-decoration: none;
+    font-family: 'Didact Gothic', sans-serif; 
+    font-weight: bold; 
+}
+
+footer.footer .list-unstyled li a:hover {
+    color: #333; 
+}
+
+footer.footer .text-muted {
+    font-size: 14px;
+    color: #333; 
+    font-family: 'Didact Gothic', sans-serif; 
+    font-weight: bold;
+}
+.footer .about-us {
+  color: #0000CC; 
+  font-weight: bold;
+}
+.newsletter-form {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.newsletter-form h3 {
+  margin-bottom: 20px;
+}
+
+.newsletter-form form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.newsletter-form .form-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.newsletter-form label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.newsletter-form input[type="email"] {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.newsletter-form input[type="email"]:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.newsletter-form button[type="submit"] {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.newsletter-form button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+#signup-message {
+  text-align: center;
+  color: green;
+  font-weight: bold;
+  height: 20px;
+}
+.auth-error {
+  position: absolute;
+  bottom: -0.6rem;
+  left: 0;
+  font-size: 0.9rem;
+  color: #dc3545;
+}
+.section-heading {
+  border-bottom: 2px solid orange;
+  font-family: "Didact Gothic";
+  color: purple;
+}
+.update-card {
+  box-shadow: 0 4px 8px rgba(50, 150, 200, 1); 
+  border-radius: 30px;
+}
+
