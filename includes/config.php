@@ -12,6 +12,5 @@ $db->setAttribute(PDO::ATTR_EMULATE_PREPARES , false);
 $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY , true);
 $db->setAttribute(PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION);
 
-define('APP_NAME' , 'COMMON REST API');
 define('URL', 'http://localhost/music_academy');
 ?>
