@@ -23,10 +23,7 @@
           <a class="nav-link additional-nav-link" href="classes.php">MY CLASSES</a>
         </li>
         <li class="nav-item mr-2">
-          <a class="nav-link additional-nav-link" href="profile.php">MY PROFILE</a>
-        </li>
-        <li class="nav-item mr-2">
-          <a href="myaccount.php" class="btn my-account-button">MY ACCOUNT</a>
+          <a href="profile.php" class="btn my-profile-button">MY PROFILE</a>
         </li>
         <li class="nav-item">
           <button type="button" onclick="window.location.href='login.php'" class="btn btn-primary mr-2">Login</button>
