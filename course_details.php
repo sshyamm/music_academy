@@ -1,6 +1,3 @@
-<head>
-  <title>Drums</title>
-</head>
 <?php require_once 'includes/header.php'; ?>
 <div class="jumbotron jumbotron-fluid jumbotron10">
         <div class="container">
@@ -35,16 +32,14 @@
         <ul class="list-group">
           <li class="lst-grp-itm"><strong>Price:</strong> 99 INR</li>
           <li class="lst-grp-itm"><strong>Class Hours:</strong> 20</li>
-          <li class="lst-grp-itm"><strong>Lessons:</strong> 10</li>
           <li class="lst-grp-itm"><strong>Instructor:</strong> Ann</li>
-          <li class="lst-grp-itm"><strong>Students Enrolled:</strong> 50</li>
-          <li class="lst-grp-itm"><strong>Last Date to Enroll:</strong> January 1, 2025</li>
+          <li class="lst-grp-itm"><strong>Description:</strong> Explore the world of music through our instrumental courses, where you'll learn to play various instruments and delve into the nuances of musical expression.</li>
         </ul>
       </div>
       <div class="col-md-6">
-        <h2>Enroll Now</h2>
-        <p>Embark on a musical journey of discovery and growth by enrolling in our vibrant and innovative music academy today.</p>
-        <button type="button" class="btn btn-primary btn-lg enl-btn">Enroll Now</button>
+        <h2>I'm Interested</h2>
+        <p>Embark on a musical journey of discovery and growth by expressing your interest in our vibrant and innovative music academy today.</p>
+        <button type="button" class="btn btn-primary btn-lg enl-btn">I'm Interested</button>
       </div>
     </div>
   </div>

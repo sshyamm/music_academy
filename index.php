@@ -1,6 +1,3 @@
-<head>
-  <title>Home</title>
-</head>
 <?php require_once 'includes/header.php'; ?>
     <main class="custom-main">
     <div class="container-fluid">

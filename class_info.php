@@ -1,6 +1,3 @@
-<head>
-  <title>Class Info</title>
-</head>
 <?php require_once 'includes/header.php'; ?>
 
 <main class="custom-main">

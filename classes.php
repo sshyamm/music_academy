@@ -1,8 +1,4 @@
-
-<head>
-  <title>Classes</title>
-</head>
-    <?php require_once 'includes/header.php'; ?>
+<?php require_once 'includes/header.php'; ?>
     <div class="jumbotron jumbotron-fluid jumbotron1">
         <div class="container">
             <h1 class="display-4">Music Classes</h1>

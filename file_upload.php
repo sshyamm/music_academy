@@ -1,6 +1,3 @@
-<head>
-  <title>File Upload</title>
-</head>
 <?php require_once 'includes/header.php'; ?>
 <div id="res" class="alert alert-success" role="alert"></div>
 <main class="custom-main">

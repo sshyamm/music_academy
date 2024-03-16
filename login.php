@@ -1,6 +1,3 @@
-<head>
-  <title>Login</title>
-</head>
 <?php require_once 'includes/header.php'; ?>
 <main class="custom-main">
 <span>&nbsp;</span>
