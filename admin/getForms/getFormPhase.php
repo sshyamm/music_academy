@@ -7,13 +7,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch ($actionPhase) {
         case 'create_mode_phase':
             $class_parent_id = $_POST['class_parent_id'];
-            $student_parent_id = $_POST['student_parent_id'];
+            $user_parent_id = $_POST['user_parent_id'];
             $attendance = $_POST['attendance'];
             $attendance_time = ($attendance === "Present" || $attendance === "Late") ? date("Y-m-d H:i:s") : "Absent";
             $class_room_status = $_POST['class_room_status'];
 
-            $sql = "INSERT INTO class_rooms (class_parent_id, student_parent_id, attendance, attendance_time, class_room_status)
-                    VALUES ('$class_parent_id', '$student_parent_id', '$attendance', '$attendance_time', '$class_room_status')";
+            $sql = "INSERT INTO class_rooms (class_parent_id, user_parent_id, attendance, attendance_time, class_room_status)
+                    VALUES ('$class_parent_id', '$user_parent_id', '$attendance', '$attendance_time', '$class_room_status')";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Room created successfully!!');
@@ -25,12 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case 'edit_mode_phase':
             $class_room_id = $_POST['class_room_id'];
             $class_parent_id = $_POST['class_parent_id'];
-            $student_parent_id = $_POST['student_parent_id'];
+            $user_parent_id = $_POST['user_parent_id'];
             $attendance = $_POST['attendance'];
             $attendance_time = ($attendance === "Present" || $attendance === "Late") ? date("Y-m-d H:i:s") : "Absent";
             $class_room_status = $_POST['class_room_status'];
 
-            $sql = "UPDATE class_rooms SET class_parent_id='$class_parent_id', student_parent_id='$student_parent_id', attendance='$attendance', attendance_time='$attendance_time', class_room_status='$class_room_status' WHERE class_room_id=$class_room_id";
+            $sql = "UPDATE class_rooms SET class_parent_id='$class_parent_id', user_parent_id='$user_parent_id', attendance='$attendance', attendance_time='$attendance_time', class_room_status='$class_room_status' WHERE class_room_id=$class_room_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Room updated successfully!!');

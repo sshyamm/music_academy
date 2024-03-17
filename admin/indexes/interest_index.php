@@ -44,11 +44,11 @@
 <?php
 include("../db.php");
 $sql = "SELECT i.*, 
-           st.student_username,
+           us.user_name,
            c.course_name, 
            l.level_name
     FROM interests i
-    LEFT JOIN students st ON i.student_parent_id = st.student_id
+    LEFT JOIN users us ON i.user_parent_id = us.user_id
     LEFT JOIN courses c ON i.course_parent_id = c.course_id
     LEFT JOIN levels l ON i.level_parent_id = l.level_id";
 $result = $conn->query($sql);
@@ -59,7 +59,7 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>{$row['interest_id']}</td>";
-        echo "<td>{$row['student_username']}</td>";
+        echo "<td>{$row['user_name']}</td>";
         echo "<td>{$row['course_name']}</td>";
         echo "<td>{$row['level_name']}</td>";
         echo "<td>{$row['interest_date']}</td>";

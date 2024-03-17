@@ -1,49 +1,36 @@
 <?php
+session_start();
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-require_once '../includes/config.php';
-require_once '../core/check_user.php';
+require_once '../includes/config.php'; 
+require_once '../core/profile.php'; 
 
-if ($_SERVER['CONTENT_TYPE'] === 'application/json' || $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = (array) json_decode(file_get_contents('php://input'), true) + $_POST;
+$data = (array) json_decode(file_get_contents('php://input'), true) + $_POST;
 
-    if ((isset($data['teacher_username'], $data['teacher_password']) && !isset($data['student_username'], $data['student_password']))
-        || (!isset($data['teacher_username'], $data['teacher_password']) && isset($data['student_username'], $data['student_password']))) {
-        
-        $user = new User($db);
+if (isset($data['user_name'], $data['user_password'])) {
+    $user = new Profile($db); 
+    $user->user_name = $data['user_name'];
+    $user->user_password = $data['user_password'];
 
-        if (isset($data['teacher_username'], $data['teacher_password'])) {
-            $user->teacher_username = $data['teacher_username'];
-            $user->teacher_password = $data['teacher_password'];
+    $result = $user->checkUser();
+} else {
+    echo json_encode(array('error' => 'Please provide both username and password'));
+    exit; 
+}
 
-            $result = $user->checkTeacher();
-        } elseif (isset($data['student_username'], $data['student_password'])) {
-            $user->student_username = $data['student_username'];
-            $user->student_password = $data['student_password'];
-
-            $result = $user->checkStudent();
-        }
-
-        if (isset($result)) {
-            if ($result === true) {
-                echo json_encode(array('Message' => 'Logged in successfully'));
-            } elseif ($result === 'invalid_password') {
-                echo json_encode(array('error' => 'Invalid password. Try again'));
-            } else {
-                echo json_encode(array('error' => 'User does not exist'));
-            }
-        } else {
-            echo json_encode(array('error' => 'Invalid data'));
-            exit;
-        }
+if (isset($result)) {
+    if ($result['success']) {
+        $_SESSION['user_id'] = $result['user_id'];
+        $_SESSION['user_name'] = $result['user_name'];
+        echo json_encode(array('Message' => 'Logged in successfully with ID: ' . $result['user_id'] . ' and name: ' . $result['user_name']));
     } else {
-        echo json_encode(array('error' => 'Invalid data or field'));
-        exit;
+        echo json_encode(array('error' => $result['error']));
     }
 } else {
-    echo json_encode(array('error' => 'Unsupported request method or content type'));
+    echo json_encode(array('error' => 'Invalid data'));
+    exit;
 }
 ?>

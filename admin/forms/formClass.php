@@ -40,7 +40,7 @@
 <?php
 $actionClass = isset($_GET['actionClass']) ? $_GET['actionClass'] : 'create_mode_class';
 $course_parent_id = '';
-$teacher_parent_id = '';
+$user_parent_id = '';
 $start_time = '';
 $end_time = '';
 $date_of_class = '';
@@ -57,7 +57,7 @@ if ($actionClass == 'edit_mode_class') {
         if ($res_sql->num_rows === 1) {
             $row = $res_sql->fetch_assoc();
             $course_parent_id = $row["course_parent_id"];
-            $teacher_parent_id = $row["teacher_parent_id"];
+            $user_parent_id = $row["user_parent_id"];
 	    $start_time = $row["start_time"];
 	    $end_time = $row["end_time"];
             $date_of_class = $row["date_of_class"];
@@ -82,17 +82,20 @@ if ($actionClass == 'edit_mode_class') {
     }
     ?>
     </select><br>
-    <select id="teacher_parent_id" name="teacher_parent_id">
+    <select id="user_parent_id" name="user_parent_id">
     <?php
     include("../db.php");
     if ($actionClass == 'edit_mode_class') {
-        echo "<option value=''>Select Course</option>";
-        $teacher_sql = "SELECT * FROM teachers WHERE course_parent_id = $course_parent_id";
+        echo "<option value=''>Select Teacher</option>";
+        $teacher_sql = "SELECT u.user_id, u.user_name 
+            FROM users u
+            INNER JOIN teachers t ON u.user_id = t.user_parent_id
+            WHERE t.course_parent_id = $course_parent_id";
         $teacher_result = $conn->query($teacher_sql);
         if ($teacher_result->num_rows > 0) {
             while ($teacher_row = $teacher_result->fetch_assoc()) {
-                $selected = ($teacher_row['teacher_id'] == $teacher_parent_id) ? 'selected' : '';
-                echo "<option value='" . $teacher_row['teacher_id'] . "' $selected>" . $teacher_row['teacher_username'] . "</option>";
+                $selected = ($teacher_row['user_id'] == $user_parent_id) ? 'selected' : '';
+                echo "<option value='" . $teacher_row['user_id'] . "' $selected>" . $teacher_row['user_name'] . "</option>";
             }
         } else {
             echo "<option value='' selected>No teachers available</option>";

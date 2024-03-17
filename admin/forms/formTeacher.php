@@ -55,8 +55,7 @@
 
 <?php
 $actionTeacher = isset($_GET['actionTeacher']) ? $_GET['actionTeacher'] : 'create_mode_teacher';
-$teacher_username = '';
-$teacher_password = '';
+$user_parent_id = '';
 $teacher_phone = '';
 $teacher_email = '';
 $teacher_address = '';
@@ -78,8 +77,7 @@ if ($actionTeacher == 'edit_mode_teacher') {
 
         if ($res_sql->num_rows === 1) {
             $row = $res_sql->fetch_assoc();
-            $teacher_username = $row["teacher_username"];
-            $teacher_password = $row["teacher_password"];
+            $user_parent_id = $row["user_parent_id"];
             $teacher_phone = $row["teacher_phone"];
             $teacher_email = $row["teacher_email"];
             $teacher_address = $row["teacher_address"];
@@ -95,8 +93,20 @@ if ($actionTeacher == 'edit_mode_teacher') {
 }
 ?>
 <form id="createProductFormTeacher" method="post">
-    <input type="text" id="teacher_username" name="teacher_username" <?php echo $actionTeacher !== 'create_mode_teacher' ? 'value="' . $teacher_username . '"' : 'placeholder="Teacher Name"'; ?>><br>
-    <input type="password" id="teacher_password" name="teacher_password" <?php echo $actionTeacher !== 'create_mode_teacher' ? 'value="' . $teacher_password . '"' : 'placeholder="Teacher Password"'; ?>><br>
+    <select id="user_parent_id" name="user_parent_id">
+        <?php
+        include("../db.php");
+        $user_sql = "SELECT * FROM users WHERE user_type='Teacher'";
+        $user_result = $conn->query($user_sql);
+        echo "<option value='' " . (($actionTeacher === 'create_mode_teacher') ? 'selected' : '') . ">Select Teacher</option>";
+        if ($user_result->num_rows > 0) {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $selected = ($user_row['user_id'] == $user_parent_id) ? 'selected' : '';
+                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
+            }
+        }
+        ?>
+    </select><br>
     <input type="text" id="teacher_phone" name="teacher_phone" <?php echo $actionTeacher !== 'create_mode_teacher' ? 'value="' . $teacher_phone . '"' : 'placeholder="Teacher Phone"'; ?>><br>
     <input type="text" id="teacher_email" name="teacher_email" <?php echo $actionTeacher !== 'create_mode_teacher' ? 'value="' . $teacher_email . '"' : 'placeholder="Teacher Email"'; ?>><br>
     <input type="text" id="teacher_address" name="teacher_address" <?php echo $actionTeacher !== 'create_mode_teacher' ? 'value="' . $teacher_address . '"' : 'placeholder="Teacher Address"'; ?>><br>

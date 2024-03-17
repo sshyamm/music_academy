@@ -43,12 +43,14 @@
     <?php
     include("../db.php");
     $searchName = isset($_POST['searchName']) ? $_POST['searchName'] : '';
-    $sql = "SELECT s.*,  
+    $sql = "SELECT s.*,
+               us.user_name,  
                c.course_name
         FROM teachers s
-        LEFT JOIN courses c ON s.course_parent_id = c.course_id";
+        LEFT JOIN courses c ON s.course_parent_id = c.course_id
+        LEFT JOIN users us ON s.user_parent_id = us.user_id";
     if (!empty($searchName)) {
-    	$sql .= " WHERE teacher_username LIKE '$searchName%'";
+    	$sql .= " WHERE us.user_name LIKE '$searchName%'";
     }
     $result = $conn->query($sql);
 
@@ -58,7 +60,7 @@
         while ($row = $result->fetch_assoc()) {
             echo "<tr>";
             echo "<td>{$row['teacher_id']}</td>";
-            echo "<td>{$row['teacher_username']}</td>";
+            echo "<td>{$row['user_name']}</td>";
             echo "<td>{$row['teacher_phone']}</td>";
             echo "<td>{$row['teacher_email']}</td>";
             echo "<td>{$row['teacher_address']}</td>";

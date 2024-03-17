@@ -6,8 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch ($actionTeacher) {
         case 'create_mode_teacher':
-            $teacher_username = $_POST['teacher_username'];
-            $teacher_password = $_POST['teacher_password'];
+            $user_parent_id = $_POST['user_parent_id'];
             $teacher_phone = $_POST['teacher_phone'];
             $teacher_email = $_POST['teacher_email'];
             $teacher_address = $_POST['teacher_address'];
@@ -19,8 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $join_date = $_POST['join_date'];
             $teacher_status = $_POST['teacher_status'];
 
-            $sql = "INSERT INTO teachers (teacher_username, teacher_password, teacher_phone, teacher_email, teacher_address, course_parent_id, qualification, teacher_exp, contract_date, current_salary, join_date, teacher_status)
-                    VALUES ('$teacher_username', '$teacher_password', '$teacher_phone', '$teacher_email', '$teacher_address', '$course_parent_id', '$qualification', $teacher_exp, '$contract_date', $current_salary, '$join_date', '$teacher_status')";
+            $sql = "INSERT INTO teachers (user_parent_id, teacher_phone, teacher_email, teacher_address, course_parent_id, qualification, teacher_exp, contract_date, current_salary, join_date, teacher_status)
+                    VALUES ('$user_parent_id', '$teacher_phone', '$teacher_email', '$teacher_address', '$course_parent_id', '$qualification', $teacher_exp, '$contract_date', $current_salary, '$join_date', '$teacher_status')";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Teacher created successfully!!');
@@ -31,8 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case 'edit_mode_teacher':
             $teacher_id = $_POST['teacher_id'];
-            $teacher_username = $_POST['teacher_username'];
-            $teacher_password = $_POST['teacher_password'];  
+            $user_parent_id = $_POST['user_parent_id'];  
             $teacher_phone = $_POST['teacher_phone'];
             $teacher_email = $_POST['teacher_email'];
             $teacher_address = $_POST['teacher_address'];
@@ -44,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $join_date = $_POST['join_date'];
             $teacher_status = $_POST['teacher_status'];
 
-            $sql = "UPDATE teachers SET teacher_username='$teacher_username', teacher_password='$teacher_password', teacher_phone='$teacher_phone', teacher_email='$teacher_email', teacher_address='$teacher_address', course_parent_id='$course_parent_id', qualification='$qualification', teacher_exp=$teacher_exp, contract_date='$contract_date', current_salary=$current_salary, join_date='$join_date', teacher_status='$teacher_status' WHERE teacher_id=$teacher_id";
+            $sql = "UPDATE teachers SET user_parent_id='$user_parent_id', teacher_phone='$teacher_phone', teacher_email='$teacher_email', teacher_address='$teacher_address', course_parent_id='$course_parent_id', qualification='$qualification', teacher_exp=$teacher_exp, contract_date='$contract_date', current_salary=$current_salary, join_date='$join_date', teacher_status='$teacher_status' WHERE teacher_id=$teacher_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Teacher updated successfully!!');

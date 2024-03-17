@@ -83,32 +83,32 @@ if ($actionTask == 'edit_mode_task') {
     <input type="text" id="task_title" name="task_title" <?php echo $actionTask !== 'create_mode_task' ? 'value="' . $task_title . '"' : 'placeholder="Task Title"'; ?>><br>
     <textarea id="task_desc" name="task_desc" <?php echo $actionTask === 'create_mode_task' ? 'placeholder="Task Description"' : ''; ?>><?php echo $actionTask !== 'create_mode_task' ? $task_desc : ''; ?></textarea><br>
     <select id="assigned_to" name="assigned_to">
-	<?php
-	include("../db.php");
-	$student_sql = "SELECT * FROM students";
-	$student_result = $conn->query($student_sql);
-	echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Student</option>";
-	if ($student_result->num_rows > 0) {
-    		while ($student_row = $student_result->fetch_assoc()) {
-       		 $selected = ($student_row['student_id'] == $assigned_to) ? 'selected' : '';
-        	echo "<option value='" . $student_row['student_id'] . "' $selected>" . $student_row['student_username'] . "</option>";
-    		}
-	}
-	?>
+        <?php
+        include("../db.php");
+        $user_sql = "SELECT * FROM users WHERE user_type='Student'";
+        $user_result = $conn->query($user_sql);
+        echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Student</option>";
+        if ($user_result->num_rows > 0) {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $selected = ($user_row['user_id'] == $assigned_to) ? 'selected' : '';
+                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
+            }
+        }
+        ?>
     </select><br>
     <select id="assigned_by" name="assigned_by">
-	<?php
-	include("../db.php");
-	$teacher_sql = "SELECT * FROM teachers";
-	$teacher_result = $conn->query($teacher_sql);
-	echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Teacher</option>";
-	if ($teacher_result->num_rows > 0) {
-    		while ($teacher_row = $teacher_result->fetch_assoc()) {
-       		 $selected = ($teacher_row['teacher_id'] == $assigned_by) ? 'selected' : '';
-        	echo "<option value='" . $teacher_row['teacher_id'] . "' $selected>" . $teacher_row['teacher_username'] . "</option>";
-    		}
-	}
-	?>
+        <?php
+        include("../db.php");
+        $user_sql = "SELECT * FROM users WHERE user_type='Teacher'";
+        $user_result = $conn->query($user_sql);
+        echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Teacher</option>";
+        if ($user_result->num_rows > 0) {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $selected = ($user_row['user_id'] == $assigned_by) ? 'selected' : '';
+                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
+            }
+        }
+        ?>
     </select><br>
     <input type="date" id="deadline" name="deadline" <?php echo $actionTask !== 'create_mode_task' ? 'value="' . $deadline . '"' : 'placeholder="Deadline"'; ?>><br>
     <select id="priority" name="priority">

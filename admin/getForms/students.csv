@@ -1,4 +1,4 @@
-﻿student_username,student_password,phone_num,email,age_group_parent_id,course_parent_id,level_parent_id,emergency_contact,blood_group,address,pincode,city_parent_id,state_parent_id,country_parent_id,student_status,joined_date
-Akash,5678,8779878979,varun@gmail.com,2,2,1,87687678788,O+,"102, Delhi",,4,4,3,Active,01-01-2024
-Praveen,5678,8779878979,varun@gmail.com,2,2,1,87687678788,O+,"102, Delhi",45981,4,4,3,Active,01-01-2024
-Rohan,5678,8779878979,varun@gmail.com,2,2,1,87687678788,O+,"102, Delhi",45981,4,4,3,Active,01-01-2024
+﻿user_name,phone_num,email,age_group_parent_id,course_parent_id,level_parent_id,emergency_contact,blood_group,address,pincode,city_parent_id,state_parent_id,country_parent_id,student_status,joined_date
+Akash,8779878979,varun@gmail.com,2,2,1,87687678788,O+,"102, Delhi",,4,4,3,Active,01-01-2024
+Praveen,8779878979,varun@gmail.com,2,2,1,87687678788,O+,"102, Delhi",45981,4,4,3,Active,01-01-2024
+Rohan,8779878979,varun@gmail.com,2,2,1,87687678788,O+,"102, Delhi",45981,4,4,3,Active,01-01-2024

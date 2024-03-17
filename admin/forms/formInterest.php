@@ -38,7 +38,7 @@
 
 <?php
 $actionInt = isset($_GET['actionInt']) ? $_GET['actionInt'] : 'create_mode_int';
-$student_parent_id = '';
+$user_parent_id = '';
 $course_parent_id = '';
 $level_parent_id = '';
 $interest_date= '';
@@ -55,7 +55,7 @@ if ($actionInt == 'edit_mode_int') {
 
         if ($res_sql->num_rows === 1) {
             $row = $res_sql->fetch_assoc();
-            $student_parent_id = $row["student_parent_id"];
+            $user_parent_id = $row["user_parent_id"];
             $course_parent_id = $row["course_parent_id"];
             $level_parent_id = $row["level_parent_id"];
             $interest_date = $row["interest_date"];
@@ -66,18 +66,19 @@ if ($actionInt == 'edit_mode_int') {
 ?>
 
 <form id="createProductFormInterest" method="post">
-    <select id="student_parent_id" name="student_parent_id">
-	<?php
-	$student_sql = "SELECT * FROM students";
-	$student_result = $conn->query($student_sql);
-	echo "<option value='Select Student' " . (($actionInt === 'create_mode_int') ? 'selected' : '') . ">Select Student</option>";
-	if ($student_result->num_rows > 0) {
-    		while ($student_row = $student_result->fetch_assoc()) {
-       		 $selected = ($student_row['student_id'] == $student_parent_id) ? 'selected' : '';
-        	echo "<option value='" . $student_row['student_id'] . "' $selected>" . $student_row['student_username'] . "</option>";
-    		}
-	}
-	?>
+    <select id="user_parent_id" name="user_parent_id">
+        <?php
+        include("../db.php");
+        $user_sql = "SELECT * FROM users WHERE user_type='Student'";
+        $user_result = $conn->query($user_sql);
+        echo "<option value='' " . (($actionInt === 'create_mode_int') ? 'selected' : '') . ">Select Student</option>";
+        if ($user_result->num_rows > 0) {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $selected = ($user_row['user_id'] == $user_parent_id) ? 'selected' : '';
+                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
+            }
+        }
+        ?>
     </select><br>
     <select id="course_parent_id" name="course_parent_id">
         <?php

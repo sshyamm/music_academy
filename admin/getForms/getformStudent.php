@@ -6,8 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch ($actionStudent) {
         case 'create_mode_student':
-            $student_username = $_POST['student_username'];
-            $student_password = $_POST['student_password'];
+            $user_parent_id = $_POST['user_parent_id'];
             $phone_num = $_POST['phone_num'];
             $email = $_POST['email'];
             $age_group_parent_id = $_POST['age_group_parent_id'];
@@ -23,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $student_status = $_POST['student_status'];
             $joined_date = 'CURDATE()'; // Using MySQL CURDATE() function
 
-            $sql = "INSERT INTO students (student_username, student_password, phone_num, email, age_group_parent_id, course_parent_id, level_parent_id, emergency_contact, blood_group, address, pincode, city_parent_id, state_parent_id, country_parent_id, student_status, joined_date)
-                    VALUES ('$student_username', '$student_password', '$phone_num', '$email', '$age_group_parent_id', '$course_parent_id', '$level_parent_id', '$emergency_contact', '$blood_group', '$address', '$pincode', '$city_parent_id', '$state_parent_id', '$country_parent_id', '$student_status', $joined_date)";
+            $sql = "INSERT INTO students (user_parent_id, phone_num, email, age_group_parent_id, course_parent_id, level_parent_id, emergency_contact, blood_group, address, pincode, city_parent_id, state_parent_id, country_parent_id, student_status, joined_date)
+                    VALUES ('$user_parent_id', '$phone_num', '$email', '$age_group_parent_id', '$course_parent_id', '$level_parent_id', '$emergency_contact', '$blood_group', '$address', '$pincode', '$city_parent_id', '$state_parent_id', '$country_parent_id', '$student_status', $joined_date)";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Student created successfully!!');
@@ -35,8 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case 'edit_mode_student':
             $student_id = $_POST['student_id']; 
-            $student_username = $_POST['student_username'];
-            $student_password = $_POST['student_password'];
+            $user_parent_id = $_POST['user_parent_id'];
             $phone_num = $_POST['phone_num'];
             $email = $_POST['email'];
             $age_group_parent_id = $_POST['age_group_parent_id'];
@@ -51,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $country_parent_id = $_POST['country_parent_id'];
             $student_status = $_POST['student_status'];
 
-            $sql = "UPDATE students SET student_username='$student_username', student_password='$student_password', phone_num='$phone_num', email='$email', age_group_parent_id='$age_group_parent_id', course_parent_id='$course_parent_id', level_parent_id='$level_parent_id', emergency_contact='$emergency_contact', blood_group='$blood_group', address='$address', pincode='$pincode', city_parent_id='$city_parent_id', state_parent_id='$state_parent_id', country_parent_id='$country_parent_id', student_status='$student_status' WHERE student_id=$student_id";
+            $sql = "UPDATE students SET user_parent_id='$user_parent_id', phone_num='$phone_num', email='$email', age_group_parent_id='$age_group_parent_id', course_parent_id='$course_parent_id', level_parent_id='$level_parent_id', emergency_contact='$emergency_contact', blood_group='$blood_group', address='$address', pincode='$pincode', city_parent_id='$city_parent_id', state_parent_id='$state_parent_id', country_parent_id='$country_parent_id', student_status='$student_status' WHERE student_id=$student_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Student updated successfully!!');

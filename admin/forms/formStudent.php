@@ -41,8 +41,7 @@
 <div id="formStudentContainer">
 <?php
 $actionStudent = isset($_GET['actionStudent']) ? $_GET['actionStudent'] : 'create_mode_student';
-$student_username = '';
-$student_password = '';
+$user_parent_id = '';
 $phone_num = '';
 $email = '';
 $age_group_parent_id = '';
@@ -67,29 +66,40 @@ if ($actionStudent == 'edit_mode_student') {
 
         if ($res_sql->num_rows === 1) {
             $row = $res_sql->fetch_assoc();
-            $student_username = $row["student_username"];
-            $student_password = $row["student_password"];
-	    $phone_num = $row["phone_num"];
-	    $email = $row["email"];
-	    $age_group_parent_id = $row["age_group_parent_id"];
-	    $course_parent_id = $row["course_parent_id"];
-	    $level_parent_id = $row["level_parent_id"];
-	    $emergency_contact = $row["emergency_contact"];
-	    $blood_group = $row["blood_group"];
-	    $address = $row["address"];
-	    $pincode = $row["pincode"];
-	    $city_parent_id = $row["city_parent_id"];
-	    $state_parent_id = $row["state_parent_id"];
-	    $country_parent_id = $row["country_parent_id"];
-	    $student_status = $row["student_status"];
+            $user_parent_id = $row["user_parent_id"];
+            $phone_num = $row["phone_num"];
+            $email = $row["email"];
+            $age_group_parent_id = $row["age_group_parent_id"];
+            $course_parent_id = $row["course_parent_id"];
+            $level_parent_id = $row["level_parent_id"];
+            $emergency_contact = $row["emergency_contact"];
+            $blood_group = $row["blood_group"];
+            $address = $row["address"];
+            $pincode = $row["pincode"];
+            $city_parent_id = $row["city_parent_id"];
+            $state_parent_id = $row["state_parent_id"];
+            $country_parent_id = $row["country_parent_id"];
+            $student_status = $row["student_status"];
         }
     }
 }
 ?>
 
 <form id="createProductFormStudent" method="post">
-    <input type="text" id="student_username" name="student_username" <?php echo $actionStudent !== 'create_mode_student' ? 'value="' . $student_username . '"' : 'placeholder="Student Username"'; ?>><br>
-    <input type="password" id="student_password" name="student_password" <?php echo $actionStudent !== 'create_mode_student' ? 'value="' . $student_password . '"' : 'placeholder="Student Password"'; ?>><br>
+    <select id="user_parent_id" name="user_parent_id">
+        <?php
+        include("../db.php");
+        $user_sql = "SELECT * FROM users WHERE user_type='Student'";
+        $user_result = $conn->query($user_sql);
+        echo "<option value='' " . (($actionStudent === 'create_mode_student') ? 'selected' : '') . ">Select Student</option>";
+        if ($user_result->num_rows > 0) {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $selected = ($user_row['user_id'] == $user_parent_id) ? 'selected' : '';
+                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
+            }
+        }
+        ?>
+    </select><br>
     <input type="text" id="phone_num" name="phone_num" <?php echo $actionStudent !== 'create_mode_student' ? 'value="' . $phone_num . '"' : 'placeholder="Phone Number"'; ?>><br>
     <input type="text" id="email" name="email" <?php echo $actionStudent !== 'create_mode_student' ? 'value="' . $email . '"' : 'placeholder="Email"'; ?>><br>
     <select id="age_group_parent_id" name="age_group_parent_id">

@@ -2,10 +2,10 @@
     include("../db.php");
     $sql = "SELECT Ro.*, 
                d.date_of_class,
-	       s.student_username
+	       us.user_name
         FROM class_rooms Ro
         LEFT JOIN classes d ON Ro.class_parent_id = d.class_id
-	LEFT JOIN students s ON Ro.student_parent_id = s.student_id";
+	LEFT JOIN users us ON Ro.user_parent_id = us.user_id";
 
     $result = $conn->query($sql);
 
@@ -16,7 +16,7 @@
             echo "<tr>";
             echo "<td>{$row['class_room_id']}</td>";
             echo "<td>{$row['date_of_class']}</td>";
-            echo "<td>{$row['student_username']}</td>";
+            echo "<td>{$row['user_name']}</td>";
             echo "<td>{$row['attendance']}</td>";
             echo "<td>{$row['attendance_time']}</td>";
             echo "<td>{$row['class_room_status']}</td>";

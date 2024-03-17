@@ -40,7 +40,7 @@
 <?php
 $actionPhase = isset($_GET['actionPhase']) ? $_GET['actionPhase'] : 'create_mode_phase';
 $class_parent_id = '';
-$student_parent_id = '';
+$user_parent_id = '';
 $attendance = '';
 $class_room_status = '';
 
@@ -55,7 +55,7 @@ if ($actionPhase == 'edit_mode_phase') {
         if ($res_sql->num_rows === 1) {
             $row = $res_sql->fetch_assoc();
             $class_parent_id = $row["class_parent_id"];
-            $student_parent_id = $row["student_parent_id"];
+            $user_parent_id = $row["user_parent_id"];
 	    $attendance = $row["attendance"];
             $class_room_status = $row["class_room_status"];
         }
@@ -69,7 +69,7 @@ if ($actionPhase == 'edit_mode_phase') {
 	include("../db.php");
 	$class_sql = "SELECT * FROM classes";
 	$class_result = $conn->query($class_sql);
-	echo "<option value='Select Class' " . (($actionPhase === 'create_mode_phase') ? 'selected' : '') . ">Select Class</option>";
+	echo "<option value='' " . (($actionPhase === 'create_mode_phase') ? 'selected' : '') . ">Select Class</option>";
 	if ($class_result->num_rows > 0) {
     		while ($class_row = $class_result->fetch_assoc()) {
        		 $selected = ($class_row['class_id'] == $class_parent_id) ? 'selected' : '';
@@ -78,19 +78,19 @@ if ($actionPhase == 'edit_mode_phase') {
 	}
 	?>
     </select><br>
-    <select id="student_parent_id" name="student_parent_id">
-	<?php
-	include("../db.php");
-	$student_sql = "SELECT * FROM students";
-	$student_result = $conn->query($student_sql);
-	echo "<option value='Select Student' " . (($actionPhase === 'create_mode_phase') ? 'selected' : '') . ">Select Student</option>";
-	if ($class_result->num_rows > 0) {
-    		while ($student_row = $student_result->fetch_assoc()) {
-       		 $selected = ($student_row['student_id'] == $student_parent_id) ? 'selected' : '';
-        	echo "<option value='" . $student_row['student_id'] . "' $selected>" . $student_row['student_username'] . "</option>";
-    		}
-	}
-	?>
+    <select id="user_parent_id" name="user_parent_id">
+        <?php
+        include("../db.php");
+        $user_sql = "SELECT * FROM users WHERE user_type='Student'";
+        $user_result = $conn->query($user_sql);
+        echo "<option value='' " . (($actionPhase === 'create_mode_phase') ? 'selected' : '') . ">Select Student</option>";
+        if ($user_result->num_rows > 0) {
+            while ($user_row = $user_result->fetch_assoc()) {
+                $selected = ($user_row['user_id'] == $user_parent_id) ? 'selected' : '';
+                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
+            }
+        }
+        ?>
     </select><br>
     <select id="attendance" name="attendance">
         <option value="Select" <?php echo ($actionPhase === 'create_mode_phase') ? 'selected' : ''; ?>>Select</option>

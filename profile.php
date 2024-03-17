@@ -1,4 +1,5 @@
 <?php
+session_start(); 
 require_once 'includes/config.php';
 
 $student_id = 3; 
@@ -8,8 +9,10 @@ $sql = "SELECT s.*,
                 l.level_name, 
                 ci.city_name, 
                 st.state_name, 
-                co.country_name
+                co.country_name,
+                us.user_name
         FROM students s
+        LEFT JOIN users us ON s.user_parent_id = us.user_id
         LEFT JOIN age_groups ag ON s.age_group_parent_id = ag.age_group_id
         LEFT JOIN courses c ON s.course_parent_id = c.course_id
         LEFT JOIN levels l ON s.level_parent_id = l.level_id
@@ -26,7 +29,7 @@ $student = $stmt->fetch(PDO::FETCH_ASSOC);
 
 <div class="jumbotron jumbotron-fluid jumbotron11">
   <div class="container">
-    <h1 class="display-4">My Profile</h1>
+    <h1 class="display-4">My Profile (<?php echo $_SESSION['user_name']; ?>)</h1>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="index.php">Home</a></li>
@@ -42,7 +45,7 @@ $student = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="card border-1 rounded-lg" style="box-shadow: 0 8px 12px rgba(0, 0, 0, 0.8);">
         <img src="img/profile.jpg" class="card-img-top mx-auto d-block rounded-circle" alt="Profile Picture" style="width: 150px; height: 150px;">
         <div class="card-body text-center">
-          <h2 class="card-title mb-4"><?php echo $student['student_username']; ?></h2>
+          <h2 class="card-title mb-4"><?php echo $student['user_name']; ?></h2>
           <p class="card-text mb-4"><strong>Location: </strong><?php echo $student['city_name']; ?>, <?php echo $student['state_name']; ?>, <?php echo $student['country_name']; ?></p>
           <p class="card-text mb-4"><strong>Email:</strong> <?php echo $student['email']; ?></p>
           <p class="card-text mb-4"><strong>Bio:</strong> I am an enthusiastic student</p>
@@ -62,7 +65,7 @@ $student = $stmt->fetch(PDO::FETCH_ASSOC);
                       <tbody>
                         <tr>
                           <th scope="row">Name</th>
-                          <td><?php echo $student['student_username']; ?></td>
+                          <td><?php echo $student['user_name']; ?></td>
                         </tr>
                         <tr>
                           <th scope="row">Phone number</th>

@@ -6,15 +6,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch ($actionInt) {
         case 'create_mode_int':
-            $student_parent_id = $_POST['student_parent_id'];
+            $user_parent_id = $_POST['user_parent_id'];
             $course_parent_id = $_POST['course_parent_id'];
             $level_parent_id = $_POST['level_parent_id'];
             $interest_date = $_POST['interest_date'];
             $interest_status = $_POST['interest_status'];
             
 
-            $sql = "INSERT INTO interests (student_parent_id, course_parent_id, level_parent_id, interest_date, interest_status)
-                    VALUES ('$student_parent_id', '$course_parent_id', '$level_parent_id', '$interest_date','$interest_status')";
+            $sql = "INSERT INTO interests (user_parent_id, course_parent_id, level_parent_id, interest_date, interest_status)
+                    VALUES ('$user_parent_id', '$course_parent_id', '$level_parent_id', '$interest_date','$interest_status')";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Interest created successfully!!');
@@ -25,13 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case 'edit_mode_int':
             $interest_id = $_POST['interest_id'];
-            $student_parent_id = $_POST['student_parent_id'];
+            $user_parent_id = $_POST['user_parent_id'];
             $course_parent_id = $_POST['course_parent_id'];
             $level_parent_id = $_POST['level_parent_id'];
             $interest_date = $_POST['interest_date'];
             $interest_status = $_POST['interest_status'];
 
-            $sql = "UPDATE interests SET student_parent_id='$student_parent_id', course_parent_id='$course_parent_id', level_parent_id='$level_parent_id', interest_date='$interest_date', interest_status='$interest_status' WHERE interest_id=$interest_id";
+            $sql = "UPDATE interests SET user_parent_id='$user_parent_id', course_parent_id='$course_parent_id', level_parent_id='$level_parent_id', interest_date='$interest_date', interest_status='$interest_status' WHERE interest_id=$interest_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Interest updated successfully!!');

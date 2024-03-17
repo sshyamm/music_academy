@@ -47,10 +47,10 @@
     $searchTeacher = isset($_POST['searchTeacher']) ? $_POST['searchTeacher'] : '';
     $sql = "SELECT ti.*, 
                c.course_name,
-	       t.teacher_username
+	       us.user_name
         FROM classes ti
         LEFT JOIN courses c ON ti.course_parent_id = c.course_id
-	LEFT JOIN teachers t ON ti.teacher_parent_id = t.teacher_id";
+	LEFT JOIN users us ON ti.user_parent_id = us.user_id";
 
 if (!empty($searchCourse) && !empty($searchTeacher)) {
     $sql .= " WHERE course_name LIKE '$searchCourse%' AND teacher_username LIKE '$searchTeacher%'";
@@ -68,7 +68,7 @@ if (!empty($searchCourse) && !empty($searchTeacher)) {
             echo "<tr>";
             echo "<td>{$row['class_id']}</td>";
             echo "<td>{$row['course_name']}</td>";
-            echo "<td>{$row['teacher_username']}</td>";
+            echo "<td>{$row['user_name']}</td>";
             echo "<td>{$row['start_time']}</td>";
             echo "<td>{$row['end_time']}</td>";
             echo "<td>{$row['date_of_class']}</td>";

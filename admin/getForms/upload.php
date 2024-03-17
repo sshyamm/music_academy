@@ -47,7 +47,7 @@ if(isset($_FILES['fileToUpload'])) {
                 $joined_date = implode('-', array_reverse(explode('-', $values[15])));
 
                 // Check if the record already exists
-                $existingRecordQuery = "SELECT student_username FROM students WHERE student_username = '$values[0]'";
+                $existingRecordQuery = "SELECT user_parent_id FROM students WHERE user_parent_id = '$values[0]'";
                 $result = $conn->query($existingRecordQuery);
 
                 if($result->num_rows > 0) {
@@ -57,7 +57,7 @@ if(isset($_FILES['fileToUpload'])) {
                 }
 
                 // Insert data into the database
-                $sql = "INSERT INTO students (student_username, student_password, phone_num, email, age_group_parent_id, course_parent_id, level_parent_id, emergency_contact, blood_group, address, pincode, city_parent_id, state_parent_id, country_parent_id, student_status, joined_date) VALUES ('$values[0]', '$values[1]', '$values[2]', '$values[3]', '$values[4]', '$values[5]', '$values[6]', '$values[7]', '$values[8]', '$values[9]', '$values[10]', '$values[11]', '$values[12]', '$values[13]', '$values[14]', '$joined_date')";
+                $sql = "INSERT INTO students (user_parent_id, phone_num, email, age_group_parent_id, course_parent_id, level_parent_id, emergency_contact, blood_group, address, pincode, city_parent_id, state_parent_id, country_parent_id, student_status, joined_date) VALUES ('$values[0]', '$values[1]', '$values[2]', '$values[3]', '$values[4]', '$values[5]', '$values[6]', '$values[7]', '$values[8]', '$values[9]', '$values[10]', '$values[11]', '$values[12]', '$values[13]', '$values[14]', '$joined_date')";
 
                 // Execute the SQL query
                 if ($conn->query($sql) === TRUE) {

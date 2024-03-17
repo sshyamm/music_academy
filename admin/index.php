@@ -76,7 +76,7 @@
             outline: none;
             border-color: #007bff;
         }
-	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest { height: 20px; }
+	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser { height: 20px; }
     </style>
 </head>
 <body>
@@ -99,6 +99,7 @@
         <button onclick="showCity();">City Manager</button>
         <button onclick="showState();">State Manager</button>
         <button onclick="showCountry();">Country Manager</button>
+        <button onclick="showUser();">User Manager</button>
     	</div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -163,7 +164,7 @@
         		method: 'POST',
         		data: { course_parent_id: course_parent_id },
         		success: function(response) {
-            		$('#teacher_parent_id').html(response);
+            		$('#user_parent_id').html(response);
         		},
     		});
 	}
@@ -355,6 +356,17 @@
                     $('#selectContainer').html(response); 
                 },
             });
+        }
+        function showUser(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("selectContainer").innerHTML = this.responseText;
+                    document.querySelector(".button-container").innerHTML = "<h2>User Manager</h2><button onclick='returnToIndex()'>Return</button>";  
+                }
+            };
+            xmlhttp.open("GET", "indexes/user_index.php", true); 
+            xmlhttp.send();
         }
         function showInterest(){
             var xmlhttp = new XMLHttpRequest();
@@ -568,6 +580,40 @@
                 xmlhttp.send();
             }
         }
+        function showFormUser(actionUser, user_id) {
+            if (actionUser == 'delete_mode_user') {
+                if (confirm('Are you sure you want to delete this user?')) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = JSON.parse(this.responseText);
+                            document.getElementById('responseMessageUser').innerHTML = response.message;
+                            if (response.success) {
+                                updateTableUser();
+                                setTimeout(function () {
+                                    document.getElementById('responseMessageUser').innerHTML = "";
+                                }, 3000);
+                            }
+                        }
+                    };
+
+                    var formData = new FormData();
+                    formData.append('actionUser', actionUser);
+                    formData.append('user_id', user_id);
+                    xmlhttp.open("POST", "getForms/getformUser.php", true); 
+                    xmlhttp.send(formData);
+                }
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("formContainerUser").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "forms/formUser.php?actionUser=" + actionUser + "&user_id=" + user_id, true); 
+                xmlhttp.send();
+            }
+        }
         function showFormClass(actionClass, class_id) {
             if (actionClass == 'delete_mode_class') {
                 if (confirm('Are you sure you want to delete this class?')) {
@@ -622,7 +668,7 @@
                     var formData = new FormData();
                     formData.append('actionPhase', actionPhase);
                     formData.append('class_room_id', class_room_id);
-                    xmlhttp.open("POST", "getForms/getformPhase.php", true); 
+                    xmlhttp.open("POST", "getForms/getFormPhase.php", true); 
                     xmlhttp.send(formData);
                 }
             } else {
@@ -875,8 +921,7 @@
             }
         }
         function validateFormStudent() {
-            var student_username = document.getElementById("student_username").value;
-            var student_password = document.getElementById("student_password").value;
+            var user_parent_id = document.getElementById("user_parent_id").value;
             var phone_num = document.getElementById("phone_num").value;
             var email = document.getElementById("email").value;
             var age_group_parent_id = document.getElementById("age_group_parent_id").value;
@@ -893,11 +938,8 @@
             
             var alertMessage = "";
 
-            if (student_username === "") {
-                alertMessage += "Please enter a student name.\n";
-            }
-            if (student_password === "") {
-                alertMessage += "Please enter a password.\n";
+            if (user_parent_id === "") {
+                alertMessage += "Please select any student.\n";
             }
             if (phone_num === "") {
                 alertMessage += "Please enter the phone number.\n";
@@ -964,8 +1006,7 @@
             }
         }
         function validateFormTeacher() {
-    		var teacher_username = document.getElementById("teacher_username").value;
-            var teacher_password = document.getElementById("teacher_password").value;
+    		var user_parent_id = document.getElementById("user_parent_id").value;
     		var teacher_phone = document.getElementById("teacher_phone").value;
     		var teacher_email = document.getElementById("teacher_email").value;
     		var teacher_address = document.getElementById("teacher_address").value;
@@ -979,11 +1020,8 @@
 
     		var alertMessage = "";
 
-    		if (teacher_username === "") {
-        		alertMessage += "Please enter a Teacher name.\n";
-    		}
-            if (teacher_password === "") {
-        		alertMessage += "Please enter a password.\n";
+    		if (user_parent_id === "") {
+        		alertMessage += "Please select a Teacher name.\n";
     		}
     		if (teacher_phone === "") {
         		alertMessage += "Please enter a teacher phone number.\n";
@@ -1041,7 +1079,7 @@
 		}
         function validateFormClass() {
             var course_parent_id = document.getElementById("course_parent_id").value;
-            var teacher_parent_id = document.getElementById("teacher_parent_id").value;
+            var user_parent_id = document.getElementById("user_parent_id").value;
             var start_time = document.getElementById("start_time").value;
             var end_time = document.getElementById("end_time").value;
             var date_of_class = document.getElementById("date_of_class").value;
@@ -1049,10 +1087,10 @@
             
             var alertMessage = "";
 
-            if (course_parent_id === "Select Course") {
+            if (course_parent_id === "") {
                 alertMessage += "Please select course.\n";
             }
-            if (teacher_parent_id === "Select Teacher") {
+            if (user_parent_id === "") {
                 alertMessage += "Please select teacher.\n";
             }
             if (start_time === "") {
@@ -1095,7 +1133,7 @@
         }
         function validateFormPhase() {
             var class_parent_id = document.getElementById("class_parent_id").value;
-            var student_parent_id = document.getElementById("student_parent_id").value;
+            var user_parent_id = document.getElementById("user_parent_id").value;
             var attendance = document.getElementById("attendance").value;
             var class_room_status = document.getElementById("class_room_status").value;
             
@@ -1104,7 +1142,7 @@
             if (class_parent_id === "Select Class") {
                 alertMessage += "Please select class.\n";
             }
-            if (student_parent_id === "Select Student") {
+            if (user_parent_id === "") {
                 alertMessage += "Please select student.\n";
             }
             if (attendance === "Select") {
@@ -1284,8 +1322,54 @@
                 xmlhttp.send(formData);
             }
         }
+        function validateFormUser() {
+            var user_name = document.getElementById("user_name").value;
+            var user_password = document.getElementById("user_password").value;
+            var user_type = document.getElementById("user_type").value;
+            var user_status = document.getElementById("user_status").value;
+            
+            var alertMessage = "";
+
+            if (user_name === "") {
+                alertMessage += "Please enter a user name.\n";
+            }
+            if (user_password === "") {
+                alertMessage += "Please enter user password.\n";
+            }
+            if (user_type === "Select") {
+                alertMessage += "Please select any user type.\n";
+            }
+            if (user_status === "Select") {
+                alertMessage += "Please select any user status.\n";
+            }
+
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                var formData = new FormData(document.getElementById("createProductFormUser"));
+
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('responseMessageUser').innerHTML = response.message;
+                        if (response.success) {
+                            updateTableUser();
+                            document.getElementById('createProductFormUser').style.display = 'none';
+                            setTimeout(function () {
+                                document.getElementById('responseMessageUser').innerHTML = "";
+                            }, 3000);
+                        }
+                    }
+                };
+
+                xmlhttp.open("POST", "getForms/getformUser.php", true); 
+                xmlhttp.send(formData);
+            }
+        }
         function validateFormInterest() {
-            var student_parent_id = document.getElementById("student_parent_id").value;
+            var user_parent_id = document.getElementById("user_parent_id").value;
             var course_parent_id = document.getElementById("course_parent_id").value;
             var level_parent_id = document.getElementById("level_parent_id").value;
             var interest_date = document.getElementById("interest_date").value;
@@ -1293,7 +1377,7 @@
             
             var alertMessage = "";
 
-            if (student_parent_id === "Select Student") {
+            if (user_parent_id === "") {
                 alertMessage += "Please select any student.\n";
             }
             if (course_parent_id === "Select Course") {
@@ -1551,6 +1635,16 @@
                 }
             };
             xmlhttp.open("GET", "updateForms/updateformInterest.php", true); 
+            xmlhttp.send();
+        }
+        function updateTableUser() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("updateTableContainerUser").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "updateForms/updateformUser.php", true); 
             xmlhttp.send();
         }
         function updateTableCourse() {
