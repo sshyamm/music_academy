@@ -25,7 +25,8 @@ if (isset($result)) {
     if ($result['success']) {
         $_SESSION['user_id'] = $result['user_id'];
         $_SESSION['user_name'] = $result['user_name'];
-        echo json_encode(array('Message' => 'Logged in successfully with ID: ' . $result['user_id'] . ' and name: ' . $result['user_name']));
+        $_SESSION['user_type'] = $result['user_type'];
+        echo json_encode(array('Message' => 'Logged in successfully with ID: ' . $result['user_id'] . ' and name: ' . $result['user_name'] . ' and type: ' . $result['user_type']));
     } else {
         echo json_encode(array('error' => $result['error']));
     }

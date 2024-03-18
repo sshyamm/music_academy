@@ -9,21 +9,8 @@ require_once '../core/student.php';
 
 $student = new Student($db);
 
-$student->student_username = $_POST['student_username'];
-$student->student_password = $_POST['student_password'];
-$student->phone_num = $_POST['phone_num'];
-$student->email = $_POST['email'];
-$student->age_group_parent_id = $_POST['age_group_parent_id'];
-$student->course_parent_id = $_POST['course_parent_id'];
-$student->level_parent_id = $_POST['level_parent_id'];
-$student->emergency_contact = $_POST['emergency_contact'];
-$student->blood_group = $_POST['blood_group'];
-$student->address = $_POST['address'];
-$student->pincode = $_POST['pincode'];
-$student->city_parent_id = $_POST['city_parent_id'];
-$student->state_parent_id = $_POST['state_parent_id'];
-$student->country_parent_id = $_POST['country_parent_id'];
-$student->student_status = $_POST['student_status'];
+$student->user_name = $_POST['user_name'];
+$student->user_password = $_POST['user_password'];
 
 $result = $student->createStudent();
 if($result === true){

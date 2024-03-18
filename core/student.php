@@ -3,9 +3,8 @@ class Student{
     private $conn;
     private $table = "students";
 
-    public $student_id;
-    public $student_username;
-    public $student_password;
+    public $user_parent_id;
+    public $user_name;
     public $phone_num;
     public $email;
     public $age_group_parent_id;
@@ -18,178 +17,96 @@ class Student{
     public $city_parent_id;
     public $state_parent_id;
     public $country_parent_id;
-    public $student_status;
-    public $joined_date;
 
     public function __construct($db){
         $this->conn = $db;
     }
 
     public function readStudents(){
-        $sql = "SELECT * FROM students";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        return $stmt;
     } 
 
-    public function readStudentDetail(){
-        $sql = "SELECT * FROM students WHERE student_id=?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(1, $this->student_id);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row) {
-            $this->student_username = $row['student_username'];
-            $this->student_password = $row['student_password'];
-            $this->phone_num = $row['phone_num'];
-            $this->email = $row['email'];
-            $this->age_group_parent_id = $row['age_group_parent_id'];
-            $this->course_parent_id = $row['course_parent_id'];
-            $this->level_parent_id = $row['level_parent_id'];
-            $this->emergency_contact = $row['emergency_contact'];
-            $this->blood_group = $row['blood_group'];
-            $this->address = $row['address'];
-            $this->pincode = $row['pincode'];
-            $this->city_parent_id = $row['city_parent_id'];
-            $this->state_parent_id = $row['state_parent_id'];
-            $this->country_parent_id = $row['country_parent_id'];
-            $this->student_status = $row['student_status'];
-            $this->joined_date = $row['joined_date'];
-            return true; 
-        }
-        return false; 
+    public function readStudentDetail(){ 
     }
 
-    public function createStudent(){
-        $checkSql = "SELECT * FROM students WHERE student_username = ?";
-        $checkStmt = $this->conn->prepare($checkSql);
-        $checkStmt->bindParam(1, $this->student_username);
-        $checkStmt->execute();
-        $numRows = $checkStmt->rowCount();
-        if($numRows > 0) {
-            echo json_encode(array('error' => 'This username is taken by another user. Please try a different username.'));
+    public function createStudent() {
+        $duplicate_stmt = $this->conn->prepare("SELECT * FROM users WHERE user_name = :user_name");
+        $duplicate_stmt->bindParam(':user_name', $this->user_name);
+        $duplicate_stmt->execute();
+    
+        if ($duplicate_stmt->rowCount() > 0) {
+            echo json_encode(array('error' => 'Username already exists'));
             exit();
         }
-        $currentDate = date('Y-m-d');
-        $sql = "INSERT INTO students 
-        SET student_username = :student_username, 
-            student_password = :student_password,
-            phone_num = :phone_num,
-            email = :email,
-            age_group_parent_id = :age_group_parent_id,
-            course_parent_id = :course_parent_id,
-            level_parent_id = :level_parent_id,
-            emergency_contact = :emergency_contact,
-            blood_group = :blood_group,
-            address = :address,
-            pincode = :pincode,
-            city_parent_id = :city_parent_id,
-            state_parent_id = :state_parent_id,
-            country_parent_id = :country_parent_id,
-            student_status = :student_status,
-            joined_date = :joined_date";
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->bindParam(':student_username', $this->student_username);
-        $stmt->bindParam(':student_password', $this->student_password);
-        $stmt->bindParam(':phone_num', $this->phone_num);
-        $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':age_group_parent_id', $this->age_group_parent_id);
-        $stmt->bindParam(':course_parent_id', $this->course_parent_id);
-        $stmt->bindParam(':level_parent_id', $this->level_parent_id);
-        $stmt->bindParam(':emergency_contact', $this->emergency_contact);
-        $stmt->bindParam(':blood_group', $this->blood_group);
-        $stmt->bindParam(':address', $this->address);
-        $stmt->bindParam(':pincode', $this->pincode);
-        $stmt->bindParam(':city_parent_id', $this->city_parent_id);
-        $stmt->bindParam(':state_parent_id', $this->state_parent_id);
-        $stmt->bindParam(':country_parent_id', $this->country_parent_id);
-        $stmt->bindParam(':student_status', $this->student_status);
-        $stmt->bindParam(':joined_date', $currentDate);
-        
-        if($stmt->execute()) {
-            return true;
+    
+        $insert_user_stmt = $this->conn->prepare("INSERT INTO users (user_name, user_password) VALUES (:user_name, :user_password)");
+        $insert_user_stmt->bindParam(':user_name', $this->user_name);
+        $insert_user_stmt->bindParam(':user_password', $this->user_password); 
+    
+        if ($insert_user_stmt->execute()) {
+            $user_id = $this->conn->lastInsertId();
+    
+            $insert_student_stmt = $this->conn->prepare("INSERT INTO students (user_parent_id) VALUES (:user_id)");
+            $insert_student_stmt->bindParam(':user_id', $user_id);
+    
+            if ($insert_student_stmt->execute()) {
+                return true;
+            } else {
+                return json_encode(array('error' => 'Failed to create student'));
+            }
+        } else {
+            return json_encode(array('error' => 'Failed to create user'));
         }
-        printf('error %s \n', $stmt->error);
-        return false;
     }
     
-    public function updateStudent(){
-        $checkIdSql = "SELECT * FROM students WHERE student_id = :student_id";
-        $checkIdStmt = $this->conn->prepare($checkIdSql);
-        $checkIdStmt->bindParam(':student_id', $this->student_id);
-        $checkIdStmt->execute();
-        $numIdRows = $checkIdStmt->rowCount();
-        if($numIdRows == 0) {
-            echo json_encode(array('error' => 'No student found with this ID.'));
+    public function updateStudent() {
+        $check_stmt = $this->conn->prepare("SELECT * FROM students WHERE user_parent_id = :user_parent_id");
+        $check_stmt->bindParam(':user_parent_id', $this->user_parent_id);
+        $check_stmt->execute();
+        
+        if ($check_stmt->rowCount() === 0) {
+            echo json_encode(array('error' => 'Student does not exist'));
             exit();
         }
-
-        $checkSql = "SELECT * FROM $this->table WHERE student_username = :student_username AND student_id != :student_id";
-        $checkStmt = $this->conn->prepare($checkSql);
-        $checkStmt->bindParam(':student_username', $this->student_username);
-        $checkStmt->bindParam(':student_id', $this->student_id);
-        $checkStmt->execute();
-        if ($checkStmt->rowCount() > 0) {
-            echo json_encode(array('error' => 'This username is taken by another user. Please try a different username.'));
+    
+        $duplicate_stmt = $this->conn->prepare("SELECT * FROM users WHERE user_name = :user_name AND user_id != :user_id");
+        $duplicate_stmt->bindParam(':user_name', $this->user_name);
+        $duplicate_stmt->bindParam(':user_id', $this->user_parent_id);
+        $duplicate_stmt->execute();
+    
+        if ($duplicate_stmt->rowCount() > 0) {
+            echo json_encode(array('error' => 'Username already exists'));
             exit();
         }
-
-        $sql = "UPDATE students 
-        SET student_username = :student_username,
-            phone_num = :phone_num,
-            email = :email,
-            age_group_parent_id = :age_group_parent_id,
-            course_parent_id = :course_parent_id,
-            level_parent_id = :level_parent_id,
-            emergency_contact = :emergency_contact,
-            blood_group = :blood_group,
-            address = :address,
-            pincode = :pincode,
-            city_parent_id = :city_parent_id,
-            state_parent_id = :state_parent_id,
-            country_parent_id = :country_parent_id
-        WHERE student_id = :student_id";
-
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->bindParam(':student_id', $this->student_id);
-        $stmt->bindParam(':student_username', $this->student_username);
-        $stmt->bindParam(':phone_num', $this->phone_num);
-        $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':age_group_parent_id', $this->age_group_parent_id);
-        $stmt->bindParam(':course_parent_id', $this->course_parent_id);
-        $stmt->bindParam(':level_parent_id', $this->level_parent_id);
-        $stmt->bindParam(':emergency_contact', $this->emergency_contact);
-        $stmt->bindParam(':blood_group', $this->blood_group);
-        $stmt->bindParam(':address', $this->address);
-        $stmt->bindParam(':pincode', $this->pincode);
-        $stmt->bindParam(':city_parent_id', $this->city_parent_id);
-        $stmt->bindParam(':state_parent_id', $this->state_parent_id);
-        $stmt->bindParam(':country_parent_id', $this->country_parent_id);
-
-        if($stmt->execute()) {
+    
+        $update_stmt = $this->conn->prepare("UPDATE students s
+                          LEFT JOIN users u ON s.user_parent_id = u.user_id
+                          SET u.user_name = :user_name, s.phone_num = :phone_num, s.email = :email, s.age_group_parent_id = :age_group_parent_id, s.course_parent_id = :course_parent_id, s.level_parent_id = :level_parent_id, s.emergency_contact = :emergency_contact, s.blood_group = :blood_group, s.address = :address, s.pincode = :pincode, s.city_parent_id = :city_parent_id, s.state_parent_id = :state_parent_id, s.country_parent_id = :country_parent_id
+                          WHERE s.user_parent_id = :user_parent_id");
+        $update_stmt->bindParam(':user_name', $this->user_name);
+        $update_stmt->bindParam(':phone_num', $this->phone_num);
+        $update_stmt->bindParam(':email', $this->email);
+        $update_stmt->bindParam(':age_group_parent_id', $this->age_group_parent_id);
+        $update_stmt->bindParam(':course_parent_id', $this->course_parent_id);
+        $update_stmt->bindParam(':level_parent_id', $this->level_parent_id);
+        $update_stmt->bindParam(':emergency_contact', $this->emergency_contact);
+        $update_stmt->bindParam(':blood_group', $this->blood_group);
+        $update_stmt->bindParam(':address', $this->address);
+        $update_stmt->bindParam(':pincode', $this->pincode);
+        $update_stmt->bindParam(':city_parent_id', $this->city_parent_id);
+        $update_stmt->bindParam(':state_parent_id', $this->state_parent_id);
+        $update_stmt->bindParam(':country_parent_id', $this->country_parent_id);
+        $update_stmt->bindParam(':user_parent_id', $this->user_parent_id);
+    
+        $update_stmt->execute();
+    
+        if ($update_stmt->rowCount() > 0) {
             return true;
+        } else {
+            return json_encode(array('error' => 'Failed to update student details'));
         }
-        printf('error %s \n', $stmt->error);
-        return false;
     }
 
     public function deleteStudent(){
-        $sql = "DELETE FROM students WHERE student_id = :student_id";
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->bindParam(':student_id', $this->student_id);
-
-        if($stmt->execute()) {
-            if ($stmt->rowCount() > 0) {
-                return true; 
-            } else {
-                return false; 
-            }
-        }
-        printf('error %s \n', $stmt->error);
-        return false; 
     }
 }
 ?>
