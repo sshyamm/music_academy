@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 18, 2024 at 06:48 AM
+-- Generation Time: Mar 19, 2024 at 11:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -113,7 +113,8 @@ CREATE TABLE `classes` (
 
 INSERT INTO `classes` (`class_id`, `course_parent_id`, `user_parent_id`, `start_time`, `end_time`, `date_of_class`, `created_at`, `updated_at`, `class_status`) VALUES
 (21, 1, 5, '23:54:00', '23:55:00', '2024-03-13', '2024-03-17 11:54:46', '2024-03-17 11:54:46', 'Ongoing'),
-(22, 2, 4, '23:54:00', '21:00:00', '2024-03-22', '2024-03-17 11:55:09', '2024-03-17 11:55:09', 'Cancelled');
+(22, 2, 4, '23:54:00', '21:00:00', '2024-03-22', '2024-03-17 11:55:09', '2024-03-17 11:55:09', 'Cancelled'),
+(23, 1, 5, '15:39:00', '15:39:00', '2024-03-22', '2024-03-19 03:37:22', '2024-03-19 03:37:22', 'Finished');
 
 -- --------------------------------------------------------
 
@@ -273,7 +274,7 @@ CREATE TABLE `students` (
   `city_parent_id` int(11) DEFAULT NULL,
   `state_parent_id` int(11) DEFAULT NULL,
   `country_parent_id` int(11) DEFAULT NULL,
-  `student_status` enum('Enquired','Active','Inactive') DEFAULT NULL,
+  `student_status` enum('Enquired','Active','Inactive') DEFAULT 'Active',
   `joined_date` date DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -282,10 +283,12 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`student_id`, `user_parent_id`, `phone_num`, `email`, `age_group_parent_id`, `course_parent_id`, `level_parent_id`, `emergency_contact`, `blood_group`, `address`, `pincode`, `city_parent_id`, `state_parent_id`, `country_parent_id`, `student_status`, `joined_date`) VALUES
-(1, 1, '9188103943', 'shyam27sps@gmail.com', 1, 1, 1, '9447196749', 'B+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 1, 1, 1, 'Active', '2024-02-01'),
-(3, 2, '8756545643', 'arun@gmail.com', 3, 1, 1, '8565667675', 'A-', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641012', 4, 4, 3, 'Active', '2024-02-15'),
-(4, 3, '7564566673', 'suresh@gmail.com', 3, 1, 2, '7566667874', 'AB+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 6, 1, 1, 'Enquired', '2024-02-25'),
-(36, 3, '7564566673', 'suresh@gmail.com', 3, 1, 2, '7566667874', 'AB+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 3, 3, 1, 'Active', '2024-02-29');
+(1, 1, '9188103942', 'shyam27sps@gmail.com', 1, 1, 6, '9447196749', 'AB+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 1, 1, 1, 'Active', '2024-02-01'),
+(3, 2, '8756545643', 'arun@gmail.com', 3, 1, 1, '8565667675', 'AB+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641012', 4, 4, 3, 'Active', '2024-02-15'),
+(4, 3, '7564566673', 'suresh@gmail.com', 3, 1, 2, '7566667874', 'A+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 6, 1, 1, 'Enquired', '2024-02-25'),
+(36, 3, '7564566673', 'suresh@gmail.com', 3, 1, 2, '7566667874', 'A+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 6, 1, 1, 'Active', '2024-02-29'),
+(79, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', '2024-03-18'),
+(80, 11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', '2024-03-19');
 
 -- --------------------------------------------------------
 
@@ -325,7 +328,7 @@ INSERT INTO `tasks` (`task_id`, `task_title`, `task_desc`, `assigned_to`, `assig
 
 CREATE TABLE `teachers` (
   `teacher_id` int(11) NOT NULL,
-  `user_parent_id` int(11) NOT NULL,
+  `user_parent_id` int(11) DEFAULT NULL,
   `teacher_phone` varchar(255) DEFAULT NULL,
   `teacher_email` varchar(255) DEFAULT NULL,
   `teacher_address` varchar(255) DEFAULT NULL,
@@ -366,10 +369,12 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_password`, `user_type`, `user_status`) VALUES
 (1, 'Shyam', 'shy123', 'Student', 'Active'),
-(2, 'Arun', 'arun123', 'Student', 'Active'),
+(2, 'Arunesh', 'arun123', 'Student', 'Active'),
 (3, 'Suresh', 'sur123', 'Student', 'Active'),
 (4, 'Ann', 'ann123', 'Teacher', 'Active'),
-(5, 'Jennie', 'jenn123', 'Teacher', 'Active');
+(5, 'Jennie', 'jenn123', 'Teacher', 'Active'),
+(10, 'Ramesh', 'ram123', 'Student', 'Active'),
+(11, 'shy123', '12345', 'Student', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -485,7 +490,7 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `class_rooms`
@@ -527,7 +532,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `tasks`
@@ -545,7 +550,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

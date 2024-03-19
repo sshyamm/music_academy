@@ -8,13 +8,17 @@
             <?php
             require_once 'includes/config.php';
 
+            $user_name = $_SESSION['user_name'] ?? '';
+
             $sql = "SELECT ti.*, 
                            c.course_name,
                            us.user_name
                     FROM classes ti
                     LEFT JOIN courses c ON ti.course_parent_id = c.course_id
-                    LEFT JOIN users us ON ti.user_parent_id = us.user_id";
+                    LEFT JOIN users us ON ti.user_parent_id = us.user_id
+                    WHERE us.user_name = :user_name";
             $stmt = $db->prepare($sql);
+            $stmt->bindParam(':user_name', $user_name);
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,14 +46,14 @@
                     echo "<td>" . $row['end_time'] . "</td>";
                     echo "<td>" . $row['date_of_class'] . "</td>";
                     echo "<td>" . $row['class_status'] . "</td>";
-                    echo "<td><a href='class_details.php?id=" . $row['class_id'] . "' class='btn btn-secondary view-students-btn'>View Details</a></td>";
+                    echo "<td><a href='class_details.php?class_id=" . $row['class_id'] . "' class='btn btn-secondary view-students-btn'>View Details</a></td>";
                     echo "</tr>";
                 }
                 echo "</tbody>";
                 echo "</table>";
                 echo "</div>";
             } else {
-                echo "No class found.";
+                echo "No class found for the current user.";
             }
             ?>
 

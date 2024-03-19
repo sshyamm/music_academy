@@ -10,19 +10,21 @@
             </nav>
         </div>
     </div>
-    <div class="container">
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-6">
-                <div class="card-body d-flex align-items-center justify-content-between p-1">
-                    <div>
-                        <h5 class="card-title m-0">Scheduled Classes</h5>
-                        <p class="card-text m-0">View our upcoming classes schedule and join us!</p>
-                    </div>
-                    <a href="class_info.php" class="btn btn-primary">View Classes</a>
+    <?php if(isset($_SESSION['user_name']) && isset($_SESSION['user_id'])): ?>
+        <div class="container">
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-6">
+                        <div class="card-body d-flex align-items-center justify-content-between p-1">
+                            <div>
+                                <h5 class="card-title m-0">Scheduled Classes</h5>
+                                <p class="card-text m-0">View our upcoming classes schedule and join us!</p>
+                            </div>
+                            <a href="class_info.php" class="btn btn-primary">View Classes</a>
+                        </div>
                 </div>
+            </div>
         </div>
-    </div>
-</div>
+    <?php endif; ?>
     <main class="custom-main">
     <div class="container mt-5">
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
