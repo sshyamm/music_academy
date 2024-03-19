@@ -331,7 +331,7 @@ if ($user_parent_id !== null && $user_type !== null) {
                         </div>
                         <span>&nbsp;</span>
                         <div class="text-center edit-button">
-                            <button type="submit" id="editfrmBtn_teach" class="btn btn-primary btn-lg">Submit</button>
+                            <button type="submit" id="editfrmBtn" class="btn btn-primary btn-lg">Submit</button>
                         </div>
                     </form>
                 <?php } ?>
@@ -341,29 +341,34 @@ if ($user_parent_id !== null && $user_type !== null) {
 </div>
 <script>
     $(document).ready(function() {
-        $('#myacc_form').submit(function(event) {
-            event.preventDefault();
-
-            $.ajax({
-                url: 'api/edit_student.php',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    if (response.error) {
-                        $('#signup-message').text(response.error);
-                    } else {
-                        $('#signup-message').text(response.Message);
+        function handleFormSubmission(form, url) {
+            form.submit(function(event) {
+                event.preventDefault();
+        
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.error) {
+                            $('#signup-message').text(response.error);
+                        } else {
+                            $('#signup-message').text(response.Message);
+                        }
+                        setTimeout(function() {
+                            $('#signup-message').text('');
+                            location.reload();
+                        }, 3000);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert("An error occurred while processing your request.");
                     }
-                    setTimeout(function() {
-                        $('#signup-message').text('');
-                        location.reload();
-                    }, 3000);
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                    alert("An error occurred while processing your request.");
-                }
+                });
             });
-        });
+        }
+
+        handleFormSubmission($('#myacc_form'), 'api/edit_student.php');
+        handleFormSubmission($('#myacc_form_teach'), 'api/edit_teacher.php');
     });
 </script>

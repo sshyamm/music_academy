@@ -4,9 +4,6 @@
     <div class="lux-styled-section" style="font-family: 'didact-gothic';">
         <div class="container mt-5">
             <h2 class="text-center text-dark mb-4">Classes Information</h2>
-            <div class="text-center mb-4">
-                <button class="btn btn-primary add-class-btn">Add Class</button>
-            </div>
 
             <?php
             require_once 'includes/config.php';

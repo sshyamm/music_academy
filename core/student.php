@@ -2,6 +2,7 @@
 class Student{
     private $conn;
     private $table = "students";
+    private $table_teach = "teachers";
 
     public $user_parent_id;
     public $user_name;
@@ -17,15 +18,14 @@ class Student{
     public $city_parent_id;
     public $state_parent_id;
     public $country_parent_id;
+    public $teacher_phone;
+    public $teacher_email;
+    public $qualification;
+    public $teacher_exp;
+    public $teacher_address;
 
     public function __construct($db){
         $this->conn = $db;
-    }
-
-    public function readStudents(){
-    } 
-
-    public function readStudentDetail(){ 
     }
 
     public function createStudent() {
@@ -106,7 +106,43 @@ class Student{
         }
     }
 
-    public function deleteStudent(){
+    public function updateTeacher(){
+        $check_stmt = $this->conn->prepare("SELECT * FROM $this->table_teach WHERE user_parent_id = :user_parent_id");
+        $check_stmt->bindParam(':user_parent_id', $this->user_parent_id);
+        $check_stmt->execute();
+        
+        if ($check_stmt->rowCount() === 0) {
+            return array('error' => 'Teacher does not exist');
+        }
+    
+        $duplicate_stmt = $this->conn->prepare("SELECT * FROM users WHERE user_name = :user_name AND user_id != :user_id");
+        $duplicate_stmt->bindParam(':user_name', $this->user_name);
+        $duplicate_stmt->bindParam(':user_id', $this->user_parent_id);
+        $duplicate_stmt->execute();
+    
+        if ($duplicate_stmt->rowCount() > 0) {
+            return array('error' => 'Teacher name already exists');
+        }
+    
+        $update_stmt = $this->conn->prepare("UPDATE $this->table_teach s
+                          LEFT JOIN users u ON s.user_parent_id = u.user_id
+                          SET u.user_name = :user_name, s.teacher_phone = :teacher_phone, s.teacher_email = :teacher_email, s.qualification = :qualification, s.course_parent_id = :course_parent_id, s.teacher_exp = :teacher_exp, s.teacher_address = :teacher_address
+                          WHERE s.user_parent_id = :user_parent_id");
+        $update_stmt->bindParam(':user_name', $this->user_name);
+        $update_stmt->bindParam(':teacher_phone', $this->teacher_phone);
+        $update_stmt->bindParam(':teacher_email', $this->teacher_email);
+        $update_stmt->bindParam(':qualification', $this->qualification);
+        $update_stmt->bindParam(':course_parent_id', $this->course_parent_id);
+        $update_stmt->bindParam(':teacher_exp', $this->teacher_exp);
+        $update_stmt->bindParam(':teacher_address', $this->teacher_address);
+    
+        $update_stmt->execute();
+    
+        if ($update_stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return array('error' => 'Failed to update teacher details');
+        }
     }
 }
 ?>

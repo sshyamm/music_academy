@@ -66,7 +66,8 @@
                         }
                         setTimeout(function() {
                             $('#signup-message').text('');
-                        }, 3000);
+                            window.location.href = 'index.php';
+                        }, 900);
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
