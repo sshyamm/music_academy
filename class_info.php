@@ -9,14 +9,29 @@
             require_once 'includes/config.php';
 
             $user_name = $_SESSION['user_name'] ?? '';
+            $user_type = $_SESSION['user_type'] ?? '';
 
             $sql = "SELECT ti.*, 
                            c.course_name,
                            us.user_name
                     FROM classes ti
                     LEFT JOIN courses c ON ti.course_parent_id = c.course_id
-                    LEFT JOIN users us ON ti.user_parent_id = us.user_id
-                    WHERE us.user_name = :user_name";
+                    LEFT JOIN users us ON ti.user_parent_id = us.user_id";
+
+            if ($user_type == 'Student') {
+                $sql .= " WHERE ti.class_id IN (
+                            SELECT cr.class_parent_id
+                            FROM class_rooms cr
+                            WHERE cr.user_parent_id = (
+                                SELECT user_id
+                                FROM users
+                                WHERE user_name = :user_name
+                            )
+                        )";
+            } else {
+                $sql .= " WHERE us.user_name = :user_name";
+            }
+
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':user_name', $user_name);
             $stmt->execute();

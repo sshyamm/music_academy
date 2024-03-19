@@ -70,6 +70,7 @@ if ($actionUser == 'edit_mode_user') {
         <option value="Select" <?php echo ($actionUser === 'create_mode_user') ? 'selected' : ''; ?>>Select</option>
         <option value="Student" <?php echo ($actionUser === 'edit_mode_user' && $user_type === 'Student') ? 'selected' : ''; ?>>Student</option>
         <option value="Teacher" <?php echo ($actionUser === 'edit_mode_user' && $user_type === 'Teacher') ? 'selected' : ''; ?>>Teacher</option>
+        <option value="None" <?php echo ($actionUser === 'edit_mode_user' && $user_type === 'None') ? 'selected' : ''; ?>>None</option>
     </select><br>
     <select id="user_status" name="user_status">
         <option value="Select" <?php echo ($actionUser === 'create_mode_user') ? 'selected' : ''; ?>>Select</option>

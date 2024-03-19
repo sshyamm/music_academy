@@ -42,10 +42,10 @@ if ($user_parent_id !== null && $user_type !== null) {
 
         if ($row !== false) {
             $user_name = $row["user_name"];
-            $email = $row["email"];
             switch ($user_type) {
                 case 'Student':
                     $phone_num = $row["phone_num"];
+                    $email = $row["email"];
                     $age_group_parent_id = $row["age_group_parent_id"];
                     $course_parent_id = $row["course_parent_id"];
                     $level_parent_id = $row["level_parent_id"];

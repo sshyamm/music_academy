@@ -18,10 +18,17 @@ class Profile {
         $checkStmt->bindParam(":user_name", $this->user_name);
         $checkStmt->execute();
         $numRows = $checkStmt->rowCount();
+        
         if ($numRows == 0) {
             return array('success' => false, 'error' => 'User does not exist');
         }
+        
         $row = $checkStmt->fetch();
+        
+        if ($row['user_type'] === "None") {
+            return array('success' => false, 'error' => 'You are not approved. Please contact admin');
+        }
+        
         if ($this->user_password === $row['user_password']) {
             return array('success' => true, 'user_id' => $row['user_id'], 'user_name' => $row['user_name'], 'user_type' => $row['user_type']);
         } else {

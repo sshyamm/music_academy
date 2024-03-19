@@ -63,11 +63,10 @@
                             $('#signup-message').text(response.error);
                         } else {
                             $('#signup-message').text(response.Message);
+                            setTimeout(function() {
+                                window.location.href = 'index.php';
+                            }, 900);
                         }
-                        setTimeout(function() {
-                            $('#signup-message').text('');
-                            window.location.href = 'index.php';
-                        }, 900);
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
@@ -79,3 +78,5 @@
         });
     });
 </script>
+
+
