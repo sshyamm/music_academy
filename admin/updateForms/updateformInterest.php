@@ -2,10 +2,12 @@
 include("../db.php");
 $sql = "SELECT i.*, 
            us.user_name,
+           cl.date_of_class,
            c.course_name, 
            l.level_name
     FROM interests i
     LEFT JOIN users us ON i.user_parent_id = us.user_id
+    LEFT JOIN classes cl ON i.interest_date = cl.class_id
     LEFT JOIN courses c ON i.course_parent_id = c.course_id
     LEFT JOIN levels l ON i.level_parent_id = l.level_id";
 $result = $conn->query($sql);
@@ -19,7 +21,7 @@ if ($result->num_rows > 0) {
         echo "<td>{$row['user_name']}</td>";
         echo "<td>{$row['course_name']}</td>";
         echo "<td>{$row['level_name']}</td>";
-        echo "<td>{$row['interest_date']}</td>";
+        echo "<td>{$row['date_of_class']}</td>";
         echo "<td>{$row['interest_status']}</td>";
         echo "<td>";
         echo "<button onclick=\"showFormInterest('edit_mode_int', {$row['interest_id']})\">Edit</button>";
