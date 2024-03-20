@@ -1,8 +1,11 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
     require_once 'includes/header.php';
     require_once 'includes/config.php';
+
+    if(!isset($_SESSION['user_type'])) {
+        header("Location: login.php");
+        exit();
+    }
 
     if(isset($_GET['class_id'])) {
         $class_id = $_GET['class_id'];
@@ -10,10 +13,16 @@ ini_set('display_errors', 1);
         $sql = "SELECT ti.*, 
                        c.course_name,
                        c.course_desc,
-                       us.user_name
+                       us.user_name AS teacher_name,
+                       cr.user_parent_id AS student_id,
+                       stu.user_name AS student_name,
+                       s.email AS student_email
                 FROM classes ti
                 LEFT JOIN courses c ON ti.course_parent_id = c.course_id
                 LEFT JOIN users us ON ti.user_parent_id = us.user_id
+                LEFT JOIN class_rooms cr ON ti.class_id = cr.class_parent_id
+                LEFT JOIN users stu ON cr.user_parent_id = stu.user_id
+                LEFT JOIN students s ON stu.user_id = s.user_parent_id
                 WHERE ti.class_id = :class_id";
 
         $stmt = $db->prepare($sql);
@@ -26,11 +35,19 @@ ini_set('display_errors', 1);
 
             $course_name = $row['course_name'];
             $course_desc = $row['course_desc'];
-            $teacher_name = $row['user_name'];
+            $teacher_name = $row['teacher_name'];
             $start_time = $row['start_time'];
             $end_time = $row['end_time'];
             $date_of_class = $row['date_of_class'];
             $class_status = $row['class_status'];
+
+            $students = [];
+            foreach ($data as $student) {
+                $students[] = [
+                    'name' => $student['student_name'],
+                    'email' => $student['student_email']
+                ];
+            }
         } else {
             echo "No class found for the provided ID.";
             exit(); 
@@ -66,50 +83,63 @@ ini_set('display_errors', 1);
             </div>
         </div>
 
-            <div class="card mb-4 border-1 rounded-lg shadow-lg">
-                <div class="card-header bg-warning text-black rounded-top">
-                    Students List
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Attendance</th> 
-                                    <th>Action</th> 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Student 1</td>
-                                    <td>student1@example.com</td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="On Time">On Time</option>
-                                            <option value="Delayed">Delayed</option>
-                                            <option value="Absent">Absent</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+        <div class="card mb-4 border-1 rounded-lg shadow-lg">
+            <div class="card-header bg-warning text-black rounded-top">
+                Students List
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <?php if($_SESSION['user_type'] == 'Teacher'): ?>
+                                    <th>Attendance</th>
+                                    <th>Action</th>
+                                <?php endif; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $count = 1;
+                                foreach ($students as $student) {
+                                    echo "<tr>";
+                                    echo "<td>" . $count . "</td>";
+                                    echo "<td>" . $student['name'] . "</td>";
+                                    echo "<td>" . $student['email'] . "</td>";
+                                    if ($_SESSION['user_type'] == 'Teacher') {
+                                        echo "<td>
+                                                <select class='form-control'>
+                                                    <option value='On Time'>On Time</option>
+                                                    <option value='Delayed'>Delayed</option>
+                                                    <option value='Absent'>Absent</option>
+                                                </select>
+                                            </td>";
+                                        echo "<td>
+                                                <button class='btn btn-danger btn-sm delete-btn'>Delete</button>
+                                            </td>";
+                                    }
+                                    echo "</tr>";
+                                    $count++;
+                                }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
 
-            <div class="text-center">
-                <button class="btn btn-warning mr-2">Start Class</button>
-                <a href="file_upload.php" class="btn btn-primary mr-2">Upload Task</a>
-                <button class="btn btn-secondary">Add Student</button>
-            </div>
-            <span>&nbsp;</span>
+
+            <?php if($_SESSION['user_type'] == 'Teacher'): ?>
+                <div class="text-center">
+                    <button class="btn btn-warning mr-2">Start Class</button>
+                    <a href="file_upload.php" class="btn btn-primary mr-2">Upload Task</a>
+                    <a href="add_student.php?class_id=<?php echo $class_id; ?>" class="btn btn-secondary">Add Students</a>
+                </div>
+                <span>&nbsp;</span>
+            <?php endif; ?>
 
             <div class="card mb-4 border-1 rounded-lg shadow-lg" id="uploadedTasksContainer">
                 <div class="card-header bg-warning text-black rounded-top">
@@ -139,7 +169,12 @@ ini_set('display_errors', 1);
                                                 echo "<tr>";
                                                 echo "<td>" . $count . "</td>";
                                                 echo "<td>" . $file . "</td>";
-                                                echo "<td><a href='uploads/" . $file . "' download><button class='btn btn-primary btn-sm'>Download</button></a> <button class='btn btn-danger btn-sm delete-btn'>Delete</button></td>";
+                                                echo "<td><a href='uploads/" . $file . "' download>
+                                                <button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
+                                                if ($_SESSION['user_type'] == 'Teacher') {
+                                                    echo "<button class='btn btn-danger btn-sm delete-btn'>Delete</button>";
+                                                }
+                                                echo "</td>";
                                                 echo "</tr>";
                                                 $count++;
                                             }
