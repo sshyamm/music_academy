@@ -34,10 +34,31 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($students as $student): ?>
+                        <?php foreach ($students as $student): 
+                            // Check if the student is already added to the class
+                            $sql = "SELECT COUNT(*) AS count 
+                                    FROM class_rooms cr
+                                    JOIN interests i ON cr.user_parent_id = i.user_parent_id
+                                    WHERE cr.class_parent_id = :class_id
+                                    AND cr.user_parent_id = :user_id";
+
+                            $stmt = $db->prepare($sql);
+                            $stmt->bindParam(':class_id', $class_id, PDO::PARAM_INT);
+                            $stmt->bindParam(':user_id', $student['user_id'], PDO::PARAM_INT);
+                            $stmt->execute();
+                            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                            $alreadyAdded = ($result['count'] > 0);
+                        ?>
                             <tr>
-                                <td><input type="checkbox" name="selected_students[]" value="<?php echo $student['user_id']; ?>"></td>
-                                <td><?php echo htmlspecialchars($student['user_name']); ?></td>
+                                <td>
+                                    <input type="checkbox" name="selected_students[]" value="<?php echo $student['user_id']; ?>" <?php echo $alreadyAdded ? 'disabled' : ''; ?>>
+                                </td>
+                                <td>
+                                    <?php echo htmlspecialchars($student['user_name']); ?>
+                                    <?php if ($alreadyAdded): ?>
+                                        <span class="text-danger">(Already added to the class)</span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

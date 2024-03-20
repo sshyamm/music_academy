@@ -124,6 +124,17 @@
         		},
     		});
 	}
+    function fetchDates() {
+    		var course_parent_id = $('#course_parent_id').val();
+    		$.ajax({
+        		url: 'getForms/get_dates.php',
+        		method: 'POST',
+        		data: { course_parent_id: course_parent_id },
+        		success: function(response) {
+            		$('#interest_date').html(response);
+        		},
+    		});
+	}
 	function fetchStates_search() {
     		var country = $('#country').val();
     		$.ajax({
@@ -1139,7 +1150,7 @@
             
             var alertMessage = "";
 
-            if (class_parent_id === "Select Class") {
+            if (class_parent_id === "") {
                 alertMessage += "Please select class.\n";
             }
             if (user_parent_id === "") {

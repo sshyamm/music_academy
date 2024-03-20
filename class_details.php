@@ -14,6 +14,7 @@
                        c.course_name,
                        c.course_desc,
                        us.user_name AS teacher_name,
+                       cr.class_room_id,
                        cr.user_parent_id AS student_id,
                        stu.user_name AS student_name,
                        s.email AS student_email
@@ -45,7 +46,8 @@
             foreach ($data as $student) {
                 $students[] = [
                     'name' => $student['student_name'],
-                    'email' => $student['student_email']
+                    'email' => $student['student_email'],
+                    'class_room_id' => $student['class_room_id'] 
                 ];
             }
         } else {
@@ -95,10 +97,10 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <?php if($_SESSION['user_type'] == 'Teacher'): ?>
+                                <?php if($_SESSION['user_type'] == 'Teacher'){ ?>
                                     <th>Attendance</th>
                                     <th>Action</th>
-                                <?php endif; ?>
+                                <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -109,21 +111,23 @@
                                     echo "<td>" . $count . "</td>";
                                     echo "<td>" . $student['name'] . "</td>";
                                     echo "<td>" . $student['email'] . "</td>";
-                                    if ($_SESSION['user_type'] == 'Teacher') {
+                                    if ($_SESSION['user_type'] === 'Teacher') {
                                         echo "<td>
-                                                <select class='form-control'>
-                                                    <option value='On Time'>On Time</option>
-                                                    <option value='Delayed'>Delayed</option>
+                                                <select class='form-control attendance-dropdown'>
+                                                    <option value='Select'>Select</option>
+                                                    <option value='Present'>Present</option>
                                                     <option value='Absent'>Absent</option>
+                                                    <option value='Late'>Late</option>
                                                 </select>
                                             </td>";
                                         echo "<td>
                                                 <button class='btn btn-danger btn-sm delete-btn'>Delete</button>
                                             </td>";
+                                        echo "<td style='display: none;'><input type='hidden' class='class_room_id' value='" . $student['class_room_id'] . "'></td>";
                                     }
                                     echo "</tr>";
                                     $count++;
-                                }
+                                }                           
                             ?>
                         </tbody>
                     </table>
@@ -218,4 +222,42 @@
         </div>
     </main>
     <span>&nbsp;</span>
-    <?php require_once 'includes/footer.php'; ?>
+    <script>
+    $(document).ready(function() {
+        $("select.attendance-dropdown").change(function() {
+        var attendance = $(this).val(); 
+        var classRoomId = $(this).closest("tr").find(".class_room_id").val(); 
+
+        $.ajax({
+            url: 'update_attendance.php',
+            method: 'POST',
+            data: { class_room_id: classRoomId, attendance: attendance },
+            success: function(response) {
+                alert("Attendance updated successfully");
+            },
+            error: function(xhr, status, error) {
+                console.error("Error updating attendance: " + error);
+            }
+        });
+    });
+
+        $(".delete-btn").click(function() {
+            var classRoomId = $(this).closest("tr").find(".class_room_id").val();
+            var confirmation = confirm("Are you sure you want to delete this student?");
+            if (confirmation) {
+                $.ajax({
+                    url: 'delete_student.php',
+                    method: 'POST',
+                    data: { class_room_id: classRoomId },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Error deleting student: " + error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+<?php require_once 'includes/footer.php'; ?>

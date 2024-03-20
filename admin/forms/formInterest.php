@@ -80,18 +80,19 @@ if ($actionInt == 'edit_mode_int') {
         }
         ?>
     </select><br>
-    <select id="course_parent_id" name="course_parent_id">
-        <?php
-        $course_sql = "SELECT * FROM courses";
-        $course_result = $conn->query($course_sql);
-        echo "<option value='Select Course' " . (($actionInt === 'create_mode_int') ? 'selected' : '') . ">Select Course</option>";
-        if ($course_result->num_rows > 0) {
-            while ($course_row = $course_result->fetch_assoc()) {
-                $selected = ($course_row['course_id'] == $course_parent_id) ? 'selected' : '';
-                echo "<option value='" . $course_row['course_id'] . "' $selected>" . $course_row['course_name'] . "</option>";
-            }
+    <select id="course_parent_id" name="course_parent_id" onChange="fetchDates();">
+    <?php
+    require_once("../db.php");
+    $course_sql = "SELECT * FROM courses";
+    $course_result = $conn->query($course_sql);
+    echo "<option value=''>Select Course</option>";
+    if ($course_result->num_rows > 0) {
+        while ($course_row = $course_result->fetch_assoc()) {
+            $selected = ($course_row['course_id'] == $course_parent_id) ? 'selected' : '';
+            echo "<option value='" . $course_row['course_id'] . "' $selected>" . $course_row['course_name'] . "</option>";
         }
-        ?>
+    }
+    ?>
     </select><br>
     <select id="level_parent_id" name="level_parent_id">
         <?php
@@ -107,23 +108,29 @@ if ($actionInt == 'edit_mode_int') {
         ?>
     </select><br>
     <select id="interest_date" name="interest_date">
-    <?php
-    include("../db.php");
-    $class_sql = "SELECT c.class_id, c.date_of_class, crs.course_name 
-                  FROM classes c
-                  INNER JOIN courses crs ON c.course_parent_id = crs.course_id"; 
-    $class_result = $conn->query($class_sql);
-    echo "<option value='' " . (($actionPhase === 'create_mode_int') ? 'selected' : '') . ">Select Class</option>";
-    if ($class_result->num_rows > 0) {
-        while ($class_row = $class_result->fetch_assoc()) {
-            $selected = ($class_row['class_id'] == $interest_date) ? 'selected' : '';
-            $display_text = $class_row['date_of_class'] . ' (' . $class_row['course_name'] . ')';
-            $option_value = $class_row['class_id'];
-            $encoded_display_text = htmlspecialchars($display_text);
-            echo "<option value='$option_value' $selected>$encoded_display_text</option>";
+        <?php
+        include("../db.php"); 
+        if($actionInt == 'edit_mode_int'){ 
+            echo "<option value=''>Select Class</option>";
+            $class_sql = "SELECT c.class_id, c.date_of_class, crs.course_name 
+                        FROM classes c
+                        INNER JOIN courses crs ON c.course_parent_id = crs.course_id WHERE course_parent_id = $course_parent_id"; 
+            $class_result = $conn->query($class_sql);
+            if ($class_result->num_rows > 0) {
+                while ($class_row = $class_result->fetch_assoc()) {
+                    $selected = ($class_row['class_id'] == $interest_date) ? 'selected' : ''; 
+                    $display_text = $class_row['date_of_class'] . ' (' . $class_row['course_name'] . ')';
+                    $option_value = $class_row['class_id'];
+                    $encoded_display_text = htmlspecialchars($display_text);
+                    echo "<option value='$option_value' $selected>$encoded_display_text</option>";
+                }
+            } else {
+                echo "<option value='' selected>No classes available</option>";
+            }
+        } else {
+            echo "<option value='' selected>Select Class</option>";
         }
-    }
-    ?>
+        ?>
     </select><br>
     <select id="interest_status" name="interest_status">
         <option value="Select" <?php echo ($actionInt === 'create_mode_int') ? 'selected' : ''; ?>>Select</option>
