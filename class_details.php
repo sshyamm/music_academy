@@ -1,65 +1,68 @@
 <?php
-    require_once 'includes/header.php';
-    require_once 'includes/config.php';
+require_once 'includes/header.php';
+require_once 'includes/config.php';
 
-    if(!isset($_SESSION['user_type'])) {
-        header("Location: login.php");
-        exit();
-    }
+if (!isset($_SESSION['user_type'])) {
+    header("Location: login.php");
+    exit();
+}
 
-    if(isset($_GET['class_id'])) {
-        $class_id = $_GET['class_id'];
+if (isset($_GET['class_id'])) {
+    $class_id = $_GET['class_id'];
 
-        $sql = "SELECT ti.*, 
-                       c.course_name,
-                       c.course_desc,
-                       us.user_name AS teacher_name,
-                       cr.class_room_id,
-                       cr.user_parent_id AS student_id,
-                       stu.user_name AS student_name,
-                       s.email AS student_email
-                FROM classes ti
-                LEFT JOIN courses c ON ti.course_parent_id = c.course_id
-                LEFT JOIN users us ON ti.user_parent_id = us.user_id
-                LEFT JOIN class_rooms cr ON ti.class_id = cr.class_parent_id
-                LEFT JOIN users stu ON cr.user_parent_id = stu.user_id
-                LEFT JOIN students s ON stu.user_id = s.user_parent_id
-                WHERE ti.class_id = :class_id";
+    $sql = "SELECT ti.*, 
+                   c.course_name,
+                   c.course_desc,
+                   us.user_name AS teacher_name,
+                   cr.class_room_id,
+                   cr.user_parent_id AS student_id,
+                   stu.user_name AS student_name,
+                   s.email AS student_email
+            FROM classes ti
+            LEFT JOIN courses c ON ti.course_parent_id = c.course_id
+            LEFT JOIN users us ON ti.user_parent_id = us.user_id
+            LEFT JOIN class_rooms cr ON ti.class_id = cr.class_parent_id
+            LEFT JOIN users stu ON cr.user_parent_id = stu.user_id
+            LEFT JOIN students s ON stu.user_id = s.user_parent_id
+            WHERE ti.class_id = :class_id";
 
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':class_id', $class_id);
-        $stmt->execute();
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':class_id', $class_id);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if($data) {
-            $row = $data[0];
+    if ($data) {
+        $row = $data[0];
 
-            $course_name = $row['course_name'];
-            $course_desc = $row['course_desc'];
-            $teacher_name = $row['teacher_name'];
-            $start_time = $row['start_time'];
-            $end_time = $row['end_time'];
-            $date_of_class = $row['date_of_class'];
-            $class_status = $row['class_status'];
+        $course_name = $row['course_name'];
+        $course_desc = $row['course_desc'];
+        $teacher_name = $row['teacher_name'];
+        $start_time = $row['start_time'];
+        $end_time = $row['end_time'];
+        $date_of_class = $row['date_of_class'];
+        $class_status = $row['class_status'];
 
-            $students = [];
-            foreach ($data as $student) {
+        $students = [];
+
+        foreach ($data as $student) {
+            if (!is_null($student['student_name']) && !is_null($student['student_email']) && !is_null($student['class_room_id'])) {
                 $students[] = [
                     'name' => $student['student_name'],
                     'email' => $student['student_email'],
-                    'class_room_id' => $student['class_room_id'] 
+                    'class_room_id' => $student['class_room_id']
                 ];
             }
-        } else {
-            echo "No class found for the provided ID.";
-            exit(); 
         }
     } else {
-        echo "Class ID is not provided.";
-        exit(); 
+        $students = [];
+        echo "No class found for the provided ID.";
+        exit();
     }
+} else {
+    echo "Class ID is not provided.";
+    exit();
+}
 ?>
-
 <main class="custom-main">
     <div class="container mt-5">
         <h2 class="text-center mb-4">Class Details</h2>
@@ -103,16 +106,17 @@
                                 <?php } ?>
                             </tr>
                         </thead>
+                    <?php if (!empty($students)) { ?>
                         <tbody>
                             <?php
-                                $count = 1;
-                                foreach ($students as $student) {
-                                    echo "<tr>";
-                                    echo "<td>" . $count . "</td>";
-                                    echo "<td>" . $student['name'] . "</td>";
-                                    echo "<td>" . $student['email'] . "</td>";
-                                    if ($_SESSION['user_type'] === 'Teacher') {
-                                        echo "<td>
+                            $count = 1;
+                            foreach ($students as $student) {
+                                echo "<tr>";
+                                echo "<td>" . $count . "</td>";
+                                echo "<td>" . $student['name'] . "</td>";
+                                echo "<td>" . $student['email'] . "</td>";
+                                if ($_SESSION['user_type'] == 'Teacher') {
+                                    echo "<td>
                                                 <select class='form-control attendance-dropdown'>
                                                     <option value='Select'>Select</option>
                                                     <option value='Present'>Present</option>
@@ -120,16 +124,27 @@
                                                     <option value='Late'>Late</option>
                                                 </select>
                                             </td>";
-                                        echo "<td>
+                                    echo "<td>
                                                 <button class='btn btn-danger btn-sm delete-btn'>Delete</button>
                                             </td>";
-                                        echo "<td style='display: none;'><input type='hidden' class='class_room_id' value='" . $student['class_room_id'] . "'></td>";
-                                    }
-                                    echo "</tr>";
-                                    $count++;
-                                }                           
+                                    echo "<td style='display: none;'><input type='hidden' class='class_room_id' value='" . $student['class_room_id'] . "'></td>";
+                                }
+                                echo "</tr>";
+                                $count++;
+                            }
                             ?>
                         </tbody>
+                    <?php } else { ?>
+                        <tbody>
+                            <tr>
+                                <td colspan="5">
+                                    <div class="alert alert-info text-center" role="alert">
+                                        No students added
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    <?php } ?>
                     </table>
                 </div>
             </div>
