@@ -17,8 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($_FILES['task_file']['name'])) {
                 $file_name = $_FILES['task_file']['name'];
                 $file_tmp = $_FILES['task_file']['tmp_name'];
-                $uploadDir = '../../uploads/'; 
-                $task_file = $uploadDir . $file_name;
+                $uploadDir = '/opt/lampp/htdocs/music_academy/admin/getForms/uploads/'; 
+                $task_file = $file_name;
 
                 if (move_uploaded_file($file_tmp, $task_file)) {
                 } else {
@@ -49,8 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($_FILES['task_file']['name'])) {
                 $file_name = $_FILES['task_file']['name'];
                 $file_tmp = $_FILES['task_file']['tmp_name'];
-                $uploadDir = 'uploads/'; 
-                $task_file = $uploadDir . $file_name;
+                $uploadDir = '/opt/lampp/htdocs/music_academy/admin/getForms/uploads/'; 
+                $task_file = $file_name;
 
                 if (move_uploaded_file($file_tmp, $task_file)) {
                 } else {
