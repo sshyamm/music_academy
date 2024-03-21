@@ -73,8 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             $updated_at = date('Y-m-d H:i:s');
-
-            $sql = "UPDATE tasks SET task_title='$task_title', task_desc='$task_desc', assigned_to='$assigned_to', assigned_by='$assigned_by', deadline='$deadline', priority='$priority', updated_at='$updated_at', estimated_hours='$estimated_hours', file_path='$file_path', task_status='$task_status' WHERE task_id=$task_id";
+dline', priority='$priority', updated_at='$updated_at', estimated_hours='$estimated_hours', file_path='$file_path', task_status='$task_status' WHERE task_id=$task_id";
+            $sql = "UPDATE tasks SET task_title='$task_title', task_desc='$task_desc', assigned_to='$assigned_to', assigned_by='$assigned_by', deadline='$dea
             
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Task updated successfully.');

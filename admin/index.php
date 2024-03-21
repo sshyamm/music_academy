@@ -76,7 +76,7 @@
             outline: none;
             border-color: #007bff;
         }
-	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser { height: 20px; }
+	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn { height: 20px; }
     </style>
 </head>
 <body>
@@ -91,6 +91,7 @@
         <button onclick="showClass();">Class Manager</button>
         <button onclick="showPhase();">Class sessions</button>
         <button onclick="showInterest();">Interest Manager</button>
+        <button onclick="showAssgn();">Assignments</button>
     	</div>
     	<div class="button-row">
         <button onclick="showCourse();">Course Manager</button>
@@ -132,6 +133,17 @@
         		data: { course_parent_id: course_parent_id },
         		success: function(response) {
             		$('#interest_date').html(response);
+        		},
+    		});
+	}
+    function fetchDates_task() {
+    		var course_parent_id = $('#course_parent_id').val();
+    		$.ajax({
+        		url: 'getForms/get_dates.php',
+        		method: 'POST',
+        		data: { course_parent_id: course_parent_id },
+        		success: function(response) {
+            		$('#date_parent_id').html(response);
         		},
     		});
 	}
@@ -314,6 +326,18 @@
                 }
             };
             xmlhttp.open("GET", "indexes/phase_index.php", true); 
+            xmlhttp.send();
+        }
+        function showAssgn(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("selectContainer").innerHTML = this.responseText;
+                    document.querySelector(".button-container").innerHTML = "<h2>Tasks in a Class</h2><button onclick='returnToIndex()'>Return</button>";
+                    document.getElementById("searchContainer").innerHTML = `<marquee>Class Assignments</marquee>`;   
+                }
+            };
+            xmlhttp.open("GET", "indexes/assgn_index.php", true); 
             xmlhttp.send();
         }
         function showCourse() {
@@ -826,6 +850,40 @@
                     }
                 };
                 xmlhttp.open("GET", "forms/formInterest.php?actionInt=" + actionInt + "&interest_id=" + interest_id, true); 
+                xmlhttp.send();
+            }
+        }
+        function showFormAssgn(actionAssgn, task_id) {
+            if (actionAssgn == 'delete_mode_assgn') {
+                if (confirm('Are you sure you want to delete this task?')) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = JSON.parse(this.responseText);
+                            document.getElementById('responseMessageAssgn').innerHTML = response.message;
+                            if (response.success) {
+                                updateTableAssgn();
+                                setTimeout(function () {
+                                    document.getElementById('responseMessageAssgn').innerHTML = "";
+                                }, 3000);
+                            }
+                        }
+                    };
+
+                    var formData = new FormData();
+                    formData.append('actionAssgn', actionAssgn);
+                    formData.append('task_id', task_id);
+                    xmlhttp.open("POST", "getForms/getformAssgn.php", true); 
+                    xmlhttp.send(formData);
+                }
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("formContainerAssgn").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "forms/formAssgn.php?actionAssgn=" + actionAssgn + "&task_id=" + task_id, true); 
                 xmlhttp.send();
             }
         }
@@ -1429,6 +1487,52 @@
                 xmlhttp.send(formData);
             }
         }
+        function validateFormAssgn() {
+            var task_desc = document.getElementById("task_desc").value;
+            var course_parent_id = document.getElementById("course_parent_id").value;
+            var date_parent_id = document.getElementById("date_parent_id").value;
+            var task_status = document.getElementById("task_status").value;
+            
+            var alertMessage = "";
+
+            if (task_desc === "") {
+                alertMessage += "Please enter task description.\n";
+            }
+            if (course_parent_id === "") {
+                alertMessage += "Please select any course.\n";
+            }
+            if (date_parent_id === "") {
+                alertMessage += "Please select any date.\n";
+            }
+            if (task_status === "Select") {
+                alertMessage += "Please select any task status.\n";
+            }
+
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                var formData = new FormData(document.getElementById("createProductFormAssgn"));
+
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('responseMessageAssgn').innerHTML = response.message;
+                        if (response.success) {
+                            updateTableAssgn();
+                            document.getElementById('createProductFormAssgn').style.display = 'none';
+                            setTimeout(function () {
+                                document.getElementById('responseMessageAssgn').innerHTML = "";
+                            }, 3000);
+                        }
+                    }
+                };
+
+                xmlhttp.open("POST", "getForms/getformAssgn.php", true); 
+                xmlhttp.send(formData);
+            }
+        }
         function validateFormAge() {
             var age_group_name = document.querySelector('input[name="age_group_name"]:checked');
             var age_group_status = document.getElementById("age_group_status").value;
@@ -1648,6 +1752,16 @@
             xmlhttp.open("GET", "updateForms/updateformInterest.php", true); 
             xmlhttp.send();
         }
+        function updateTableAssgn() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("updateTableContainerAssgn").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "updateForms/updateformAssgn.php", true); 
+            xmlhttp.send();
+        }
         function updateTableUser() {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
@@ -1729,6 +1843,7 @@
     <div id="formContainerCourse"></div>
     <div id="formContainerLevel"></div>
     <div id="formContainerInterest"></div>
+    <div id="formContainerAssgn"></div>
     <div id="formContainerAge"></div>
     <div id="formContainerCity"></div>
     <div id="formContainerState"></div>

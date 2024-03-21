@@ -170,6 +170,7 @@ if (isset($_GET['class_id'])) {
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Task Description</th>
                                     <th>File Name</th>
                                     <th>Action</th>
                                 </tr>
@@ -187,6 +188,7 @@ if (isset($_GET['class_id'])) {
                                             if ($file != "." && $file != "..") {
                                                 echo "<tr>";
                                                 echo "<td>" . $count . "</td>";
+                                                echo "<td>Task description placeholder</td>";
                                                 echo "<td>" . $file . "</td>";
                                                 echo "<td><a href='uploads/" . $file . "' download>
                                                 <button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
