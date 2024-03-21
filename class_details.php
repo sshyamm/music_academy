@@ -154,7 +154,7 @@ if (isset($_GET['class_id'])) {
             <?php if($_SESSION['user_type'] == 'Teacher'): ?>
                 <div class="text-center">
                     <button class="btn btn-warning mr-2">Start Class</button>
-                    <a href="file_upload.php" class="btn btn-primary mr-2">Upload Task</a>
+                    <a href="file_upload.php?class_id=<?php echo $class_id; ?>" class="btn btn-primary mr-2">Upload Task</a>
                     <a href="add_student.php?class_id=<?php echo $class_id; ?>" class="btn btn-secondary">Add Students</a>
                 </div>
                 <span>&nbsp;</span>
@@ -177,32 +177,49 @@ if (isset($_GET['class_id'])) {
                             </thead>
                             <tbody>
                                 <?php
-                                    $directory = "uploads/";
+                                $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
 
-                                    if (is_dir($directory)) {
-                                        $files = scandir($directory);
+                                if (is_dir($directory)) {
+                                    $course_parent_id = $row['course_parent_id'];
+                                    $sql = "SELECT task_id, task_desc, task_file FROM class_tasks WHERE date_parent_id = :class_id AND course_parent_id = :course_id";
+                                    $stmt = $db->prepare($sql);
+                                    $stmt->bindParam(':class_id', $class_id);
+                                    $stmt->bindParam(':course_id', $course_parent_id);
+                                    $stmt->execute();
+                                    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                                    if ($tasks) {
                                         $count = 1;
-
-                                        foreach ($files as $file) {
-                                            if ($file != "." && $file != "..") {
-                                                echo "<tr>";
-                                                echo "<td>" . $count . "</td>";
-                                                echo "<td>Task description placeholder</td>";
-                                                echo "<td>" . $file . "</td>";
-                                                echo "<td><a href='uploads/" . $file . "' download>
-                                                <button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
-                                                if ($_SESSION['user_type'] == 'Teacher') {
-                                                    echo "<button class='btn btn-danger btn-sm delete-btn'>Delete</button>";
-                                                }
-                                                echo "</td>";
-                                                echo "</tr>";
-                                                $count++;
+                                        foreach ($tasks as $task) {
+                                            echo "<tr>";
+                                            echo "<td>" . $count . "</td>";
+                                            echo "<td>" . $task['task_desc'] . "</td>";
+                                            $task_file = $task['task_file'];
+                                            echo "<td>";
+                                            if ($task_file && file_exists($directory . $task_file)) {
+                                                echo $task_file;
+                                            } else {
+                                                echo "No File Found";
                                             }
+                                            echo "</td>";
+                                            echo "<td>";
+                                            if ($task_file && file_exists($directory . $task_file)) {
+                                                echo "<a href='uploads/" . $task_file . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
+                                            }
+                                            if ($_SESSION['user_type'] == 'Teacher') {
+                                                echo "<button class='btn btn-danger btn-sm delete-tsk'>Delete Task</button>";
+                                                echo "<td style='display: none;'><input type='hidden' class='task_id' value='" . $task['task_id'] . "'></td>";
+                                            }
+                                            echo "</td>";
+                                            echo "</tr>";
+                                            $count++;
                                         }
                                     } else {
-                                        echo "<tr><td colspan='3'>No files found in the directory.</td></tr>";
+                                        echo "<tbody><tr><td colspan='4'><div class='alert alert-info text-center' role='alert'>No Tasks Assigned</div></td></tr></tbody>";
                                     }
+                                } else {
+                                    echo "<tr><td colspan='4'>No files found in the directory.</td></tr>";
+                                }
                                 ?>
                             </tbody>
                         </table>
@@ -275,6 +292,23 @@ if (isset($_GET['class_id'])) {
                 });
             }
         });
+        $(".delete-tsk").click(function() {
+    var taskId = $(this).closest("tr").find(".task_id").val();
+    var confirmation = confirm("Are you sure you want to delete this task?");
+    if (confirmation) {
+        $.ajax({
+            url: 'delete_task.php',
+            method: 'POST',
+            data: { task_id: taskId },
+            success: function(response) {
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert("Error deleting task: " + error);
+            }
+        });
+    }
+});
     });
 </script>
 <?php require_once 'includes/footer.php'; ?>

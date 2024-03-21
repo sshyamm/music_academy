@@ -1,78 +1,103 @@
-<?php require_once 'includes/header.php'; ?>
-<div id="res" class="alert alert-success" role="alert"></div>
+<?php 
+require_once 'includes/header.php';
+require_once 'includes/config.php';
+
+$class_id = isset($_GET['class_id']) ? $_GET['class_id'] : ''; 
+?>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <main class="custom-main">
-<div class="container up-form">
-    <form id="uploadF" enctype="multipart/form-data">
-        <h2 class="text-center mb-4">File Upload</h2>
-        <div class="form-group">
-            <label for="fileToUpload">Select image to upload:</label>
-            <input type="file" class="form-control-file" name="fileToUpload" id="fileToUpload">
-        </div><br>
+    <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-auto" style="width: 33.33%;">
-                <button type="button" class="btn btn-primary btn-block" id="upBtn">Import</button>
+            <div class="col-md-7">
+            <div class="card" style="box-shadow: 0 0.8rem 3rem rgba(0, 0, 0, 0.4); border-radius: 1.5rem;">
+                <div class="card-header bg-warning text-dark">
+                Upload Task
+                </div>
+                <div class="card-body">
+                <form id="uploadForm" name="uploadForm" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                    <label for="task_desc" class="form-label">Task Description</label>
+                    <textarea class="form-control" id="task_desc" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                    <label for="task_file" class="form-label">Task File</label>
+                    <input class="form-control" type="file" id="task_file">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="upBtn">Upload</button><span>&nbsp;</span>
+                    <button type="reset" class="btn btn-secondary">Reset</button><span>&nbsp;</span>
+                    <button type="button" class="btn btn-danger" onclick="window.location.href = 'class_details.php?class_id=<?php echo $class_id; ?>'">Return</button>
+                    </div>
+                    <div id="progressContainer" class="mt-3" style="display: none;">
+                    <div class="progress" style="height: 12px;">
+                        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    </div>
+                </form>
+                </div>
             </div>
-            <div class="col-auto" style="width: 33.33%;">
-                <button type="button" class="btn btn-secondary btn-block" id="rstBtn">Reset</button>
-            </div>
-            <div class="col-auto" style="width: 33.33%;">
-            <a href="class_details.php" class="btn btn-danger btn-block">Return</a>
             </div>
         </div>
-        <br>
-        <div id="prog">
-            <div id="prog-bar"></div>
-        </div>
-    </form>
-</div>
-    </main>
-    <?php require_once 'includes/footer.php'; ?>
+    </div>
+</main>
+<?php require_once 'includes/footer.php'; ?>
 <script>
-    $(document).ready(function () {
-        $('#upBtn').click(function () {
-            startUpload();
-        });
-        $('#rstBtn').click(function () {
-            $('#uploadF')[0].reset();
-        });
+$(document).ready(function() {
+    $('#upBtn').click(function() {
+        handleProgressBar();
     });
+});
 
-    function startUpload() {
-        $('#prog').show();
+function handleProgressBar() {
+    $('#progressContainer').css('display', 'block');
+    var progress = 0;
+    var interval = setInterval(function() {
+        progress += 10;
+        $('#progressBar').css('width', progress + '%');
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(function() {
+                $('#progressContainer').hide();
+                $('#progressBar').css('width', '0%');
+                sendFormData(); 
+            }, 500); 
+        }
+    }, 100); 
+}
 
-        var progressBar = $('#prog-bar');
-        var width = 0;
-        var interval = setInterval(function () {
-            width += 1;
-            progressBar.css('width', width + '%');
-            if (width >= 100) {
-                clearInterval(interval);
-                proceed();
+function sendFormData() {
+    var task_desc = $('#task_desc').val().trim();
+    if (task_desc === '') {
+        alert('Task description cannot be empty.');
+        return; 
+    }
+    var task_file = $('#task_file')[0].files[0];
+    var formData = new FormData($('#uploadForm')[0]);
+    
+    formData.append('class_id', '<?php echo $class_id; ?>');
+    
+    formData.append('task_desc', task_desc);
+    formData.append('task_file', task_file);
+
+    $.ajax({
+        url: 'insert_task.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false, 
+        success: function(response) {
+            var jsonResponse = JSON.parse(response);
+            if (jsonResponse.success) {
+                $('#task_desc').val(''); 
+                $('#task_file').val('');
+                alert(jsonResponse.message); 
+            } else {
+                alert("An error occurred: " + jsonResponse.message); 
             }
-        }, 15);
-    }
-
-    function proceed() {
-        $('#prog').hide();
-        var formData = new FormData($('#uploadF')[0]);
-        $.ajax({
-            url: 'upload.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                showMessage(response);
-            }
-        });
-    }
-
-    function showMessage(message) {
-        var resultDiv = $('#res');
-        resultDiv.text(message);
-        resultDiv.show();
-        setTimeout(function () {
-            resultDiv.hide();
-        }, 3000);
-    }
+        },
+        error: function() {
+            alert("An error occurred while processing your request.");
+        }
+    });
+}
 </script>

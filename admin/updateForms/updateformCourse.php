@@ -13,8 +13,8 @@ if ($result->num_rows > 0) {
         echo "<td>{$row['course_id']}</td>";
         echo "<td>{$row['course_name']}</td>";
         echo "<td>{$row['course_desc']}</td>";
-        echo "<td>{$row['course_img']}</td>";
-        echo "<td>{$row['course_icon']}</td>";
+        echo "<td><img src='getForms/uploads/{$row['course_img']}' alt='Course Image'></td>";
+        echo "<td><img src='getForms/uploads/{$row['course_icon']}' alt='Course Icon'></td>";
         echo "<td>{$row['course_status']}</td>";
         echo "<td>";
         echo "<button onclick=\"showFormCourse('edit_mode_course', {$row['course_id']})\">Edit</button>";
