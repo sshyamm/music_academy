@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['task_desc'])) {
     $stmt->bindParam(':course_parent_id', $course_parent_id);
 
     if ($stmt->execute()) {
-        echo json_encode(array("success" => true, "message" => "Task inserted successfully."));
+        echo json_encode(array("success" => true, "message" => "Task created successfully."));
         exit();
     } else {
         echo json_encode(array("success" => false, "message" => "Error occurred."));

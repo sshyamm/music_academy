@@ -6,6 +6,8 @@ $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : '';
 ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <main class="custom-main">
+<span>&nbsp;</span>
+<h2 id="signup-message">&nbsp;</h2>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-7">
@@ -51,7 +53,7 @@ $(document).ready(function() {
 function handleFormData() {
     var task_desc = $('#task_desc').val().trim();
     if (task_desc === '') {
-        alert('Task description cannot be empty.');
+        showMessage('Task description cannot be empty.');
         return;
     }
     
@@ -96,14 +98,21 @@ function sendFormData() {
             if (jsonResponse.success) {
                 $('#task_desc').val('');
                 $('#task_file').val('');
-                alert(jsonResponse.message);
+                showMessage(jsonResponse.message); 
             } else {
-                alert("An error occurred: " + jsonResponse.message);
+                showMessage("An error occurred: " + jsonResponse.message); 
             }
         },
         error: function() {
-            alert("An error occurred while processing your request.");
+            showMessage("An error occurred while processing your request.");
         }
     });
+}
+
+function showMessage(message) {
+    $('#signup-message').text(message);
+    setTimeout(function() {
+        $('#signup-message').text('');
+    }, 2500);
 }
 </script>
