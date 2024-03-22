@@ -44,9 +44,19 @@ $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : '';
 <script>
 $(document).ready(function() {
     $('#upBtn').click(function() {
-        handleProgressBar();
+        handleFormData();
     });
 });
+
+function handleFormData() {
+    var task_desc = $('#task_desc').val().trim();
+    if (task_desc === '') {
+        alert('Task description cannot be empty.');
+        return;
+    }
+    
+    handleProgressBar();
+}
 
 function handleProgressBar() {
     $('#progressContainer').css('display', 'block');
@@ -59,23 +69,19 @@ function handleProgressBar() {
             setTimeout(function() {
                 $('#progressContainer').hide();
                 $('#progressBar').css('width', '0%');
-                sendFormData(); 
-            }, 500); 
+                sendFormData();
+            }, 500);
         }
-    }, 100); 
+    }, 100);
 }
 
 function sendFormData() {
     var task_desc = $('#task_desc').val().trim();
-    if (task_desc === '') {
-        alert('Task description cannot be empty.');
-        return; 
-    }
     var task_file = $('#task_file')[0].files[0];
     var formData = new FormData($('#uploadForm')[0]);
-    
+
     formData.append('class_id', '<?php echo $class_id; ?>');
-    
+
     formData.append('task_desc', task_desc);
     formData.append('task_file', task_file);
 
@@ -84,15 +90,15 @@ function sendFormData() {
         type: 'POST',
         data: formData,
         contentType: false,
-        processData: false, 
+        processData: false,
         success: function(response) {
             var jsonResponse = JSON.parse(response);
             if (jsonResponse.success) {
-                $('#task_desc').val(''); 
+                $('#task_desc').val('');
                 $('#task_file').val('');
-                alert(jsonResponse.message); 
+                alert(jsonResponse.message);
             } else {
-                alert("An error occurred: " + jsonResponse.message); 
+                alert("An error occurred: " + jsonResponse.message);
             }
         },
         error: function() {

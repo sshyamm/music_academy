@@ -107,12 +107,13 @@ class Student{
     }
 
     public function updateTeacher(){
-        $check_stmt = $this->conn->prepare("SELECT * FROM $this->table_teach WHERE user_parent_id = :user_parent_id");
+        $check_stmt = $this->conn->prepare("SELECT * FROM teachers WHERE user_parent_id = :user_parent_id");
         $check_stmt->bindParam(':user_parent_id', $this->user_parent_id);
         $check_stmt->execute();
         
         if ($check_stmt->rowCount() === 0) {
-            return array('error' => 'Teacher does not exist');
+            echo json_encode(array('error' => 'Teacher does not exist'));
+            exit();
         }
     
         $duplicate_stmt = $this->conn->prepare("SELECT * FROM users WHERE user_name = :user_name AND user_id != :user_id");
@@ -121,7 +122,7 @@ class Student{
         $duplicate_stmt->execute();
     
         if ($duplicate_stmt->rowCount() > 0) {
-            return array('error' => 'Teacher name already exists');
+            echo json_encode(array('error' => 'Teacher name already exists'));
         }
     
         $update_stmt = $this->conn->prepare("UPDATE $this->table_teach s
@@ -141,7 +142,7 @@ class Student{
         if ($update_stmt->rowCount() > 0) {
             return true;
         } else {
-            return array('error' => 'Failed to update teacher details');
+            echo json_encode(array('error' => 'Failed to update teacher details'));
         }
     }
 }

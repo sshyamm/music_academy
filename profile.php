@@ -1,7 +1,6 @@
 <?php require_once 'includes/header.php'; ?>
 
 <?php
-session_start(); 
 require_once 'includes/config.php';
 $user_id = $_SESSION['user_id'];
 $user_type = $_SESSION['user_type'];

@@ -41,7 +41,6 @@ $actionInt = isset($_GET['actionInt']) ? $_GET['actionInt'] : 'create_mode_int';
 $user_parent_id = '';
 $course_parent_id = '';
 $level_parent_id = '';
-$interest_date= '';
 $interest_status = '';
 
 include("../db.php");
@@ -58,7 +57,6 @@ if ($actionInt == 'edit_mode_int') {
             $user_parent_id = $row["user_parent_id"];
             $course_parent_id = $row["course_parent_id"];
             $level_parent_id = $row["level_parent_id"];
-            $interest_date = $row["interest_date"];
             $interest_status = $row["interest_status"];
         }
     }
@@ -80,7 +78,7 @@ if ($actionInt == 'edit_mode_int') {
         }
         ?>
     </select><br>
-    <select id="course_parent_id" name="course_parent_id" onChange="fetchDates();">
+    <select id="course_parent_id" name="course_parent_id">
     <?php
     require_once("../db.php");
     $course_sql = "SELECT * FROM courses";
@@ -104,31 +102,6 @@ if ($actionInt == 'edit_mode_int') {
                 $selected = ($level_row['level_id'] == $level_parent_id) ? 'selected' : '';
                 echo "<option value='" . $level_row['level_id'] . "' $selected>" . $level_row['level_name'] . "</option>";
             }
-        }
-        ?>
-    </select><br>
-    <select id="interest_date" name="interest_date">
-        <?php
-        include("../db.php"); 
-        if($actionInt == 'edit_mode_int'){ 
-            echo "<option value=''>Select Class</option>";
-            $class_sql = "SELECT c.class_id, c.date_of_class, crs.course_name 
-                        FROM classes c
-                        INNER JOIN courses crs ON c.course_parent_id = crs.course_id WHERE course_parent_id = $course_parent_id"; 
-            $class_result = $conn->query($class_sql);
-            if ($class_result->num_rows > 0) {
-                while ($class_row = $class_result->fetch_assoc()) {
-                    $selected = ($class_row['class_id'] == $interest_date) ? 'selected' : ''; 
-                    $display_text = $class_row['date_of_class'] . ' (' . $class_row['course_name'] . ')';
-                    $option_value = $class_row['class_id'];
-                    $encoded_display_text = htmlspecialchars($display_text);
-                    echo "<option value='$option_value' $selected>$encoded_display_text</option>";
-                }
-            } else {
-                echo "<option value='' selected>No classes available</option>";
-            }
-        } else {
-            echo "<option value='' selected>Select Class</option>";
         }
         ?>
     </select><br>

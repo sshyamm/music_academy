@@ -9,12 +9,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_parent_id = $_POST['user_parent_id'];
             $course_parent_id = $_POST['course_parent_id'];
             $level_parent_id = $_POST['level_parent_id'];
-            $interest_date = $_POST['interest_date'];
             $interest_status = $_POST['interest_status'];
             
 
-            $sql = "INSERT INTO interests (user_parent_id, course_parent_id, level_parent_id, interest_date, interest_status)
-                    VALUES ('$user_parent_id', '$course_parent_id', '$level_parent_id', '$interest_date','$interest_status')";
+            $sql = "INSERT INTO interests (user_parent_id, course_parent_id, level_parent_id, interest_status)
+                    VALUES ('$user_parent_id', '$course_parent_id', '$level_parent_id','$interest_status')";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Interest created successfully!!');
@@ -28,10 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_parent_id = $_POST['user_parent_id'];
             $course_parent_id = $_POST['course_parent_id'];
             $level_parent_id = $_POST['level_parent_id'];
-            $interest_date = $_POST['interest_date'];
             $interest_status = $_POST['interest_status'];
 
-            $sql = "UPDATE interests SET user_parent_id='$user_parent_id', course_parent_id='$course_parent_id', level_parent_id='$level_parent_id', interest_date='$interest_date', interest_status='$interest_status' WHERE interest_id=$interest_id";
+            $sql = "UPDATE interests SET user_parent_id='$user_parent_id', course_parent_id='$course_parent_id', level_parent_id='$level_parent_id', interest_status='$interest_status' WHERE interest_id=$interest_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Interest updated successfully!!');
