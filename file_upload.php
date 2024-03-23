@@ -3,6 +3,23 @@ require_once 'includes/header.php';
 require_once 'includes/config.php';
 
 $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : ''; 
+$edit_task_id = isset($_GET['edit_task_id']) ? $_GET['edit_task_id'] : '';
+
+$task_desc = '';
+if (!empty($edit_task_id)) {
+    $sql = "SELECT task_desc FROM class_tasks WHERE task_id = :task_id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':task_id', $edit_task_id);
+    $stmt->execute();
+    $task = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($task) {
+        $task_desc = $task['task_desc'];
+    } else {
+        echo "Task details not found for the provided edit_task_id.";
+        exit();
+    }
+}
 ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <main class="custom-main">
@@ -13,20 +30,20 @@ $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : '';
             <div class="col-md-7">
             <div class="card" style="box-shadow: 0 0.8rem 3rem rgba(0, 0, 0, 0.4); border-radius: 1.5rem;">
                 <div class="card-header bg-warning text-dark">
-                Upload Task
+                <?php echo !empty($edit_task_id) ? 'Edit Task' : 'Upload Task'; ?>
                 </div>
                 <div class="card-body">
                 <form id="uploadForm" name="uploadForm" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                     <label for="task_desc" class="form-label">Task Description</label>
-                    <textarea class="form-control" id="task_desc" rows="3"></textarea>
+                    <textarea class="form-control" id="task_desc" rows="3"><?php echo $task_desc; ?></textarea>
                     </div>
                     <div class="mb-3">
                     <label for="task_file" class="form-label">Task File</label>
                     <input class="form-control" type="file" id="task_file">
                     </div>
                     <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary" id="upBtn">Upload</button><span>&nbsp;</span>
+                    <button type="button" class="btn btn-primary" id="upBtn"><?php echo !empty($edit_task_id) ? 'Update' : 'Upload'; ?></button><span>&nbsp;</span>
                     <button type="reset" class="btn btn-secondary">Reset</button><span>&nbsp;</span>
                     <button type="button" class="btn btn-danger" onclick="window.location.href = 'class_details.php?class_id=<?php echo $class_id; ?>'">Return</button>
                     </div>
@@ -83,6 +100,9 @@ function sendFormData() {
     var formData = new FormData($('#uploadForm')[0]);
 
     formData.append('class_id', '<?php echo $class_id; ?>');
+    <?php if (!empty($edit_task_id)) : ?>
+    formData.append('edit_task_id', '<?php echo $edit_task_id; ?>');
+    <?php endif; ?>
 
     formData.append('task_desc', task_desc);
     formData.append('task_file', task_file);

@@ -242,7 +242,8 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                                 echo "<a href='uploads/" . $task_file . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
                                             }
                                             if ($_SESSION['user_type'] == 'Teacher') {
-                                                echo "<button class='btn btn-danger btn-sm delete-tsk'>Delete Task</button>";
+                                                echo "<button class='btn btn-warning btn-sm edit-tsk'>Edit Task</button>";
+                                                echo "<span>&nbsp;</span><button class='btn btn-danger btn-sm delete-tsk'>Delete Task</button>";
                                                 echo "<td style='display: none;'><input type='hidden' class='task_id' value='" . $task['task_id'] . "'></td>";
                                             }
                                             echo "</td>";
@@ -315,6 +316,10 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                         console.error("Error updating class status: " + error);
                     }
                 });
+            });
+            $(".edit-tsk").click(function() {
+                var taskId = $(this).closest("tr").find(".task_id").val();
+                window.location.href = "file_upload.php?class_id=<?php echo $class_id; ?>&edit_task_id=" + taskId;
             });
                 <?php if ($attendanceVisible): ?>
                 $("#attendance-heading").show();
