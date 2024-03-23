@@ -1138,8 +1138,8 @@
         function validateFormClass() {
             var course_parent_id = document.getElementById("course_parent_id").value;
             var user_parent_id = document.getElementById("user_parent_id").value;
-            var start_time = document.getElementById("start_time").value;
-            var end_time = document.getElementById("end_time").value;
+            var sched_start_time = document.getElementById("sched_start_time").value;
+            var sched_end_time = document.getElementById("sched_end_time").value;
             var date_of_class = document.getElementById("date_of_class").value;
             var class_status = document.getElementById("class_status").value;
             
@@ -1151,10 +1151,10 @@
             if (user_parent_id === "") {
                 alertMessage += "Please select teacher.\n";
             }
-            if (start_time === "") {
+            if (sched_start_time === "") {
                 alertMessage += "Please select start time.\n";
             }
-            if (end_time === "") {
+            if (sched_end_time === "") {
                 alertMessage += "Please select end time.\n";
             }
             if (date_of_class === "") {

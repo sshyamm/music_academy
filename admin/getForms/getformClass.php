@@ -8,15 +8,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case 'create_mode_class':
             $course_parent_id = $_POST['course_parent_id'];
             $user_parent_id = $_POST['user_parent_id'];
-            $start_time = $_POST['start_time'];
-            $end_time = $_POST['end_time'];
+            $sched_start_time = $_POST['sched_start_time'];
+            $sched_end_time = $_POST['sched_end_time'];
             $date_of_class = $_POST['date_of_class'];
             $created_at = date('Y-m-d H:i:s');
             $updated_at = $created_at;
             $class_status = $_POST['class_status'];
 
-            $sql = "INSERT INTO classes (course_parent_id, user_parent_id, start_time, end_time, date_of_class, created_at, updated_at, class_status)
-                    VALUES ('$course_parent_id', '$user_parent_id', '$start_time', '$end_time', '$date_of_class', '$created_at', '$updated_at', '$class_status')";
+            $sql = "INSERT INTO classes (course_parent_id, user_parent_id, sched_start_time, sched_end_time, date_of_class, created_at, updated_at, class_status)
+                    VALUES ('$course_parent_id', '$user_parent_id', '$sched_start_time', '$sched_end_time', '$date_of_class', '$created_at', '$updated_at', '$class_status')";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Class created successfully!!');
@@ -29,13 +29,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $class_id = $_POST['class_id'];
             $course_parent_id = $_POST['course_parent_id'];
             $user_parent_id = $_POST['user_parent_id'];
-            $start_time = $_POST['start_time'];
-            $end_time = $_POST['end_time'];
+            $sched_start_time = $_POST['sched_start_time'];
+            $sched_end_time = $_POST['sched_end_time'];
             $date_of_class = $_POST['date_of_class'];
             $updated_at = date('Y-m-d H:i:s'); 
             $class_status = $_POST['class_status'];
 
-            $sql = "UPDATE classes SET course_parent_id='$course_parent_id', user_parent_id='$user_parent_id', start_time='$start_time', end_time='$end_time', date_of_class='$date_of_class', updated_at='$updated_at', class_status='$class_status' WHERE class_id=$class_id";
+            $sql = "UPDATE classes SET course_parent_id='$course_parent_id', user_parent_id='$user_parent_id', sched_start_time='$sched_start_time', sched_end_time='$sched_end_time', date_of_class='$date_of_class', updated_at='$updated_at', class_status='$class_status' WHERE class_id=$class_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Class updated successfully!!');

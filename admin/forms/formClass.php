@@ -41,8 +41,8 @@
 $actionClass = isset($_GET['actionClass']) ? $_GET['actionClass'] : 'create_mode_class';
 $course_parent_id = '';
 $user_parent_id = '';
-$start_time = '';
-$end_time = '';
+$sched_start_time = '';
+$sched_end_time = '';
 $date_of_class = '';
 $class_status = '';
 
@@ -58,8 +58,8 @@ if ($actionClass == 'edit_mode_class') {
             $row = $res_sql->fetch_assoc();
             $course_parent_id = $row["course_parent_id"];
             $user_parent_id = $row["user_parent_id"];
-	    $start_time = $row["start_time"];
-	    $end_time = $row["end_time"];
+	    $sched_start_time = $row["sched_start_time"];
+	    $sched_end_time = $row["sched_end_time"];
             $date_of_class = $row["date_of_class"];
             $class_status = $row["class_status"];
         }
@@ -105,8 +105,8 @@ if ($actionClass == 'edit_mode_class') {
     }
     ?>
     </select><br>
-    <input type="time" id="start_time" name="start_time" <?php echo $actionClass !== 'create_mode_class' ? 'value="' . $start_time . '"' : ''; ?>><br>
-    <input type="time" id="end_time" name="end_time" <?php echo $actionClass !== 'create_mode_class' ? 'value="' . $end_time . '"' : ''; ?>><br>
+    <input type="time" id="sched_start_time" name="sched_start_time" <?php echo $actionClass !== 'create_mode_class' ? 'value="' . $sched_start_time . '"' : ''; ?>><br>
+    <input type="time" id="sched_end_time" name="sched_end_time" <?php echo $actionClass !== 'create_mode_class' ? 'value="' . $sched_end_time . '"' : ''; ?>><br>
     <input type="date" id="date_of_class" name="date_of_class" <?php echo $actionClass !== 'create_mode_class' ? 'value="' . $date_of_class . '"' : ''; ?>><br>
     <select id="class_status" name="class_status">
         <option value="Select" <?php echo ($actionClass === 'create_mode_class') ? 'selected' : ''; ?>>Select</option>

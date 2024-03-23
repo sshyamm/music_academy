@@ -17,8 +17,8 @@
             echo "<td>{$row['class_id']}</td>";
             echo "<td>{$row['course_name']}</td>";
             echo "<td>{$row['user_name']}</td>";
-            echo "<td>{$row['start_time']}</td>";
-            echo "<td>{$row['end_time']}</td>";
+            echo "<td>{$row['sched_start_time']}</td>";
+            echo "<td>{$row['sched_end_time']}</td>";
             echo "<td>{$row['date_of_class']}</td>";
             echo "<td>{$row['created_at']}</td>";
             echo "<td>{$row['updated_at']}</td>";

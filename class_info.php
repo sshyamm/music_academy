@@ -57,8 +57,8 @@
                     echo "<tr>";
                     echo "<td class='font-weight-bold'>" . $row['course_name'] . "</td>";
                     echo "<td class='font-weight-bold'>" . $row['user_name'] . "</td>";
-                    echo "<td>" . $row['start_time'] . "</td>";
-                    echo "<td>" . $row['end_time'] . "</td>";
+                    echo "<td>" . $row['sched_start_time'] . "</td>";
+                    echo "<td>" . $row['sched_end_time'] . "</td>";
                     echo "<td>" . $row['date_of_class'] . "</td>";
                     echo "<td>" . $row['class_status'] . "</td>";
                     echo "<td><a href='class_details.php?class_id=" . $row['class_id'] . "' class='btn btn-secondary view-students-btn'>View Details</a></td>";
