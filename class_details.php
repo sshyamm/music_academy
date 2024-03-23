@@ -38,8 +38,8 @@ $sql = "SELECT ti.*,
         $course_name = $row['course_name'];
         $course_desc = $row['course_desc'];
         $teacher_name = $row['teacher_name'];
-        $start_time = $row['start_time'];
-        $end_time = $row['end_time'];
+        $sched_start_time = $row['sched_start_time'];
+        $sched_end_time = $row['sched_end_time'];
         $date_of_class = $row['date_of_class'];
         $class_status = $row['class_status'];
         $actual_start_time = $row['actual_start_time'];
@@ -96,8 +96,8 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                     <div class="col-md-6">
                         <p><strong>Course:</strong> <?php echo $course_name; ?></p>
                         <p><strong>Teacher:</strong> <?php echo $teacher_name; ?></p>
-                        <p><strong>Start Time:</strong> <?php echo $start_time; ?></p>
-                        <p><strong>End Time:</strong> <?php echo $end_time; ?></p>
+                        <p><strong>Start Time:</strong> <?php echo $sched_start_time; ?></p>
+                        <p><strong>End Time:</strong> <?php echo $sched_end_time; ?></p>
                         <p><strong>Date:</strong> <?php echo $date_of_class; ?></p>
                         <p><strong>Class Status:</strong> <span class="badge badge-success"><?php echo $class_status; ?></span></p>
                     </div>
@@ -135,30 +135,31 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                 echo "<td>" . $count . "</td>";
                                 echo "<td>" . $student['name'] . "</td>";
                                 echo "<td>" . $student['email'] . "</td>";
+                                if ($_SESSION['user_type'] === 'Teacher') {
+                                    $attendanceStatus = $student['attendance_status'];
 
-                                $attendanceStatus = $student['attendance_status'];
+                                    if (!is_null($attendanceStatus)) {
+                                        echo "<td class=\"attendance-column\"";
+                                        if (!$attendanceVisible) echo " style=\"display: none;\"";
+                                        echo ">" . $attendanceStatus . "<span>&nbsp;</span><span class='text-success'><i class='bi bi-check-circle-fill'></i></span></td>";
+                                    } else {
+                                        echo "<td class=\"attendance-column\"";
+                                        if (!$attendanceVisible) echo " style=\"display: none;\"";
+                                        echo ">
+                                            <select class='form-control attendance-dropdown'>
+                                                <option value='Select'>Select</option>
+                                                <option value='Present'>Present</option>
+                                                <option value='Absent'>Absent</option>
+                                                <option value='Late'>Late</option>
+                                            </select>
+                                        </td>";
+                                    }
 
-                                if (!is_null($attendanceStatus)) {
-                                    echo "<td class=\"attendance-column\"";
-                                    if (!$attendanceVisible) echo " style=\"display: none;\"";
-                                    echo ">" . $attendanceStatus . "<span class='text-success'><i class='bi bi-check-circle-fill'></i></span></td>";
-                                } else {
-                                    echo "<td class=\"attendance-column\"";
-                                    if (!$attendanceVisible) echo " style=\"display: none;\"";
-                                    echo ">
-                                        <select class='form-control attendance-dropdown'>
-                                            <option value='Select'>Select</option>
-                                            <option value='Present'>Present</option>
-                                            <option value='Absent'>Absent</option>
-                                            <option value='Late'>Late</option>
-                                        </select>
+                                    echo "<td>
+                                        <button class='btn btn-danger btn-sm delete-btn'>Delete</button>
                                     </td>";
-                                }
-
-                                echo "<td>
-                                    <button class='btn btn-danger btn-sm delete-btn'>Delete</button>
-                                </td>";
-                                echo "<td style='display: none;'><input type='hidden' class='class_room_id' value='" . $student['class_room_id'] . "'></td>";
+                                    echo "<td style='display: none;'><input type='hidden' class='class_room_id' value='" . $student['class_room_id'] . "'></td>";
+                                }    
                                 echo "</tr>";
                                 $count++;
                             }
@@ -321,7 +322,7 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
             $("select.attendance-dropdown").change(function() {
                 var attendance = $(this).val(); 
                 var classRoomId = $(this).closest("tr").find(".class_room_id").val(); 
-                var tickSymbol = '<span class="text-success"><i class="bi bi-check-circle-fill"></i></span>';
+                var tickSymbol = '<span>&nbsp;</span><span class="text-success"><i class="bi bi-check-circle-fill"></i></span>';
                 var selectedText = $(this).find('option:selected').text() + " " + tickSymbol;
                 var selectedSpan = $('<span>').html(selectedText);
 
@@ -339,8 +340,8 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                 });
             });
             <?php if ($disableDropdowns): ?>
-        $(".attendance-column select").prop('disabled', true);
-    <?php endif; ?>
+                $(".attendance-column select").prop('disabled', true);
+            <?php endif; ?>
             $(".delete-btn").click(function() {
                 var classRoomId = $(this).closest("tr").find(".class_room_id").val();
                 var confirmation = confirm("Are you sure you want to delete this student?");
