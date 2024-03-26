@@ -212,58 +212,58 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
+                            <?php
+                            $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
 
-                                if (is_dir($directory)) {
-                                    $course_parent_id = $row['course_parent_id'];
-                                    $sql = "SELECT task_id, task_desc, task_deadline, task_file FROM class_tasks WHERE date_parent_id = :class_id AND course_parent_id = :course_id";
-                                    $stmt = $db->prepare($sql);
-                                    $stmt->bindParam(':class_id', $class_id);
-                                    $stmt->bindParam(':course_id', $course_parent_id);
-                                    $stmt->execute();
-                                    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            if (is_dir($directory)) {
+                                $course_parent_id = $row['course_parent_id'];
+                                $sql = "SELECT task_id, task_desc, task_deadline, task_file FROM class_tasks WHERE date_parent_id = :class_id AND course_parent_id = :course_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindParam(':class_id', $class_id);
+                                $stmt->bindParam(':course_id', $course_parent_id);
+                                $stmt->execute();
+                                $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                    if ($tasks) {
-                                        $count = 1;
-                                        foreach ($tasks as $task) {
-                                            echo "<tr>";
-                                            echo "<td>" . $count . "</td>";
-                                            echo "<td>" . $task['task_desc'] . "</td>";
-                                            $task_file = $task['task_file'];
-                                            echo "<td>";
-                                            if ($task_file && file_exists($directory . $task_file)) {
-                                                echo $task_file;
-                                            } else {
-                                                echo "No File Found";
-                                            }
-                                            echo "</td>";
-                                            echo "<td>" . $task['task_deadline'] . "</td>";
-                                            echo "<td>";
-                                            if ($task_file && file_exists($directory . $task_file)) {
-                                                echo "<a href='uploads/" . $task_file . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
-                                            }
-                                            if ($_SESSION['user_type'] == 'Student') {
-                                                echo "<a href='submit_task.php?task_id=" . $task['task_id'] . "&class_id=" . $class_id . "' class='btn btn-success btn-sm submit-tsk'>Submit Task</a>";
-                                                
-                                            }
-                                            if ($_SESSION['user_type'] == 'Teacher') {
-                                                echo "<button class='btn btn-warning btn-sm edit-tsk'>Edit Task</button>";
-                                                echo "<span>&nbsp;</span><button class='btn btn-danger btn-sm delete-tsk'>Delete Task</button>";
-                                                echo "<span>&nbsp;</span><button class='btn btn-success btn-sm view-tsk'>View Task</button>";
-                                                echo "<td style='display: none;'><input type='hidden' class='task_id' value='" . $task['task_id'] . "'></td>";
-                                            }
-                                            echo "</td>";
-                                            echo "</tr>";
-                                            $count++;
+                                if ($tasks) {
+                                    $count = 1;
+                                    foreach ($tasks as $task) {
+                                        echo "<tr>";
+                                        echo "<td>" . $count . "</td>";
+                                        echo "<td>" . $task['task_desc'] . "</td>";
+                                        $task_file = $task['task_file'];
+                                        $file_path = $directory . $task_file; 
+                                        echo "<td>";
+                                        if ($task_file && file_exists($file_path)) {
+                                            echo $task_file;
+                                        } else {
+                                            echo "No File Found";
                                         }
-                                    } else {
-                                        echo "<tbody><tr><td colspan='4'><div class='alert alert-info text-center' role='alert'>No Tasks Assigned</div></td></tr></tbody>";
+                                        echo "</td>";
+                                        echo "<td>" . $task['task_deadline'] . "</td>";
+                                        echo "<td>";
+                                        if ($task_file && file_exists($file_path)) {
+                                            echo "<a href='/music_academy/admin/getForms/uploads/" . $task_file . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
+                                        }
+                                        if ($_SESSION['user_type'] == 'Student') {
+                                            echo "<a href='submit_task.php?task_id=" . $task['task_id'] . "&class_id=" . $class_id . "' class='btn btn-success btn-sm submit-tsk'>Submit Task</a>";
+                                        }
+                                        if ($_SESSION['user_type'] == 'Teacher') {
+                                            echo "<button class='btn btn-warning btn-sm edit-tsk'>Edit Task</button>";
+                                            echo "<span>&nbsp;</span><button class='btn btn-danger btn-sm delete-tsk'>Delete Task</button>";
+                                            echo "<span>&nbsp;</span><button class='btn btn-success btn-sm view-tsk'>View Task</button>";
+                                            echo "<td style='display: none;'><input type='hidden' class='task_id' value='" . $task['task_id'] . "'></td>";
+                                        }
+                                        echo "</td>";
+                                        echo "</tr>";
+                                        $count++;
                                     }
                                 } else {
-                                    echo "<tr><td colspan='4'>No files found in the directory.</td></tr>";
+                                    echo "<tbody><tr><td colspan='5'><div class='alert alert-info text-center' role='alert'>No Tasks Assigned</div></td></tr></tbody>";
                                 }
-                                ?>
+                            } else {
+                                echo "<tr><td colspan='5'>No files found in the directory.</td></tr>";
+                            }
+                            ?>
                             </tbody>
                         </table>
                     </div>

@@ -143,49 +143,50 @@ $stmt_update_submit_status->execute();
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
+                            <?php
+                            $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
 
-                                if (is_dir($directory)) {
-                                    $sql = "SELECT task_manager_id, remark, file_path FROM tasks WHERE task_parent_id = :task_id AND user_parent_id = :user_id";
-                                    $stmt = $db->prepare($sql);
-                                    $stmt->bindParam(':task_id', $task_id);
-                                    $stmt->bindParam(':user_id', $user_id);
-                                    $stmt->execute();
-                                    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            if (is_dir($directory)) {
+                                $sql = "SELECT task_manager_id, remark, file_path FROM tasks WHERE task_parent_id = :task_id AND user_parent_id = :user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindParam(':task_id', $task_id);
+                                $stmt->bindParam(':user_id', $user_id);
+                                $stmt->execute();
+                                $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                    if ($tasks) {
-                                        $count = 1;
-                                        foreach ($tasks as $task) {
-                                            echo "<tr>";
-                                            echo "<td>" . $count . "</td>";
-                                            echo "<td>" . $task['remark'] . "</td>";
-                                            $file_path = $task['file_path'];
-                                            echo "<td>";
-                                            if ($file_path && file_exists($directory . $file_path)) {
-                                                echo $file_path;
-                                            } else {
-                                                echo "No File Found";
-                                            }
-                                            echo "</td>";
-                                            echo "<td>";
-                                            if ($file_path && file_exists($directory . $file_path)) {
-                                                echo "<a href='uploads/" . $file_path . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
-                                            }
-                                            echo "<button class='btn btn-warning btn-sm edit-sb'>Edit Submission</button>";
-                                            echo "<span>&nbsp;</span><button class='btn btn-danger btn-sm delete-sb'>Delete Submission</button>";
-                                            echo "<td style='display: none;'><input type='hidden' class='task_manager_id' value='" . $task['task_manager_id'] . "'></td>";
-                                            echo "</td>";
-                                            echo "</tr>";
-                                            $count++;
+                                if ($tasks) {
+                                    $count = 1;
+                                    foreach ($tasks as $task) {
+                                        echo "<tr>";
+                                        echo "<td>" . $count . "</td>";
+                                        echo "<td>" . $task['remark'] . "</td>";
+                                        $file_path = $task['file_path'];
+                                        $full_file_path = $directory . $file_path;
+                                        echo "<td>";
+                                        if ($file_path && file_exists($full_file_path)) {
+                                            echo $file_path;
+                                        } else {
+                                            echo "No File Found";
                                         }
-                                    } else {
-                                        echo "<tbody><tr><td colspan='4'><div class='alert alert-info text-center' role='alert'>No Submissions</div></td></tr></tbody>";
+                                        echo "</td>";
+                                        echo "<td>";
+                                        if ($file_path && file_exists($full_file_path)) {
+                                            echo "<a href='/music_academy/admin/getForms/uploads/" . $file_path . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
+                                        }
+                                        echo "<button class='btn btn-warning btn-sm edit-sb'>Edit Submission</button>";
+                                        echo "<span>&nbsp;</span><button class='btn btn-danger btn-sm delete-sb'>Delete Submission</button>";
+                                        echo "<td style='display: none;'><input type='hidden' class='task_manager_id' value='" . $task['task_manager_id'] . "'></td>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                        $count++;
                                     }
                                 } else {
-                                    echo "<tr><td colspan='4'>No files found in the directory.</td></tr>";
+                                    echo "<tbody><tr><td colspan='4'><div class='alert alert-info text-center' role='alert'>No Submissions</div></td></tr></tbody>";
                                 }
-                                ?>
+                            } else {
+                                echo "<tr><td colspan='4'>No files found in the directory.</td></tr>";
+                            }
+                            ?>
                             </tbody>
                         </table>
                     </div>

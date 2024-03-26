@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
     $grading = isset($_POST['grading']) ? $_POST['grading'] : '';
 
-    $stmt = $db->prepare("UPDATE tasks SET comment = ?, grading = ?, submit_status = CASE WHEN ? <> '' THEN 'Graded & Completed' ELSE submit_status END WHERE task_manager_id = ?");
+    $stmt = $db->prepare("UPDATE tasks SET comment = ?, grading = ?, submit_status = CASE WHEN ? <> '' THEN 'Graded & Completed' ELSE 'Submitted For Review' END WHERE task_manager_id = ?");
     $stmt->execute([$comment, $grading, $grading, $task_manager_id]);
 
     if ($stmt->rowCount() > 0) {
