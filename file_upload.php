@@ -6,8 +6,9 @@ $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : '';
 $edit_task_id = isset($_GET['edit_task_id']) ? $_GET['edit_task_id'] : '';
 
 $task_desc = '';
+$task_deadline = '';
 if (!empty($edit_task_id)) {
-    $sql = "SELECT task_desc FROM class_tasks WHERE task_id = :task_id";
+    $sql = "SELECT task_desc,task_deadline FROM class_tasks WHERE task_id = :task_id";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':task_id', $edit_task_id);
     $stmt->execute();
@@ -15,6 +16,7 @@ if (!empty($edit_task_id)) {
 
     if ($task) {
         $task_desc = $task['task_desc'];
+        $task_deadline = $task['task_deadline'];
     } else {
         echo "Task details not found for the provided edit_task_id.";
         exit();
@@ -37,6 +39,10 @@ if (!empty($edit_task_id)) {
                     <div class="mb-3">
                     <label for="task_desc" class="form-label">Task Description</label>
                     <textarea class="form-control" id="task_desc" rows="3"><?php echo $task_desc; ?></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="task_deadline" class="form-label">Task Deadline</label>
+                        <input class="form-control" type="date" id="task_deadline" name="task_deadline" value="<?php echo $task_deadline; ?>">
                     </div>
                     <div class="mb-3">
                     <label for="task_file" class="form-label">Task File</label>
@@ -69,11 +75,18 @@ $(document).ready(function() {
 
 function handleFormData() {
     var task_desc = $('#task_desc').val().trim();
-    if (task_desc === '') {
-        showMessage('Task description cannot be empty.');
+    var task_deadline = $('#task_deadline').val().trim();
+    var alertMessage = "";
+    if (task_desc === "") {
+        alertMessage += "Task Description cannot be empty. ";
+    }
+    if (task_deadline === "") {
+        alertMessage += "Please select task deadline. ";
+    }
+    if (alertMessage !== ""){
+        showMessage(alertMessage);
         return;
     }
-    
     handleProgressBar();
 }
 
@@ -96,6 +109,7 @@ function handleProgressBar() {
 
 function sendFormData() {
     var task_desc = $('#task_desc').val().trim();
+    var task_deadline = $('#task_deadline').val().trim();
     var task_file = $('#task_file')[0].files[0];
     var formData = new FormData($('#uploadForm')[0]);
 
@@ -105,6 +119,7 @@ function sendFormData() {
     <?php endif; ?>
 
     formData.append('task_desc', task_desc);
+    formData.append('task_deadline', task_deadline);
     formData.append('task_file', task_file);
 
     $.ajax({
@@ -117,6 +132,7 @@ function sendFormData() {
             var jsonResponse = JSON.parse(response);
             if (jsonResponse.success) {
                 $('#task_desc').val('');
+                $('#task_deadline').val('');
                 $('#task_file').val('');
                 showMessage(jsonResponse.message); 
             } else {

@@ -48,11 +48,11 @@ $sql = "SELECT ti.*,
         $students = [];
 
         foreach ($data as $student) {
-            if (!is_null($student['student_name']) && !is_null($student['student_email']) && !is_null($student['class_room_id'])) {
+            if (!is_null($student['student_name']) && !is_null($student['class_room_id'])) {
                 $students[] = [
+                    'class_room_id' => $student['class_room_id'],
                     'name' => $student['student_name'],
                     'email' => $student['student_email'],
-                    'class_room_id' => $student['class_room_id'],
                     'attendance_status' => $student['attendance_status']
                 ];
             }
@@ -134,7 +134,7 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                 echo "<tr>";
                                 echo "<td>" . $count . "</td>";
                                 echo "<td>" . $student['name'] . "</td>";
-                                echo "<td>" . $student['email'] . "</td>";
+                                echo "<td>" . ($student['email'] ? $student['email'] : "Email Not Registered") . "</td>";
                                 if ($_SESSION['user_type'] === 'Teacher') {
                                     $attendanceStatus = $student['attendance_status'];
 
@@ -207,6 +207,7 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                     <th>#</th>
                                     <th>Task Description</th>
                                     <th>File Name</th>
+                                    <th>Task Deadline</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -216,7 +217,7 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
 
                                 if (is_dir($directory)) {
                                     $course_parent_id = $row['course_parent_id'];
-                                    $sql = "SELECT task_id, task_desc, task_file FROM class_tasks WHERE date_parent_id = :class_id AND course_parent_id = :course_id";
+                                    $sql = "SELECT task_id, task_desc, task_deadline, task_file FROM class_tasks WHERE date_parent_id = :class_id AND course_parent_id = :course_id";
                                     $stmt = $db->prepare($sql);
                                     $stmt->bindParam(':class_id', $class_id);
                                     $stmt->bindParam(':course_id', $course_parent_id);
@@ -237,6 +238,7 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                                 echo "No File Found";
                                             }
                                             echo "</td>";
+                                            echo "<td>" . $task['task_deadline'] . "</td>";
                                             echo "<td>";
                                             if ($task_file && file_exists($directory . $task_file)) {
                                                 echo "<a href='uploads/" . $task_file . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
