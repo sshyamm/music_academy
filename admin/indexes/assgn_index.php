@@ -53,7 +53,7 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     echo "<table>";
-    echo "<tr><th>ID</th><th>Task Description</th><th>Course Name</th><th>Date of class</th><th>Task file</th><th>Task Status</th><th>Action</th></tr>"; 
+    echo "<tr><th>ID</th><th>Task Description</th><th>Course Name</th><th>Date of class</th><th>Task file</th><th>Task Deadline</th><th>Task Status</th><th>Action</th></tr>"; 
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";
         echo "<td>{$row['task_id']}</td>";
@@ -61,6 +61,7 @@ if ($result->num_rows > 0) {
         echo "<td>{$row['course_name']}</td>";
         echo "<td>{$row['date_of_class']}</td>";
         echo "<td>{$row['task_file']}</td>";
+        echo "<td>{$row['task_deadline']}</td>";
         echo "<td>{$row['task_status']}</td>";
         echo "<td>";
         echo "<button onclick=\"showFormAssgn('edit_mode_assgn', {$row['task_id']})\">Edit</button>";

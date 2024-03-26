@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $task_desc = isset($_POST['task_desc']) ? trim($_POST['task_desc']) : '';
             $course_parent_id = isset($_POST['course_parent_id']) ? trim($_POST['course_parent_id']) : '';
             $date_parent_id = isset($_POST['date_parent_id']) ? trim($_POST['date_parent_id']) : '';
+            $task_deadline = isset($_POST['task_deadline']) ? trim($_POST['task_deadline']) : '';
             $task_file = '';
             $task_status = isset($_POST['task_status']) ? trim($_POST['task_status']) : '';
             
@@ -28,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            $sql = "INSERT INTO class_tasks (task_desc, course_parent_id, date_parent_id, task_file, task_status)
-                    VALUES ('$task_desc', '$course_parent_id', '$date_parent_id', '$task_file','$task_status')";
+            $sql = "INSERT INTO class_tasks (task_desc, course_parent_id, date_parent_id, task_file, task_deadline, task_status)
+                    VALUES ('$task_desc', '$course_parent_id', '$date_parent_id', '$task_file', '$task_deadline', '$task_status')";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Task created successfully!!');
@@ -43,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $task_desc = isset($_POST['task_desc']) ? trim($_POST['task_desc']) : '';
             $course_parent_id = isset($_POST['course_parent_id']) ? trim($_POST['course_parent_id']) : '';
             $date_parent_id = isset($_POST['date_parent_id']) ? trim($_POST['date_parent_id']) : '';
+            $task_deadline = isset($_POST['task_deadline']) ? trim($_POST['task_deadline']) : '';
             $task_file = '';
             $task_status = isset($_POST['task_status']) ? trim($_POST['task_status']) : '';
 
@@ -60,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            $sql = "UPDATE class_tasks SET task_desc='$task_desc', course_parent_id='$course_parent_id', date_parent_id='$date_parent_id', task_file='$task_file', task_status='$task_status' WHERE task_id=$task_id";
+            $sql = "UPDATE class_tasks SET task_desc='$task_desc', course_parent_id='$course_parent_id', date_parent_id='$date_parent_id', task_file='$task_file', task_deadline='$task_deadline', task_status='$task_status' WHERE task_id=$task_id";
 
             if ($conn->query($sql) === TRUE) {
                 $response = array('success' => true, 'message' => 'Task updated successfully!!');

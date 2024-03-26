@@ -241,9 +241,14 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                                             if ($task_file && file_exists($directory . $task_file)) {
                                                 echo "<a href='uploads/" . $task_file . "' download><button class='btn btn-primary btn-sm'>Download</button></a><span>&nbsp;</span>";
                                             }
+                                            if ($_SESSION['user_type'] == 'Student') {
+                                                echo "<a href='submit_task.php?task_id=" . $task['task_id'] . "&class_id=" . $class_id . "' class='btn btn-success btn-sm submit-tsk'>Submit Task</a>";
+                                                
+                                            }
                                             if ($_SESSION['user_type'] == 'Teacher') {
                                                 echo "<button class='btn btn-warning btn-sm edit-tsk'>Edit Task</button>";
                                                 echo "<span>&nbsp;</span><button class='btn btn-danger btn-sm delete-tsk'>Delete Task</button>";
+                                                echo "<span>&nbsp;</span><button class='btn btn-success btn-sm view-tsk'>View Task</button>";
                                                 echo "<td style='display: none;'><input type='hidden' class='task_id' value='" . $task['task_id'] . "'></td>";
                                             }
                                             echo "</td>";
@@ -320,6 +325,10 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
             $(".edit-tsk").click(function() {
                 var taskId = $(this).closest("tr").find(".task_id").val();
                 window.location.href = "file_upload.php?class_id=<?php echo $class_id; ?>&edit_task_id=" + taskId;
+            });
+            $(".view-tsk").click(function() {
+                var taskId = $(this).closest("tr").find(".task_id").val();
+                window.location.href = "view_task.php?class_id=<?php echo $class_id; ?>&task_id=" + taskId;
             });
                 <?php if ($attendanceVisible): ?>
                 $("#attendance-heading").show();

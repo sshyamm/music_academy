@@ -12,6 +12,7 @@
         }
 
         input[type="file"],
+        input[type="date"],
         select, textarea {
             padding: 10px;
             margin: 10px;
@@ -42,6 +43,7 @@ $task_desc = '';
 $course_parent_id = '';
 $date_parent_id = '';
 $task_file= '';
+$task_deadline = '';
 $task_status = '';
 
 include("../db.php");
@@ -59,6 +61,7 @@ if ($actionAssgn == 'edit_mode_assgn') {
             $course_parent_id = $row["course_parent_id"];
             $date_parent_id = $row["date_parent_id"];
             $task_file = $row["task_file"];
+            $task_deadline = $row["task_deadline"];
             $task_status = $row["task_status"];
         }
     }
@@ -107,6 +110,7 @@ if ($actionAssgn == 'edit_mode_assgn') {
         ?>
     </select><br>
     <input type="file" id="task_file" name="task_file"><br>
+    <input type="date" id="task_deadline" name="task_deadline" <?php echo $actionAssgn !== 'create_mode_assgn' ? 'value="' . $task_deadline . '"' : '';?>>
     <select id="task_status" name="task_status">
         <option value="Select" <?php echo ($actionAssgn === 'create_mode_assgn') ? 'selected' : ''; ?>>Select</option>
         <option value="Active" <?php echo ($actionAssgn === 'edit_mode_assgn' && $task_status === 'Active') ? 'selected' : ''; ?>>Active</option>

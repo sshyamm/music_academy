@@ -12,10 +12,7 @@
         }
 
         input[type="text"],
-        input[type="number"],
-        input[type="date"],
         input[type="file"],
-        input[type="datetime-local"],
         select, textarea {
             padding: 10px;
             margin: 10px;
@@ -42,47 +39,55 @@
 
 <?php
 $actionTask = isset($_GET['actionTask']) ? $_GET['actionTask'] : 'create_mode_task';
-$task_title = '';
-$task_desc = '';
+$task_parent_id = '';
+$user_parent_id = '';
+$remark = '';
+$comment = '';
 $file_path = '';
-$task_status = '';
-$assigned_to = '';
-$assigned_by = '';
+$grading = '';
 $deadline = '';
-$priority = '';
-$created_at = '';
-$updated_at = '';
-$completed_at = '';
-$estimated_hours = '';
+$last_updated = '';
+$submit_status = '';
 
 if ($actionTask == 'edit_mode_task') {
     include("../db.php");
 
-    $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
-    if ($task_id !== null) {
-        $my_sql  = "SELECT * FROM tasks WHERE task_id = $task_id";
+    $task_manager_id = isset($_GET['task_manager_id']) ? $_GET['task_manager_id'] : null;
+    if ($task_manager_id !== null) {
+        $my_sql  = "SELECT * FROM tasks WHERE task_manager_id = $task_manager_id";
         $res_sql = $conn->query($my_sql);
 
         if ($res_sql->num_rows === 1) {
             $row = $res_sql->fetch_assoc();
-            $task_title = $row["task_title"];
-            $task_desc = $row["task_desc"];
-            $assigned_to = $row["assigned_to"];
-            $assigned_by = $row["assigned_by"];
-            $deadline = $row["deadline"];
-            $priority = $row["priority"];
-            $estimated_hours = $row["estimated_hours"];
+            $task_parent_id = $row["task_parent_id"];
+            $user_parent_id = $row["user_parent_id"];
+            $remark = $row["remark"];
+            $comment = $row["comment"];
             $file_path = $row["file_path"];
-            $task_status = $row["task_status"];
+            $grading = $row["grading"];
+            $last_updated = $row["last_updated"];
+            $submit_status = $row["submit_status"];
         }
     }
 }
 ?>
 
 <form id="createProductFormTask" method="post" enctype="multipart/form-data">
-    <input type="text" id="task_title" name="task_title" <?php echo $actionTask !== 'create_mode_task' ? 'value="' . $task_title . '"' : 'placeholder="Task Title"'; ?>><br>
-    <textarea id="task_desc" name="task_desc" <?php echo $actionTask === 'create_mode_task' ? 'placeholder="Task Description"' : ''; ?>><?php echo $actionTask !== 'create_mode_task' ? $task_desc : ''; ?></textarea><br>
-    <select id="assigned_to" name="assigned_to">
+    <select id="task_parent_id" name="task_parent_id">
+    <?php
+    include("../db.php");
+    $task_sql = "SELECT * FROM class_tasks";
+    $task_result = $conn->query($task_sql);
+    echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Task</option>";
+    if ($task_result->num_rows > 0) {
+        while ($task_row = $task_result->fetch_assoc()) {
+            $selected = ($task_row['task_id'] == $task_parent_id) ? 'selected' : '';
+            echo "<option value='" . $task_row['task_id'] . "' $selected>" . $task_row['task_desc'] . "</option>";
+        }
+    }
+    ?>
+    </select><br>
+    <select id="user_parent_id" name="user_parent_id">
         <?php
         include("../db.php");
         $user_sql = "SELECT * FROM users WHERE user_type='Student'";
@@ -90,44 +95,24 @@ if ($actionTask == 'edit_mode_task') {
         echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Student</option>";
         if ($user_result->num_rows > 0) {
             while ($user_row = $user_result->fetch_assoc()) {
-                $selected = ($user_row['user_id'] == $assigned_to) ? 'selected' : '';
+                $selected = ($user_row['user_id'] == $user_parent_id) ? 'selected' : '';
                 echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
             }
         }
         ?>
     </select><br>
-    <select id="assigned_by" name="assigned_by">
-        <?php
-        include("../db.php");
-        $user_sql = "SELECT * FROM users WHERE user_type='Teacher'";
-        $user_result = $conn->query($user_sql);
-        echo "<option value='' " . (($actionTask === 'create_mode_task') ? 'selected' : '') . ">Select Teacher</option>";
-        if ($user_result->num_rows > 0) {
-            while ($user_row = $user_result->fetch_assoc()) {
-                $selected = ($user_row['user_id'] == $assigned_by) ? 'selected' : '';
-                echo "<option value='" . $user_row['user_id'] . "' $selected>" . $user_row['user_name'] . "</option>";
-            }
-        }
-        ?>
-    </select><br>
-    <input type="date" id="deadline" name="deadline" <?php echo $actionTask !== 'create_mode_task' ? 'value="' . $deadline . '"' : 'placeholder="Deadline"'; ?>><br>
-    <select id="priority" name="priority">
-        <option value="Select" <?php echo ($actionTask === 'create_mode_task') ? 'selected' : ''; ?>>Select</option>
-        <option value="Critical" <?php echo ($actionTask === 'edit_mode_task' && $priority === 'Critical') ? 'selected' : ''; ?>>Critical</option>
-        <option value="High" <?php echo ($actionTask === 'edit_mode_task' && $priority === 'High') ? 'selected' : ''; ?>>High</option>
-        <option value="Moderate" <?php echo ($actionTask === 'edit_mode_task' && $priority === 'Moderate') ? 'selected' : ''; ?>>Moderate</option>
-        <option value="Less" <?php echo ($actionTask === 'edit_mode_task' && $priority === 'Less') ? 'selected' : ''; ?>>Less</option>
-    </select><br>
-    <input type="number" id="estimated_hours" name="estimated_hours" <?php echo $actionTask !== 'create_mode_task' ? 'value="' . $estimated_hours . '"' : 'placeholder="Estimated Hours"'; ?>><br>
+    <textarea id="remark" name="remark" <?php echo $actionTask === 'create_mode_task' ? 'placeholder="Task Remark by Students"' : ''; ?>><?php echo $actionTask !== 'create_mode_task' ? $remark : ''; ?></textarea><br>
+    <textarea id="comment" name="comment" <?php echo $actionTask === 'create_mode_task' ? 'placeholder="Comment by Teachers"' : ''; ?>><?php echo $actionTask !== 'create_mode_task' ? $comment : ''; ?></textarea><br>
     <input type="file" id="file_path" name="file_path"><br>
-    <select id="task_status" name="task_status">
+    <input type="text" id="grading" name="grading" <?php echo $actionTask !== 'create_mode_task' ? 'value="' . $grading . '"' : 'placeholder="Grading by Teachers"'; ?>><br>
+    <select id="submit_status" name="submit_status">
         <option value="Select" <?php echo ($actionTask === 'create_mode_task') ? 'selected' : ''; ?>>Select</option>
-        <option value="Active" <?php echo ($actionTask === 'edit_mode_task' && $task_status === 'Active') ? 'selected' : ''; ?>>Active</option>
-        <option value="Inactive" <?php echo ($actionTask === 'edit_mode_task' && $task_status === 'Inactive') ? 'selected' : ''; ?>>Inactive</option>
-        <option value="Completed" <?php echo ($actionTask === 'edit_mode_task' && $task_status === 'Completed') ? 'selected' : ''; ?>>Completed</option>
+        <option value="Pending" <?php echo ($actionTask === 'edit_mode_task' && $submit_status === 'Pending') ? 'selected' : ''; ?>>Pending</option>
+        <option value="Submitted For Review" <?php echo ($actionTask === 'edit_mode_task' && $submit_status === 'Submitted For Review') ? 'selected' : ''; ?>>Submitted For Review</option>
+        <option value="Graded & Completed" <?php echo ($actionTask === 'edit_mode_task' && $submit_status === 'Graded & Completed') ? 'selected' : ''; ?>>Graded & Completed</option>
     </select><br>
     <?php if ($actionTask == "edit_mode_task") { ?>
-        <input type="hidden" name="task_id" value="<?php echo $task_id; ?>" />
+        <input type="hidden" name="task_manager_id" value="<?php echo $task_manager_id; ?>" />
     <?php } ?>
     <input type="hidden" name="actionTask" value="<?php echo $actionTask; ?>" />
 

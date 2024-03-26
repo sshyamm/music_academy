@@ -194,17 +194,17 @@
             xmlhttp.open("GET", "indexes/student_index.php", true); 
             xmlhttp.send();
         }
-	function searchFormStudent() {
-    		$('#searchContainer').slideUp('fast', function() {
-        		$.ajax({
-            			url: 'searchForms/searchFormStudent.php',
-            			method: 'POST',
-            			success: function(response) {
-                		$('#searchContainer').html(response).slideDown('slow');
-            			},
-        		});
-    		});
-	}
+        function searchFormStudent() {
+                $('#searchContainer').slideUp('fast', function() {
+                    $.ajax({
+                            url: 'searchForms/searchFormStudent.php',
+                            method: 'POST',
+                            success: function(response) {
+                            $('#searchContainer').html(response).slideDown('slow');
+                            },
+                    });
+                });
+        }
         function searchStudent() {
             var searchId = document.getElementById('searchId').value;
 	    var searchName = document.getElementById('searchName').value;
@@ -257,25 +257,10 @@
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("selectContainer").innerHTML = this.responseText;
                     document.querySelector(".button-container").innerHTML = "<h2>Task Manager</h2><button onclick='returnToIndex()'>Return</button>";
-                    document.getElementById("searchContainer").innerHTML = `
-			<input type="text" id="searchName" class="searchInput" placeholder="Search by Title">
-			<button type="button" class="searchButton" onclick="searchTask()">Search</button>
-			`;  
                 }
             };
             xmlhttp.open("GET", "indexes/task_index.php", true); 
             xmlhttp.send();
-        }
-        function searchTask() {
-	    var searchName = document.getElementById('searchName').value;
-            $.ajax({
-                url: 'indexes/task_index.php', 
-                method: 'POST',
-                data: { searchName: searchName },
-                success: function(response) {
-                    $('#selectContainer').html(response); 
-                },
-            });
         }
         function showClass(){
             var xmlhttp = new XMLHttpRequest();
@@ -570,7 +555,7 @@
                 xmlhttp.send();
             }
         }
-        function showFormTask(actionTask, task_id) {
+        function showFormTask(actionTask, task_manager_id) {
             if (actionTask == 'delete_mode_task') {
                 if (confirm('Are you sure you want to delete this task?')) {
                     var xmlhttp = new XMLHttpRequest();
@@ -589,7 +574,7 @@
 
                     var formData = new FormData();
                     formData.append('actionTask', actionTask);
-                    formData.append('task_id', task_id);
+                    formData.append('task_manager_id', task_manager_id);
                     xmlhttp.open("POST", "getForms/getformTask.php", true); 
                     xmlhttp.send(formData);
                 }
@@ -600,7 +585,7 @@
                         document.getElementById("formContainerTask").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET", "forms/formTask.php?actionTask=" + actionTask + "&task_id=" + task_id, true); 
+                xmlhttp.open("GET", "forms/formTask.php?actionTask=" + actionTask + "&task_manager_id=" + task_manager_id, true); 
                 xmlhttp.send();
             }
         }
@@ -1236,44 +1221,32 @@
             }
         }
         function validateFormTask() {
-            var task_title = document.getElementById("task_title").value;
-            var task_desc = document.getElementById("task_desc").value;
-            var assigned_to = document.getElementById("assigned_to").value;
-            var assigned_by = document.getElementById("assigned_by").value;
-            var deadline = document.getElementById("deadline").value;
-            var priority = document.getElementById("priority").value;
-            var estimated_hours = document.getElementById("estimated_hours").value;
-            var file_path = document.getElementById("file_path");
-            var task_status = document.getElementById("task_status").value;
+            var task_parent_id = document.getElementById("task_parent_id").value;
+            var user_parent_id = document.getElementById("user_parent_id").value;
+            var remark = document.getElementById("remark").value;
+            var comment = document.getElementById("comment").value;
+            var grading = document.getElementById("grading").value;
+            var submit_status = document.getElementById("submit_status").value;
             
             var alertMessage = "";
 
-            if (task_title === "") {
-                alertMessage += "Please enter a task title.\n";
+            if (task_parent_id === "") {
+                alertMessage += "Please select a task.\n";
             }
-            if (task_desc === "") {
-                alertMessage += "Please enter the description.\n";
+            if (user_parent_id === "") {
+                alertMessage += "Please select a student.\n";
             }
-            if (assigned_to === "") {
-                alertMessage += "Please select the assigned student.\n";
+            if (remark === "") {
+                alertMessage += "Please enter remark.\n";
             }
-            if (assigned_by === "") {
-                alertMessage += "Please select the assigned teacher.\n";
+            if (comment === "") {
+                alertMessage += "Please enter comment.\n";
             }
-            if (deadline === "") {
-                alertMessage += "Please select a deadline.\n";
+            if (grading === "") {
+                alertMessage += "Please enter a grade.\n";
             }
-            if (priority === "") {
-                alertMessage += "Please select the priority.\n";
-            }
-            if (estimated_hours === "") {
-                alertMessage += "Please enter estimated hours.\n";
-            }
-            if (task_status === "Select") {
-                alertMessage += "Please select any task status.\n";
-            }
-            if (task_status === "Completed" && file_path.files.length === 0) {
-                alertMessage += "File attachment is required for completed tasks.\n";
+            if (submit_status === "") {
+                alertMessage += "Please select the status.\n";
             }
             if (alertMessage !== "") {
                 alert(alertMessage);
@@ -1476,6 +1449,7 @@
             var task_desc = document.getElementById("task_desc").value;
             var course_parent_id = document.getElementById("course_parent_id").value;
             var date_parent_id = document.getElementById("date_parent_id").value;
+            var task_deadline = document.getElementById("task_deadline").value;
             var task_status = document.getElementById("task_status").value;
             
             var alertMessage = "";
@@ -1488,6 +1462,9 @@
             }
             if (date_parent_id === "") {
                 alertMessage += "Please select any date.\n";
+            }
+            if (task_deadline === "") {
+                alertMessage += "Please select any deadline.\n";
             }
             if (task_status === "Select") {
                 alertMessage += "Please select any task status.\n";
