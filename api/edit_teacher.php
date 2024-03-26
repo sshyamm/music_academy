@@ -28,9 +28,9 @@ $teacher->teacher_exp = $teacher_exp;
 $teacher->teacher_address = $teacher_address;
 
 $result = $teacher->updateTeacher();
-if($result === true){
-    echo json_encode(array('Message'=>'Teacher updated successfully'));
+if ($result === true) {
+    echo json_encode(array('Message' => 'Teacher updated successfully'));
 } else {
-    echo json_encode(array('error'=>'Error occurred in updating teacher details')); 
+    echo json_encode(array('error' => 'Error occurred in updating teacher details'));
 }
 ?>

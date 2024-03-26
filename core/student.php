@@ -122,13 +122,14 @@ class Student{
         $duplicate_stmt->execute();
     
         if ($duplicate_stmt->rowCount() > 0) {
-            echo json_encode(array('error' => 'Teacher name already exists'));
+            echo json_encode(array('error' => 'Username already exists'));
+            exit();
         }
     
-        $update_stmt = $this->conn->prepare("UPDATE $this->table_teach s
-                          LEFT JOIN users u ON s.user_parent_id = u.user_id
-                          SET u.user_name = :user_name, s.teacher_phone = :teacher_phone, s.teacher_email = :teacher_email, s.qualification = :qualification, s.course_parent_id = :course_parent_id, s.teacher_exp = :teacher_exp, s.teacher_address = :teacher_address
-                          WHERE s.user_parent_id = :user_parent_id");
+        $update_stmt = $this->conn->prepare("UPDATE teachers t
+                          LEFT JOIN users u ON t.user_parent_id = u.user_id
+                          SET u.user_name = :user_name, t.teacher_phone = :teacher_phone, t.teacher_email = :teacher_email, t.qualification = :qualification, t.course_parent_id = :course_parent_id, t.teacher_exp = :teacher_exp, t.teacher_address = :teacher_address
+                          WHERE t.user_parent_id = :user_parent_id");
         $update_stmt->bindParam(':user_name', $this->user_name);
         $update_stmt->bindParam(':teacher_phone', $this->teacher_phone);
         $update_stmt->bindParam(':teacher_email', $this->teacher_email);
@@ -136,13 +137,14 @@ class Student{
         $update_stmt->bindParam(':course_parent_id', $this->course_parent_id);
         $update_stmt->bindParam(':teacher_exp', $this->teacher_exp);
         $update_stmt->bindParam(':teacher_address', $this->teacher_address);
+        $update_stmt->bindParam(':user_parent_id', $this->user_parent_id);
     
         $update_stmt->execute();
     
         if ($update_stmt->rowCount() > 0) {
-            return true;
+            return true; // Updated successfully
         } else {
-            echo json_encode(array('error' => 'Failed to update teacher details'));
+            return false; // Failed to update teacher details
         }
     }
 }
