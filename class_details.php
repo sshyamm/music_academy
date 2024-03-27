@@ -269,31 +269,43 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                     </div>
                 </div>
             </div>
+            <?php
+                $comment_query = "SELECT u.user_name, cc.comment, cc.created_at FROM class_comments cc
+                                INNER JOIN users u ON cc.user_parent_id = u.user_id
+                                WHERE cc.class_parent_id = :class_id
+                                ORDER BY cc.created_at DESC";
+                $comment_stmt = $db->prepare($comment_query);
+                $comment_stmt->bindParam(':class_id', $class_id);
+                $comment_stmt->execute();
+                $comments = $comment_stmt->fetchAll(PDO::FETCH_ASSOC);
+            ?>
             <div class="card mb-4 border-1 rounded-lg shadow-lg">
                 <div class="card-header bg-warning text-black rounded-top">
                     Leave a Comment
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
-                    </div>
-                    <div class="form-group">
-                        <label for="comment">Comment</label>
-                        <textarea class="form-control" id="comment" rows="3" placeholder="Enter your comment"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <form id="class-comment" method="post">
+                        <div class="form-group">
+                            <label for="comment">Comment</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Enter your comment"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submit-comment">Submit</button>
+                    </form>
 
+                    <span>&nbsp;</span><h3>Comments</h3>
                     <div class="mt-4">
-                    <h3>Comments</h3>
-                    <span>&nbsp;</span>
-                        <p><strong>John Doe</strong> - March 12, 2024</p>
-                        <p>This is a sample comment.</p>
-                        <hr>
-                        <p><strong>Jane Smith</strong> - March 11, 2024</p>
-                        <p>Another sample comment here.</p>
+                        <?php if (!empty($comments)) { ?>
+                            <?php foreach ($comments as $comment) : ?>
+                                <p><strong><?php echo $comment['user_name']; ?></strong> - <?php echo date('jS F Y, h:i A', strtotime($comment['created_at'])); ?></p>
+                                <p><?php echo $comment['comment']; ?></p>
+                                <hr>
+                            <?php endforeach; ?>
+                        <?php } else { ?>
+                            <div class="alert alert-info text-center no-comments" role="alert">
+                                No comments yet.
+                            </div>
+                        <?php } ?>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -301,6 +313,37 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
     <span>&nbsp;</span>
     <script>
         $(document).ready(function() {
+            $('#class-comment').submit(function(event) {
+            event.preventDefault(); 
+
+            var comment = $('#comment').val().trim();
+            var user_id = <?php echo $_SESSION['user_id']; ?>; 
+
+            if (comment === '') {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            var formData = {
+                user_id: user_id,
+                class_id: <?php echo $class_id; ?>,
+                comment: comment
+            };
+
+            $.ajax({
+                url: 'class_comment.php',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    $('.mt-4').prepend(response); 
+                    $('#comment').val('');
+                    $('.no-comments').hide();
+                },
+                error: function() {
+                    alert('An error occurred. Please try again later.');
+                }
+            });
+        });
                 $(".start-class-btn, .end-class-btn").click(function() {
                 var classId = <?php echo $class_id; ?>;
                 var action = $(this).hasClass("start-class-btn") ? "start" : "end";

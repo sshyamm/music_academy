@@ -104,15 +104,15 @@ if(isset($_GET['course_id'])) {
             $comment_stmt->execute();
             $comments = $comment_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if(!empty($comments)) {
+            if (!empty($comments)) {
                 foreach ($comments as $comment) {
                     echo '<div class="comment">';
-                    echo '<div class="meta">' . $comment['user_name'] . ' - ' . $comment['created_at'] . '</div>';
+                    echo '<div class="meta">' . $comment['user_name'] . ' - ' . date('jS F Y, h:i A', strtotime($comment['created_at'])) . '</div><span>&nbsp;</span>';
                     echo '<div class="user-content">' . $comment['comment'] . '</div>';
                     echo '</div>';
                 }
             } else {
-                echo 'No comments given';
+                echo '<div class="alert alert-info no-comments" role="alert">No comments given</div>';
             }
             ?>
         </div>
@@ -151,6 +151,7 @@ $(document).ready(function() {
         success: function(response) {
             $('.comment-section').last().prepend(response);
             $('#comment').val('');
+            $('.no-comments').hide();
         },
         error: function() {
             alert('An error occurred. Please try again later.');
