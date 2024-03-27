@@ -79,42 +79,44 @@ if(isset($_GET['course_id'])) {
  </div>
  <?php } ?>
  <div class="row mt-5">
-   <div class="col-md-12">
-     <div class="container">
-       <div class="comment-section">
-           <h3>Leave a Comment</h3>
-           <form>
-               <div class="form-group">
-                   <label for="name">Name:</label>
-                   <input type="text" class="form-control" id="name" placeholder="Enter your name">
-               </div>
-               <div class="form-group">
-                   <label for="comment">Comment:</label>
-                   <textarea class="form-control" id="comment" rows="3" placeholder="Enter your comment"></textarea>
-               </div>
-               <button type="submit" class="btn btn-primary">Submit</button>
-           </form>
-       </div>
+    <div class="col-md-12">
+        <?php if(isset($_SESSION['user_name']) && isset($_SESSION['user_type'])){ ?>
+        <div class="comment-section">
+            <h3>Leave a Comment</h3>
+            <form id="comment-form" method="post">
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Enter your comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <?php } ?>
+        <h3>Comments</h3>
+        <div class="comment-section">
+            <?php
+            $comment_query = "SELECT u.user_name, c.comment, c.created_at FROM comments c
+                            INNER JOIN users u ON c.user_parent_id = u.user_id
+                            WHERE c.course_parent_id = :course_id
+                            ORDER BY c.created_at DESC";
+            $comment_stmt = $db->prepare($comment_query);
+            $comment_stmt->bindParam(':course_id', $course_id);
+            $comment_stmt->execute();
+            $comments = $comment_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-       <div class="comment-section">
-           <h3>Comments</h3>
-           <div class="comment">
-               <div class="meta">Ravi Patel - 10th March 2024</div>
-               <div class="user-content">
-                   This website is really helpful for music enthusiasts. Keep up the good work!
-               </div>
-           </div>
-           <div class="comment">
-               <div class="meta">Priya Sharma - 12th March 2024</div>
-               <div class="user-content">
-                   I love the design of this website. It's so easy to navigate.
-               </div>
-           </div>
-       </div>
-   </div>
-   </div>
- </div>
+            if(!empty($comments)) {
+                foreach ($comments as $comment) {
+                    echo '<div class="comment">';
+                    echo '<div class="meta">' . $comment['user_name'] . ' - ' . $comment['created_at'] . '</div>';
+                    echo '<div class="user-content">' . $comment['comment'] . '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo 'No comments given';
+            }
+            ?>
+        </div>
+    </div>
 </div>
 </main>
 <?php
@@ -130,27 +132,53 @@ if(isset($_GET['course_id'])) {
 
 <script>
 $(document).ready(function() {
-   $('#interestedBtn').on('click', function() {
-       $.ajax({
-           url: 'interested.php',
-           type: 'POST',
-           data: {
-               user_id: <?php echo $_SESSION['user_id']; ?>,
-               course_id: <?php echo $course_id; ?>
-           },
-           success: function(response) {
-               if (response === 'success') {
-                   $('#interestedBtn').text('Already applied').prop('disabled', true);
-                   location.reload();
-               } else {
-                   alert('An error occurred. Please try again later.');
-               }
-           },
-           error: function() {
-               alert('An error occurred. Please try again later.');
-           }
-       });
-   });
+    $('#comment-form').submit(function(event) {
+    event.preventDefault();
+    var commentValue = $('#comment').val().trim();
+
+    if (commentValue === '') {
+        alert('Please enter a comment.');
+        return;
+    }
+
+    var formData = $(this).serialize();
+    formData += '&user_id=<?php echo $_SESSION["user_id"]; ?>&course_id=<?php echo $course_id; ?>'; 
+
+    $.ajax({
+        url: 'submit_comment.php',
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            $('.comment-section').last().prepend(response);
+            $('#comment').val('');
+        },
+        error: function() {
+            alert('An error occurred. Please try again later.');
+        }
+    });
+});
+
+$('#interestedBtn').on('click', function() {
+    $.ajax({
+        url: 'interested.php',
+        type: 'POST',
+        data: {
+            user_id: <?php echo $_SESSION['user_id']; ?>,
+            course_id: <?php echo $course_id; ?>
+        },
+        success: function(response) {
+            if (response === 'success') {
+                $('#interestedBtn').text('Already applied').prop('disabled', true);
+                location.reload();
+            } else {
+                alert('An error occurred. Please try again later.');
+            }
+        },
+        error: function() {
+            alert('An error occurred. Please try again later.');
+        }
+    });
+});
 });
 </script>
 

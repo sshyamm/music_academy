@@ -76,7 +76,7 @@
             outline: none;
             border-color: #007bff;
         }
-	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn { height: 20px; }
+	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn, #responseMessageCmt { height: 20px; }
     </style>
 </head>
 <body>
@@ -101,6 +101,7 @@
         <button onclick="showState();">State Manager</button>
         <button onclick="showCountry();">Country Manager</button>
         <button onclick="showUser();">User Manager</button>
+        <button onclick="showCmt();">Comment Manager</button>
     	</div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -260,6 +261,17 @@
                 }
             };
             xmlhttp.open("GET", "indexes/task_index.php", true); 
+            xmlhttp.send();
+        }
+        function showCmt(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("selectContainer").innerHTML = this.responseText;
+                    document.querySelector(".button-container").innerHTML = "<h2>Comment Manager</h2><button onclick='returnToIndex()'>Return</button>";
+                }
+            };
+            xmlhttp.open("GET", "indexes/cmt_index.php", true); 
             xmlhttp.send();
         }
         function showClass(){
@@ -688,6 +700,40 @@
                     }
                 };
                 xmlhttp.open("GET", "forms/formPhase.php?actionPhase=" + actionPhase + "&class_room_id=" + class_room_id, true); 
+                xmlhttp.send();
+            }
+        }
+        function showFormCmt(actionCmt, comment_id) {
+            if (actionCmt == 'delete_mode_cmt') {
+                if (confirm('Are you sure you want to delete this comment?')) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = JSON.parse(this.responseText);
+                            document.getElementById('responseMessageCmt').innerHTML = response.message;
+                            if (response.success) {
+                                updateTableCmt();
+                                setTimeout(function () {
+                                    document.getElementById('responseMessageCmt').innerHTML = "";
+                                }, 3000);
+                            }
+                        }
+                    };
+
+                    var formData = new FormData();
+                    formData.append('actionCmt', actionCmt);
+                    formData.append('comment_id', comment_id);
+                    xmlhttp.open("POST", "getForms/getformCmt.php", true); 
+                    xmlhttp.send(formData);
+                }
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("formContainerCmt").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "forms/formCmt.php?actionCmt=" + actionCmt + "&comment_id=" + comment_id, true); 
                 xmlhttp.send();
             }
         }
@@ -1220,6 +1266,52 @@
                 xmlhttp.send(formData);
             }
         }
+        function validateFormCmt() {
+            var user_parent_id = document.getElementById("user_parent_id").value;
+            var course_parent_id = document.getElementById("course_parent_id").value;
+            var comment = document.getElementById("comment").value;
+            var comment_status = document.getElementById("comment_status").value;
+            
+            var alertMessage = "";
+
+            if (user_parent_id === "") {
+                alertMessage += "Please select user.\n";
+            }
+            if (course_parent_id === "") {
+                alertMessage += "Please select course.\n";
+            }
+            if (comment === "") {
+                alertMessage += "Please enter comment.\n";
+            }
+            if (comment_status === "Select") {
+                alertMessage += "Please select any comment status.\n";
+            }
+
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                var formData = new FormData(document.getElementById("createProductFormCmt"));
+
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('responseMessageCmt').innerHTML = response.message;
+                        if (response.success) {
+                            updateTableCmt();
+                            document.getElementById('createProductFormCmt').style.display = 'none';
+                            setTimeout(function () {
+                                document.getElementById('responseMessageCmt').innerHTML = "";
+                            }, 3000);
+                        }
+                    }
+                };
+
+                xmlhttp.open("POST", "getForms/getformCmt.php", true);
+                xmlhttp.send(formData);
+            }
+        }
         function validateFormTask() {
             var task_parent_id = document.getElementById("task_parent_id").value;
             var user_parent_id = document.getElementById("user_parent_id").value;
@@ -1694,6 +1786,16 @@
             xmlhttp.open("GET", "updateForms/updateformPhase.php", true); 
             xmlhttp.send();
         }
+        function updateTableCmt() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("updateTableContainerCmt").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "updateForms/updateformCmt.php", true); 
+            xmlhttp.send();
+        }
         function updateTableTask() {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
@@ -1802,6 +1904,7 @@
     <div id="formContainerTask"></div>
     <div id="formContainerClass"></div>
     <div id="formContainerPhase"></div>
+    <div id="formContainerCmt"></div>
     <div id="formContainerCourse"></div>
     <div id="formContainerLevel"></div>
     <div id="formContainerInterest"></div>
