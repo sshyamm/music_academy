@@ -353,6 +353,10 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                     method: 'POST',
                     data: { class_id: classId, action: action },
                     success: function(response) {
+                        var responseData = JSON.parse(response);
+                        var newStatus = responseData.class_status;
+
+                        $(".badge").text(newStatus);
                         if (action === "start") {
                             $(".start-class-btn").text("End Class").removeClass("btn-warning").addClass("btn-danger").removeClass("start-class-btn").addClass("end-class-btn");
                             $("#attendance-heading").show(); 
