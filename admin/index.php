@@ -92,6 +92,7 @@
         <button onclick="showPhase();">Class sessions</button>
         <button onclick="showInterest();">Interest Manager</button>
         <button onclick="showAssgn();">Assignments</button>
+        <button onclick="showCls();">Class Comments</button>
     	</div>
     	<div class="button-row">
         <button onclick="showCourse();">Course Manager</button>
@@ -272,6 +273,17 @@
                 }
             };
             xmlhttp.open("GET", "indexes/cmt_index.php", true); 
+            xmlhttp.send();
+        }
+        function showCls(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("selectContainer").innerHTML = this.responseText;
+                    document.querySelector(".button-container").innerHTML = "<h2>Class Comment Manager</h2><button onclick='returnToIndex()'>Return</button>";
+                }
+            };
+            xmlhttp.open("GET", "indexes/cls_index.php", true); 
             xmlhttp.send();
         }
         function showClass(){
@@ -734,6 +746,40 @@
                     }
                 };
                 xmlhttp.open("GET", "forms/formCmt.php?actionCmt=" + actionCmt + "&comment_id=" + comment_id, true); 
+                xmlhttp.send();
+            }
+        }
+        function showFormCls(actionCls, comment_id) {
+            if (actionCls == 'delete_mode_cls') {
+                if (confirm('Are you sure you want to delete this comment?')) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = JSON.parse(this.responseText);
+                            document.getElementById('responseMessageCmt').innerHTML = response.message;
+                            if (response.success) {
+                                updateTableCls();
+                                setTimeout(function () {
+                                    document.getElementById('responseMessageCmt').innerHTML = "";
+                                }, 3000);
+                            }
+                        }
+                    };
+
+                    var formData = new FormData();
+                    formData.append('actionCls', actionCls);
+                    formData.append('comment_id', comment_id);
+                    xmlhttp.open("POST", "getForms/getformCls.php", true); 
+                    xmlhttp.send(formData);
+                }
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("formContainerCls").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "forms/formCls.php?actionCls=" + actionCls + "&comment_id=" + comment_id, true); 
                 xmlhttp.send();
             }
         }
@@ -1312,6 +1358,52 @@
                 xmlhttp.send(formData);
             }
         }
+        function validateFormCls() {
+            var user_parent_id = document.getElementById("user_parent_id").value;
+            var class_parent_id = document.getElementById("class_parent_id").value;
+            var comment = document.getElementById("comment").value;
+            var comment_status = document.getElementById("comment_status").value;
+            
+            var alertMessage = "";
+
+            if (user_parent_id === "") {
+                alertMessage += "Please select user.\n";
+            }
+            if (class_parent_id === "") {
+                alertMessage += "Please select class.\n";
+            }
+            if (comment === "") {
+                alertMessage += "Please enter comment.\n";
+            }
+            if (comment_status === "Select") {
+                alertMessage += "Please select any comment status.\n";
+            }
+
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                var formData = new FormData(document.getElementById("createProductFormCls"));
+
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('responseMessageCmt').innerHTML = response.message;
+                        if (response.success) {
+                            updateTableCls();
+                            document.getElementById('createProductFormCls').style.display = 'none';
+                            setTimeout(function () {
+                                document.getElementById('responseMessageCmt').innerHTML = "";
+                            }, 3000);
+                        }
+                    }
+                };
+
+                xmlhttp.open("POST", "getForms/getformCls.php", true);
+                xmlhttp.send(formData);
+            }
+        }
         function validateFormTask() {
             var task_parent_id = document.getElementById("task_parent_id").value;
             var user_parent_id = document.getElementById("user_parent_id").value;
@@ -1794,6 +1886,16 @@
                 }
             };
             xmlhttp.open("GET", "updateForms/updateformCmt.php", true); 
+            xmlhttp.send();
+        }
+        function updateTableCls() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("updateTableContainerCls").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "updateForms/updateformCls.php", true); 
             xmlhttp.send();
         }
         function updateTableTask() {
