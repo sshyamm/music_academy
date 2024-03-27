@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 27, 2024 at 06:31 AM
+-- Generation Time: Mar 27, 2024 at 04:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -114,11 +114,26 @@ CREATE TABLE `classes` (
 --
 
 INSERT INTO `classes` (`class_id`, `course_parent_id`, `user_parent_id`, `sched_start_time`, `sched_end_time`, `date_of_class`, `created_at`, `updated_at`, `actual_start_time`, `actual_end_time`, `class_status`) VALUES
-(21, 1, 5, '23:54:00', '23:55:00', '2024-03-21', '2024-03-17 11:54:46', '2024-03-20 02:30:51', '2024-03-26 16:26:09', '2024-03-26 16:26:28', 'Ongoing'),
+(21, 1, 5, '23:54:00', '23:55:00', '2024-03-21', '2024-03-17 11:54:46', '2024-03-20 02:30:51', '2024-03-27 18:49:13', '2024-03-27 18:49:31', 'Finished'),
 (22, 2, 4, '23:54:00', '21:00:00', '2024-03-22', '2024-03-17 11:55:09', '2024-03-20 02:31:02', NULL, NULL, 'Cancelled'),
-(25, 1, 5, '15:41:00', '16:42:00', '2024-03-23', '2024-03-20 03:40:10', '2024-03-26 05:48:22', '2024-03-26 21:09:40', '2024-03-26 21:09:46', 'Finished'),
+(25, 1, 5, '15:41:00', '16:42:00', '2024-03-23', '2024-03-20 03:40:10', '2024-03-26 05:48:22', NULL, NULL, 'Upcoming'),
 (26, 2, 4, '16:43:00', '16:44:00', '2024-03-24', '2024-03-20 03:40:33', '2024-03-26 05:48:37', NULL, NULL, 'Ongoing'),
-(27, 3, 18, '22:27:00', '00:28:00', '2024-03-27', '2024-03-26 11:25:26', '2024-03-26 11:25:26', NULL, NULL, 'Upcoming');
+(27, 3, 18, '22:27:00', '00:28:00', '2024-03-27', '2024-03-26 11:25:26', '2024-03-26 11:25:26', '2024-03-27 21:20:03', '2024-03-27 21:20:31', 'Finished');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `class_comments`
+--
+
+CREATE TABLE `class_comments` (
+  `comment_id` int(11) NOT NULL,
+  `user_parent_id` int(11) DEFAULT NULL,
+  `class_parent_id` int(11) DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `comment_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -141,7 +156,8 @@ CREATE TABLE `class_rooms` (
 
 INSERT INTO `class_rooms` (`class_room_id`, `class_parent_id`, `user_parent_id`, `attendance`, `attendance_time`, `class_room_status`) VALUES
 (85, 21, 17, 'Present', NULL, NULL),
-(86, 25, 17, NULL, NULL, NULL);
+(86, 25, 17, 'Late', NULL, NULL),
+(87, 27, 17, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -166,7 +182,35 @@ CREATE TABLE `class_tasks` (
 INSERT INTO `class_tasks` (`task_id`, `task_desc`, `course_parent_id`, `date_parent_id`, `task_file`, `task_deadline`, `task_status`) VALUES
 (67, 'Task for violin 21, 66 :)', 1, 21, 'shyam_20240326115750.png', '2024-03-30', NULL),
 (68, 'violin 2', 1, 21, 'keyboardIn_20240326163700.jpg', '2024-03-17', NULL),
-(69, 'Vocal :)', 1, 25, 'vocalsIn_20240326164016.jpg', '2024-03-25', NULL);
+(69, 'Vocal :)', 1, 25, 'vocalsIn_20240326164016.jpg', '2024-03-26', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `comment_id` int(11) NOT NULL,
+  `user_parent_id` int(11) DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `course_parent_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `comment_status` enum('Active','Inactive') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment_id`, `user_parent_id`, `comment`, `course_parent_id`, `created_at`, `comment_status`) VALUES
+(3, 2, 'Hi Arunesh here', 2, '2024-03-27 13:52:38', 'Active'),
+(4, 17, 'Hi, Ramesh here.', 1, '2024-03-27 14:10:47', 'Active'),
+(5, 17, 'Shyam', 1, '2024-03-27 14:11:32', 'Active'),
+(6, 3, 'I\'m Suresh', 2, '2024-03-27 14:44:26', 'Active'),
+(7, 5, 'hii', 1, '2024-03-27 15:57:00', 'Active'),
+(8, 5, 'Hii', 8, '2024-03-27 15:59:13', 'Active'),
+(9, 5, 'Hii', 9, '2024-03-27 16:00:40', 'Active');
 
 -- --------------------------------------------------------
 
@@ -242,7 +286,9 @@ INSERT INTO `interests` (`interest_id`, `user_parent_id`, `course_parent_id`, `l
 (37, 17, 1, NULL, NULL),
 (38, 17, 2, NULL, NULL),
 (39, 17, 3, NULL, NULL),
-(40, 17, 4, NULL, NULL);
+(40, 17, 4, NULL, NULL),
+(41, 17, 5, NULL, NULL),
+(42, 3, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -350,7 +396,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`task_manager_id`, `task_parent_id`, `user_parent_id`, `remark`, `comment`, `file_path`, `grading`, `last_updated`, `submit_status`) VALUES
-(69, 67, 17, 'Submitted 21, 66 violin', 'Good', 'class10_20240326162933.jpg', '99.7', '2024-03-26 20:59:33', 'Graded & Completed');
+(69, 67, 17, 'Submitted 21, 66 violin', 'Good', 'class10_20240326162933.jpg', '99.5', '2024-03-26 20:59:33', 'Graded & Completed');
 
 -- --------------------------------------------------------
 
@@ -379,7 +425,7 @@ CREATE TABLE `teachers` (
 
 INSERT INTO `teachers` (`teacher_id`, `user_parent_id`, `teacher_phone`, `teacher_email`, `teacher_address`, `course_parent_id`, `qualification`, `teacher_exp`, `contract_date`, `current_salary`, `join_date`, `teacher_status`) VALUES
 (1, 4, '95675765675', 'teacher@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 2, 'Music.tech', 2, '2025-02-22', 12000, '2024-02-24', 'Inactive'),
-(4, 5, '975744674', 'jennie@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 1, 'V.Tech', 5, '2024-03-31', 12000, '2024-03-17', 'Active'),
+(4, 5, '975744674', 'jennie@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 1, 'V.Tech', 7, '2024-03-31', 12000, '2024-03-17', 'Active'),
 (5, 18, '975744675', 'david@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 3, 'D.Tech', 6, '2024-03-31', 30000, '2024-03-26', 'Active');
 
 -- --------------------------------------------------------
@@ -438,6 +484,12 @@ ALTER TABLE `classes`
   ADD PRIMARY KEY (`class_id`);
 
 --
+-- Indexes for table `class_comments`
+--
+ALTER TABLE `class_comments`
+  ADD PRIMARY KEY (`comment_id`);
+
+--
 -- Indexes for table `class_rooms`
 --
 ALTER TABLE `class_rooms`
@@ -448,6 +500,12 @@ ALTER TABLE `class_rooms`
 --
 ALTER TABLE `class_tasks`
   ADD PRIMARY KEY (`task_id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`comment_id`);
 
 --
 -- Indexes for table `countries`
@@ -532,16 +590,28 @@ ALTER TABLE `classes`
   MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
+-- AUTO_INCREMENT for table `class_comments`
+--
+ALTER TABLE `class_comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `class_rooms`
 --
 ALTER TABLE `class_rooms`
-  MODIFY `class_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `class_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `class_tasks`
 --
 ALTER TABLE `class_tasks`
   MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -559,7 +629,7 @@ ALTER TABLE `courses`
 -- AUTO_INCREMENT for table `interests`
 --
 ALTER TABLE `interests`
-  MODIFY `interest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `interest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `levels`
@@ -583,7 +653,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_manager_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `task_manager_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `teachers`
