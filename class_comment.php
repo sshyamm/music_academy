@@ -3,7 +3,7 @@ require_once 'includes/config.php';
 date_default_timezone_set('Asia/Kolkata');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['user_id'], $_POST['class_id'], $_POST['comment'])) {
-        $user_id = intval($_POST['user_id']); /
+        $user_id = intval($_POST['user_id']); 
         $class_id = intval($_POST['class_id']); 
         $comment = htmlspecialchars($_POST['comment']);
 
