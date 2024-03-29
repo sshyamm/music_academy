@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['admin_username'])) {
+    header("Location: ../admin_index.php");
+    exit(); 
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,6 +85,11 @@
             border-color: #007bff;
         }
 	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn, #responseMessageCmt { height: 20px; }
+    #logoutButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +119,7 @@
     	</div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <button id="logoutButton" onclick="window.location.href='logout.php'">Logout</button>
     <script>
 	function selectFile() {
     		$.ajax({

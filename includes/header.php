@@ -1,5 +1,14 @@
 <?php
 session_start();
+$allowed_pages = array("profile.php", "login.php", "signup.php", "classes.php", "index.php", "course_details.php");
+
+if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_type'])) {
+    $current_page = basename($_SERVER['PHP_SELF']);
+    if (!in_array($current_page, $allowed_pages)) {
+        header("Location: login.php");
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>

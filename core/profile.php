@@ -35,5 +35,24 @@ class Profile {
             return array('success' => false, 'error' => 'Invalid password. Try again');
         }
     }
+    public function checkAdmin() {
+        $checkSql = "SELECT admin_id, admin_username, admin_password FROM admins WHERE admin_username = :admin_username";
+        $checkStmt = $this->conn->prepare($checkSql);
+        $checkStmt->bindParam(":admin_username", $this->admin_username);
+        $checkStmt->execute();
+        $numRows = $checkStmt->rowCount();
+        
+        if ($numRows == 0) {
+            return array('success' => false, 'error' => 'Admin does not exist');
+        }
+        
+        $row = $checkStmt->fetch();
+        
+        if ($this->admin_password === $row['admin_password']) {
+            return array('success' => true, 'admin_id' => $row['admin_id'], 'admin_username' => $row['admin_username']);
+        } else {
+            return array('success' => false, 'error' => 'Invalid password. Try again');
+        }
+    }
 }
 ?>

@@ -44,20 +44,22 @@
             margin-left: 10px;
             display: block;
         }
+        #signup-message {
+            text-align: center;
+            color: green;
+            font-weight: bold;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
+<span>&nbsp;</span>
+<h2 id="signup-message">&nbsp;</h2>
     <form id="loginForm">
         <h2>Admin Login</h2>
         <hr>
         <input type="text" id="admin_username" name="admin_username" placeholder="Admin Username" required>
         <input type="password" id="admin_password" name="admin_password" placeholder="Admin Password" required>
-        <select id="adminStatus" name="adminStatus" required>
-            <option value="">Select</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-        </select>
-
         <button type="submit">Login</button>
     </form>
 
@@ -93,18 +95,30 @@
                     error.insertAfter(element);
                 },
                 submitHandler: function(form) {
-                    $.ajax({
-                        url: 'check.php',
-                        type: 'POST',
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            alert(response);
+                $.ajax({
+                    url: 'api/get_user.php',
+                    type: 'POST',
+                    data: $(form).serialize(),
+                    success: function(response) {
+                        if (response.error) {
+                            $('#signup-message').text(response.error);
+                        } else {
+                            $('#signup-message').text(response.Message);
+                            setTimeout(function() {
+                                window.location.href = 'admin/index.php';
+                            }, 500);
                         }
-                    });
-                    return false;
-                }
-            });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert("An error occurred while processing your request.");
+                    }
+                });
+                return false;
+            }
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>

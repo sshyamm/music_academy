@@ -16,6 +16,12 @@ if (isset($data['user_name'], $data['user_password'])) {
     $user->user_password = $data['user_password'];
 
     $result = $user->checkUser();
+} elseif (isset($data['admin_username'], $data['admin_password'])) {
+    $user = new Profile($db); 
+    $user->admin_username = $data['admin_username'];
+    $user->admin_password = $data['admin_password'];
+
+    $result_admin = $user->checkAdmin();
 } else {
     echo json_encode(array('error' => 'Please provide both username and password'));
     exit; 
@@ -29,6 +35,14 @@ if (isset($result)) {
         echo json_encode(array('Message' => 'Logged in successfully with ID: ' . $result['user_id'] . ' and name: ' . $result['user_name'] . ' and type: ' . $result['user_type']));
     } else {
         echo json_encode(array('error' => $result['error']));
+    }
+} elseif(isset($result_admin)){
+    if ($result_admin['success']) {
+        $_SESSION['admin_id'] = $result_admin['admin_id']; 
+        $_SESSION['admin_username'] = $result_admin['admin_username'];
+        echo json_encode(array('Message' => 'Logged in successfully with ID: ' . $result_admin['admin_id'] . ' and name: ' . $result_admin['admin_username']));
+    } else {
+        echo json_encode(array('error' => $result_admin['error']));
     }
 } else {
     echo json_encode(array('error' => 'Invalid data'));
