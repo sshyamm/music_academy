@@ -84,7 +84,7 @@ if(!isset($_SESSION['admin_username'])) {
             outline: none;
             border-color: #007bff;
         }
-	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn, #responseMessageCmt, #responseMessageImg { height: 20px; }
+	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn, #responseMessageCmt, #responseMessageImg, #responseMessageNews { height: 20px; }
     #logoutButton {
             position: absolute;
             top: 10px;
@@ -106,6 +106,7 @@ if(!isset($_SESSION['admin_username'])) {
         <button onclick="showInterest();">Interest Manager</button>
         <button onclick="showAssgn();">Assignments</button>
         <button onclick="showCls();">Class Comments</button>
+        <button onclick="showNews();">Newsletter Manager</button>
     	</div>
     	<div class="button-row">
         <button onclick="showCourse();">Course Manager</button>
@@ -299,6 +300,17 @@ if(!isset($_SESSION['admin_username'])) {
                 }
             };
             xmlhttp.open("GET", "indexes/cls_index.php", true); 
+            xmlhttp.send();
+        }
+        function showNews(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("selectContainer").innerHTML = this.responseText;
+                    document.querySelector(".button-container").innerHTML = "<h2>Newsletter Manager</h2><button onclick='returnToIndex()'>Return</button>";
+                }
+            };
+            xmlhttp.open("GET", "indexes/news_index.php", true); 
             xmlhttp.send();
         }
         function showClass(){
@@ -806,6 +818,40 @@ if(!isset($_SESSION['admin_username'])) {
                     }
                 };
                 xmlhttp.open("GET", "forms/formCls.php?actionCls=" + actionCls + "&comment_id=" + comment_id, true); 
+                xmlhttp.send();
+            }
+        }
+        function showFormNews(actionNews, news_id) {
+            if (actionNews == 'delete_mode_news') {
+                if (confirm('Are you sure you want to delete this news?')) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = JSON.parse(this.responseText);
+                            document.getElementById('responseMessageNews').innerHTML = response.message;
+                            if (response.success) {
+                                updateTableNews();
+                                setTimeout(function () {
+                                    document.getElementById('responseMessageNews').innerHTML = "";
+                                }, 3000);
+                            }
+                        }
+                    };
+
+                    var formData = new FormData();
+                    formData.append('actionNews', actionNews);
+                    formData.append('news_id', news_id);
+                    xmlhttp.open("POST", "getForms/getformNews.php", true); 
+                    xmlhttp.send(formData);
+                }
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("formContainerNews").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "forms/formNews.php?actionNews=" + actionNews + "&news_id=" + news_id, true); 
                 xmlhttp.send();
             }
         }
@@ -1731,6 +1777,44 @@ if(!isset($_SESSION['admin_username'])) {
                 xmlhttp.send(formData);
             }
         }
+        function validateFormNews() {
+            var email = document.getElementById("email").value;
+            var news_status = document.getElementById("news_status").value;
+            
+            var alertMessage = "";
+
+            if (email === "") {
+                alertMessage += "Please enter email.\n";
+            }
+            if (news_status === "Select") {
+                alertMessage += "Please select any news status.\n";
+            }
+
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                var formData = new FormData(document.getElementById("createProductFormNews"));
+
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('responseMessageNews').innerHTML = response.message;
+                        if (response.success) {
+                            updateTableNews();
+                            document.getElementById('createProductFormNews').style.display = 'none';
+                            setTimeout(function () {
+                                document.getElementById('responseMessageNews').innerHTML = "";
+                            }, 3000);
+                        }
+                    }
+                };
+
+                xmlhttp.open("POST", "getForms/getformNews.php", true); 
+                xmlhttp.send(formData);
+            }
+        }
         function validateFormAssgn() {
             var task_desc = document.getElementById("task_desc").value;
             var course_parent_id = document.getElementById("course_parent_id").value;
@@ -2008,6 +2092,16 @@ if(!isset($_SESSION['admin_username'])) {
                 }
             };
             xmlhttp.open("GET", "updateForms/updateformTask.php", true); 
+            xmlhttp.send();
+        }
+        function updateTableNews() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("updateTableContainerNews").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "updateForms/updateformNews.php", true); 
             xmlhttp.send();
         }
         function updateTableInterest() {
