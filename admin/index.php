@@ -84,7 +84,7 @@ if(!isset($_SESSION['admin_username'])) {
             outline: none;
             border-color: #007bff;
         }
-	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn, #responseMessageCmt { height: 20px; }
+	#responseMessageStudent, #responseMessageTeacher, #responseMessageTask, #responseMessageClass, #responseMessageCourse, #responseMessageLevel, #responseMessageAge, #responseMessageCity, #responseMessageState, #responseMessageCountry, #responseMessagePhase, #responseMessageInterest, #responseMessageUser, #responseMessageAssgn, #responseMessageCmt, #responseMessageImg { height: 20px; }
     #logoutButton {
             position: absolute;
             top: 10px;
@@ -116,6 +116,7 @@ if(!isset($_SESSION['admin_username'])) {
         <button onclick="showCountry();">Country Manager</button>
         <button onclick="showUser();">User Manager</button>
         <button onclick="showCmt();">Comment Manager</button>
+        <button onclick="showImg();">Image Manager</button>
     	</div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -413,6 +414,17 @@ if(!isset($_SESSION['admin_username'])) {
                 }
             };
             xmlhttp.open("GET", "indexes/user_index.php", true); 
+            xmlhttp.send();
+        }
+        function showImg(){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("selectContainer").innerHTML = this.responseText;
+                    document.querySelector(".button-container").innerHTML = "<h2>Image Manager</h2><button onclick='returnToIndex()'>Return</button>";  
+                }
+            };
+            xmlhttp.open("GET", "indexes/img_index.php", true); 
             xmlhttp.send();
         }
         function showInterest(){
@@ -828,6 +840,40 @@ if(!isset($_SESSION['admin_username'])) {
                     }
                 };
                 xmlhttp.open("GET", "forms/formCourse.php?actionCourse=" + actionCourse + "&course_id=" + course_id, true); 
+                xmlhttp.send();
+            }
+        }
+        function showFormImg(actionImg, image_id) {
+            if (actionImg == 'delete_mode_img') {
+                if (confirm('Are you sure you want to delete this image?')) {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = JSON.parse(this.responseText);
+                            document.getElementById('responseMessageImg').innerHTML = response.message;
+                            if (response.success) {
+                                updateTableImg();
+                                setTimeout(function () {
+                                    document.getElementById('responseMessageImg').innerHTML = "";
+                                }, 3000);
+                            }
+                        }
+                    };
+
+                    var formData = new FormData();
+                    formData.append('actionImg', actionImg);
+                    formData.append('image_id', image_id);
+                    xmlhttp.open("POST", "getForms/getformImg.php", true); 
+                    xmlhttp.send(formData);
+                }
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("formContainerImg").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET", "forms/formImg.php?actionImg=" + actionImg + "&image_id=" + image_id, true); 
                 xmlhttp.send();
             }
         }
@@ -1513,6 +1559,48 @@ if(!isset($_SESSION['admin_username'])) {
                 xmlhttp.send(formData);
             }
         }
+        function validateFormImg() {
+            var image_name = document.getElementById("image_name").value;
+            var image_path = document.getElementById("image_path").value;
+            var image_status = document.getElementById("image_status").value;
+            
+            var alertMessage = "";
+
+            if (image_name === "") {
+                alertMessage += "Please enter a image name.\n";
+            }
+            if (image_path === "") {
+                alertMessage += "Please select any image.\n";
+            }
+            if (image_status === "Select") {
+                alertMessage += "Please select any image status.\n";
+            }
+
+            if (alertMessage !== "") {
+                alert(alertMessage);
+                return;
+            } else {
+                var xmlhttp = new XMLHttpRequest();
+                var formData = new FormData(document.getElementById("createProductFormImg"));
+
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        document.getElementById('responseMessageImg').innerHTML = response.message;
+                        if (response.success) {
+                            updateTableImg();
+                            document.getElementById('createProductFormImg').style.display = 'none';
+                            setTimeout(function () {
+                                document.getElementById('responseMessageImg').innerHTML = "";
+                            }, 3000);
+                        }
+                    }
+                };
+
+                xmlhttp.open("POST", "getForms/getformImg.php", true);
+                xmlhttp.send(formData);
+            }
+        }
         function validateFormLevel() {
             var level_name = document.getElementById("level_name").value;
             var level_status = document.getElementById("level_status").value;
@@ -1992,6 +2080,16 @@ if(!isset($_SESSION['admin_username'])) {
             xmlhttp.open("GET", "updateForms/updateformCity.php", true); 
             xmlhttp.send();
         }
+        function updateTableImg() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("updateTableContainerImg").innerHTML = this.responseText;
+                }
+            };
+            xmlhttp.open("GET", "updateForms/updateformImg.php", true); 
+            xmlhttp.send();
+        }
         function updateTableState() {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
@@ -2023,6 +2121,7 @@ if(!isset($_SESSION['admin_username'])) {
     <div id="formContainerCmt"></div>
     <div id="formContainerCourse"></div>
     <div id="formContainerLevel"></div>
+    <div id="formContainerImg"></div>
     <div id="formContainerInterest"></div>
     <div id="formContainerAssgn"></div>
     <div id="formContainerAge"></div>

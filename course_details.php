@@ -1,7 +1,14 @@
-
 <?php
 require_once 'includes/config.php';
 
+$query_jumbotron = "SELECT * FROM images WHERE image_name = 'Jumbotron 2' AND image_status = 'Jumbotron'";
+$stmt_jumbotron = $db->query($query_jumbotron);
+if ($stmt_jumbotron) {
+   $jumbotron_image = $stmt_jumbotron->fetch(PDO::FETCH_ASSOC);
+} else {
+   echo "Error: Unable to fetch jumbotron image from the database";
+   die();
+}
 
 if(isset($_GET['course_id'])) {
    $course_id = $_GET['course_id'];
@@ -11,11 +18,11 @@ if(isset($_GET['course_id'])) {
    $stmt->execute();
    $course = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
    if($course) {
 ?>
+
 <?php require_once 'includes/header.php'; ?>
-<div class="jumbotron jumbotron-fluid jumbotron7">
+<div class="jumbotron jumbotron-fluid" style="background-image: url('<?php echo 'admin/getForms/img/' . $jumbotron_image['image_path']; ?>');">
    <div class="container">
        <h1 class="display-4"><?php echo $course['course_name']; ?></h1>
        <nav aria-label="breadcrumb">
@@ -27,7 +34,6 @@ if(isset($_GET['course_id'])) {
        </nav>
    </div>
 </div>
-
 
 <main class="custom-main">
    <div class="container mt-5">
@@ -182,4 +188,3 @@ $('#interestedBtn').on('click', function() {
 });
 });
 </script>
-

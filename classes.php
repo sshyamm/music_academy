@@ -1,20 +1,28 @@
 <?php
 require_once 'includes/config.php';
 
+$query_jumbotron = "SELECT * FROM images WHERE image_name = 'Jumbotron 1' AND image_status = 'Jumbotron'";
+$stmt_jumbotron = $db->query($query_jumbotron);
+if ($stmt_jumbotron) {
+   $jumbotron_image = $stmt_jumbotron->fetch(PDO::FETCH_ASSOC);
+} else {
+   echo "Error: Unable to fetch jumbotron image from the database";
+   die();
+}
 
-$query = "SELECT * FROM courses";
-$stmt = $db->query($query);
-if ($stmt) {
-   $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$query_courses = "SELECT * FROM courses";
+$stmt_courses = $db->query($query_courses);
+if ($stmt_courses) {
+   $courses = $stmt_courses->fetchAll(PDO::FETCH_ASSOC);
 } else {
    echo "Error: Unable to fetch courses from the database";
    die();
 }
 ?>
 
-
 <?php require_once 'includes/header.php'; ?>
-<div class="jumbotron jumbotron-fluid jumbotron1">
+
+<div class="jumbotron jumbotron-fluid" style="background-image: url('<?php echo 'admin/getForms/img/' . $jumbotron_image['image_path']; ?>');">
    <div class="container">
        <h1 class="display-4">Music Courses</h1>
        <nav aria-label="breadcrumb">
@@ -27,21 +35,21 @@ if ($stmt) {
 </div>
 
 <?php if(isset($_SESSION['user_name']) && isset($_SESSION['user_id'])): ?>
-       <div class="container">
-           <div class="row justify-content-center mt-3">
-               <div class="col-md-6">
-                       <div class="card-body d-flex align-items-center justify-content-between p-1">
-                           <div>
-                               <h5 class="card-title m-0">Scheduled Classes</h5>
-                               <p class="card-text m-0">View our upcoming classes schedule and join us!</p>
-                           </div>
-                           <a href="class_info.php" class="btn btn-primary">View Classes</a>
+   <div class="container">
+       <div class="row justify-content-center mt-3">
+           <div class="col-md-6">
+                   <div class="card-body d-flex align-items-center justify-content-between p-1">
+                       <div>
+                           <h5 class="card-title m-0">Scheduled Classes</h5>
+                           <p class="card-text m-0">View our upcoming classes schedule and join us!</p>
                        </div>
-               </div>
+                       <a href="class_info.php" class="btn btn-primary">View Classes</a>
+                   </div>
            </div>
        </div>
-   <?php endif; ?>
-   
+   </div>
+<?php endif; ?>
+
 <main class="custom-main">
    <div class="container mt-5">
        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
@@ -81,7 +89,6 @@ if ($stmt) {
        </a>
    </div>
 </main>
-
 
 <?php require_once 'includes/footer.php'; ?>
 

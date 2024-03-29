@@ -1,12 +1,20 @@
+<?php require_once 'includes/config.php'; ?>
 <?php require_once 'includes/header.php'; ?>
-    <main class="custom-main">
+
+<main class="custom-main">
     <div class="container-fluid">
         <div class="row">
             <div class="col">
                 <div class="img-container">
-                    <img class="img1" src="img/index1.jpg" alt="Image 1">
-                    <img class="img2" src="img/index2.jpg" alt="Image 2">
-                    <img class="img3" src="img/index3.jpg" alt="Image 3">
+                    <?php
+                    $query = "SELECT * FROM images WHERE image_status = 'Active'";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute();
+
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        echo '<img src="admin/getForms/img/' . $row["image_path"] . '">';
+                    }
+                    ?>
                 </div>
                 <div class="content">
                     <h2 class="heading">Delivering High Quality Music Education Since 2009<br>Your Hobby is our Passion</h2>
@@ -26,14 +34,16 @@
         </div>
     </div>
 </main>
-    <?php require 'includes/footer.php'; ?>
-    <script>
-        const images = document.querySelectorAll('.img-container img');
-        let index = 0;
 
-        setInterval(() => {
-            images[index].style.opacity = '0';
-            index = (index + 1) % images.length;
-            images[index].style.opacity = '1';
-        }, 1500);
-    </script>
+<?php require 'includes/footer.php'; ?>
+
+<script>
+    const images = document.querySelectorAll('.img-container img');
+    let index = 0;
+
+    setInterval(() => {
+        images[index].style.opacity = '0';
+        index = (index + 1) % images.length;
+        images[index].style.opacity = '1';
+    }, 1500);
+</script>

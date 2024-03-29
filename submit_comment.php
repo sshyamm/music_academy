@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $user_stmt->fetch(PDO::FETCH_ASSOC);
 
     $new_comment_html = '<div class="comment">';
-    $new_comment_html .= '<div class="meta">' . $user['user_name'] . ' - ' . date('jS F Y, h:i A') . '</div>'; 
+    $new_comment_html .= '<div class="meta">' . $user['user_name'] . ' - ' . date('jS F Y, h:i A') . '</div><span>&nbsp;</span>'; 
     $new_comment_html .= '<div class="user-content">' . htmlspecialchars($comment) . '</div>'; 
     $new_comment_html .= '</div>';
 

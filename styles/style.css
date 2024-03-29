@@ -61,7 +61,7 @@
 
 .btn-primary:hover, .btn-success:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-collapse {
@@ -324,40 +324,7 @@
   color: #fff;
   padding: 0 5px;
 }
-.jumbotron1 {
-    background-image: url('img/jumbotron1.jpg');
-}
 
-.jumbotron2 {
-    background-image: url('img/jumbotron2.jpg');
-}
-.jumbotron3 {
-  background-image: url('img/jumbotron3.jpg');
-}
-.jumbotron4 {
-  background-image: url('img/jumbotron4.jpg');
-}
-.jumbotron5 {
-  background-image: url('img/jumbotron5.jpg');
-}
-.jumbotron6 {
-  background-image: url('img/jumbotron6.jpg');
-}
-.jumbotron7 {
-  background-image: url('img/jumbotron7.jpg');
-}
-.jumbotron8 {
-  background-image: url('img/jumbotron8.jpg');
-}
-.jumbotron9 {
-  background-image: url('img/jumbotron9.jpg');
-}
-.jumbotron10 {
-  background-image: url('img/jumbotron10.jpg');
-}
-.jumbotron11 {
-  background-image: url('img/jumbotron11.jpg');
-}
 /* Custom Styles */
 .custom-body {
 display: flex;
