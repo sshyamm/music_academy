@@ -74,7 +74,7 @@
             },
             submitHandler: function(form) {
                 $.ajax({
-                    url: 'api/create_student.php',
+                    url: 'api/create_user.php',
                     type: 'POST',
                     data: $(form).serialize(),
                     success: function(response) {

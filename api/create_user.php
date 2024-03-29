@@ -14,7 +14,7 @@ $student->user_password = $_POST['user_password'];
 
 $result = $student->createStudent();
 if($result === true){
-    echo json_encode(array('Message'=>'Student created successfully'));
+    echo json_encode(array('Message'=>'User created successfully'));
 } else {
     echo json_encode(array('Message'=>'Error occured in creating')); 
 }
