@@ -16,11 +16,11 @@ if ($stmt) {
 <?php require_once 'includes/header.php'; ?>
 <div class="jumbotron jumbotron-fluid jumbotron1">
    <div class="container">
-       <h1 class="display-4">Music Classes</h1>
+       <h1 class="display-4">Music Courses</h1>
        <nav aria-label="breadcrumb">
            <ol class="breadcrumb">
                <li class="breadcrumb-item"><a href="<?php echo URL; ?>/index.php">Home</a></li>
-               <li class="breadcrumb-item active" aria-current="page">Music Classes</li>
+               <li class="breadcrumb-item active" aria-current="page">Music Courses</li>
            </ol>
        </nav>
    </div>

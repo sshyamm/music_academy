@@ -21,7 +21,7 @@ if(isset($_GET['course_id'])) {
        <nav aria-label="breadcrumb">
            <ol class="breadcrumb">
                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-               <li class="breadcrumb-item"><a href="classes.php">Music Classes</a></li>
+               <li class="breadcrumb-item"><a href="classes.php">Music Courses</a></li>
                <li class="breadcrumb-item active" aria-current="page"><?php echo $course['course_name']; ?></li>
            </ol>
        </nav>
