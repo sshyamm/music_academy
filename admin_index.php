@@ -1,99 +1,60 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Login</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <style> 
-        form {
-            width: 30%;
-            margin: 20px auto;
-            text-align: center;
-            border: 2px solid #000;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        input[type="text"],
-        input[type="password"],
-        select {
-            padding: 10px;
-            margin: 10px;
-            width: 90%;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-        }
-        button[type="submit"] {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #90EE90;
-            color: black;
-            border: none;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #7CFC00;
-        }
-
-        .error {
-            color: red;
-            font-size: 14px;
-            text-align: left;
-            margin-left: 10px;
-            display: block;
-        }
-        #signup-message {
-            text-align: center;
-            color: green;
-            font-weight: bold;
-            height: 20px;
-        }
-    </style>
-</head>
-<body>
+<?php require_once 'includes/header.php'; ?>
+<main class="custom-main">
 <span>&nbsp;</span>
 <h2 id="signup-message">&nbsp;</h2>
-    <form id="loginForm">
-        <h2>Admin Login</h2>
-        <hr>
-        <input type="text" id="admin_username" name="admin_username" placeholder="Admin Username" required>
-        <input type="password" id="admin_password" name="admin_password" placeholder="Admin Password" required>
-        <button type="submit">Login</button>
-    </form>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card login-card shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Admin Login</h5>
+                    <form id="loginForm" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="admin_username">Username</label>
+                            <input type="text" class="form-control" id="admin_username" name="admin_username" placeholder="Enter your username"><br>
+                            <div class="auth-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin_password">Password</label>
+                            <input type="password" class="form-control" id="admin_password" name="admin_password" placeholder="Enter your password"><br>
+                            <a href="change_admin.php" style="position: absolute; right: 0; bottom: -0.4rem; font-size: 17px; color: blue;">Change Password</a>
+                            <div class="auth-error"></div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary login-btn">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+<?php require_once 'includes/footer.php'; ?>
 
     <script>
-        $(document).ready(function(){
-            $('#loginForm').validate({
-                rules: {
-                    admin_username: {
-                        required: true,
-                    },
-                    admin_password: {
-                        required: true,
-                        minlength: 4
-                    },
-                    adminStatus: {
-                        required: true
-                    }
+    $(document).ready(function(){
+        $('#loginForm').validate({
+            rules: {
+                'admin_username': {
+                    required: true
                 },
-                messages: {
-                    admin_username: {
-                        required: "Please enter your username",
-                    },
-                    admin_password: {
-                        required: "Please provide a password",
-                        minlength: "Your password must be at least 4 characters long"
-                    },
-                    adminStatus: {
-                        required: "Please select admin status"
-                    }
+                'admin_password': {
+                    required: true
+                }
+            },
+            messages: {
+                'admin_username': {
+                    required: "Please enter a username"
                 },
-                errorClass: "error",
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);
-                },
+                'admin_password': {
+                    required: "Please enter a password"
+                }
+            },
+            errorClass: "error",
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().find(".auth-error"));
+            },
                 submitHandler: function(form) {
                 $.ajax({
                     url: 'api/get_user.php',

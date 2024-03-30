@@ -1,6 +1,6 @@
 <?php
 session_start();
-$allowed_pages = array("profile.php", "login.php", "signup.php", "classes.php", "index.php", "course_details.php");
+$allowed_pages = array("profile.php", "login.php", "signup.php", "classes.php", "index.php", "course_details.php", "change_password.php", "admin_index.php", "change_admin.php");
 
 if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_type'])) {
     $current_page = basename($_SERVER['PHP_SELF']);
@@ -45,6 +45,9 @@ if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_type'])) {
                         <a href="logout.php" class="btn btn-danger">Log Out</a>
                     </li>
                 <?php else: ?>
+                    <li class="nav-item mr-2">
+                        <button type="button" onclick="window.location.href='admin_index.php'" class="btn btn-warning"><i class="fas fa-lock"></i> Admin Login</button>
+                    </li>
                     <li class="nav-item">
                         <button type="button" onclick="window.location.href='login.php'" class="btn btn-primary mr-2">Login</button>
                         <button type="button" onclick="window.location.href='signup.php'" class="btn btn-success">Sign Up</button>

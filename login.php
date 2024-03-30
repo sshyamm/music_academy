@@ -17,6 +17,7 @@
                         <div class="form-group">
                             <label for="user_password">Password</label>
                             <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Enter your password"><br>
+                            <a href="change_password.php" style="position: absolute; right: 0; bottom: -0.4rem; font-size: 17px; color: blue;">Change Password</a>
                             <div class="auth-error"></div>
                         </div>
                         <div class="text-center">
