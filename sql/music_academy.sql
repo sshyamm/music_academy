@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 27, 2024 at 04:52 PM
+-- Generation Time: Apr 02, 2024 at 02:04 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`admin_id`, `admin_username`, `admin_password`, `admin_status`) VALUES
-(1, 'sshyamm', 'shyam', 'Active');
+(1, 'sshyamm', 'shy111', 'Active');
 
 -- --------------------------------------------------------
 
@@ -114,11 +114,11 @@ CREATE TABLE `classes` (
 --
 
 INSERT INTO `classes` (`class_id`, `course_parent_id`, `user_parent_id`, `sched_start_time`, `sched_end_time`, `date_of_class`, `created_at`, `updated_at`, `actual_start_time`, `actual_end_time`, `class_status`) VALUES
-(21, 1, 5, '23:54:00', '23:55:00', '2024-03-21', '2024-03-17 11:54:46', '2024-03-20 02:30:51', '2024-03-27 18:49:13', '2024-03-27 18:49:31', 'Finished'),
-(22, 2, 4, '23:54:00', '21:00:00', '2024-03-22', '2024-03-17 11:55:09', '2024-03-20 02:31:02', NULL, NULL, 'Cancelled'),
-(25, 1, 5, '15:41:00', '16:42:00', '2024-03-23', '2024-03-20 03:40:10', '2024-03-26 05:48:22', NULL, NULL, 'Upcoming'),
-(26, 2, 4, '16:43:00', '16:44:00', '2024-03-24', '2024-03-20 03:40:33', '2024-03-26 05:48:37', NULL, NULL, 'Ongoing'),
-(27, 3, 18, '22:27:00', '00:28:00', '2024-03-27', '2024-03-26 11:25:26', '2024-03-26 11:25:26', '2024-03-27 21:20:03', '2024-03-27 21:20:31', 'Finished');
+(21, 1, 5, '23:54:00', '23:55:00', '2024-03-21', '2024-03-17 11:54:46', '2024-03-20 02:30:51', '2024-03-28 19:59:53', '2024-03-28 20:00:33', 'Finished'),
+(22, 2, 4, '23:54:00', '21:00:00', '2024-03-22', '2024-03-17 11:55:09', '2024-03-20 02:31:02', NULL, NULL, 'Upcoming'),
+(25, 1, 5, '15:41:00', '16:42:00', '2024-03-23', '2024-03-20 03:40:10', '2024-03-26 05:48:22', '2024-03-28 17:01:52', '2024-03-28 20:11:45', 'Finished'),
+(26, 2, 4, '16:43:00', '16:44:00', '2024-03-24', '2024-03-20 03:40:33', '2024-03-26 05:48:37', NULL, NULL, 'Upcoming'),
+(27, 3, 18, '22:27:00', '00:28:00', '2024-03-27', '2024-03-26 11:25:26', '2024-03-26 11:25:26', NULL, NULL, 'Upcoming');
 
 -- --------------------------------------------------------
 
@@ -134,6 +134,18 @@ CREATE TABLE `class_comments` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `comment_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `class_comments`
+--
+
+INSERT INTO `class_comments` (`comment_id`, `user_parent_id`, `class_parent_id`, `comment`, `created_at`, `comment_status`) VALUES
+(10, 17, 21, 'Hi', '2024-03-28 16:58:21', 'Active'),
+(11, 17, 21, 'Yes, its Thursday', '2024-03-28 16:58:36', 'Active'),
+(12, 5, 25, 'Hi , all', '2024-03-28 18:47:23', 'Active'),
+(13, 5, 21, 'Hi,I&#039;m Jennie', '2024-03-28 20:04:05', 'Active'),
+(14, 17, 25, 'Hi, Im Ramesh', '2024-03-28 20:10:03', 'Active'),
+(15, 5, 25, 'Hii', '2024-03-31 15:51:02', 'Active');
 
 -- --------------------------------------------------------
 
@@ -155,9 +167,9 @@ CREATE TABLE `class_rooms` (
 --
 
 INSERT INTO `class_rooms` (`class_room_id`, `class_parent_id`, `user_parent_id`, `attendance`, `attendance_time`, `class_room_status`) VALUES
-(85, 21, 17, 'Present', NULL, NULL),
 (86, 25, 17, 'Late', NULL, NULL),
-(87, 27, 17, NULL, NULL, NULL);
+(87, 27, 17, NULL, NULL, NULL),
+(89, 21, 17, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -180,7 +192,7 @@ CREATE TABLE `class_tasks` (
 --
 
 INSERT INTO `class_tasks` (`task_id`, `task_desc`, `course_parent_id`, `date_parent_id`, `task_file`, `task_deadline`, `task_status`) VALUES
-(67, 'Task for violin 21, 66 :)', 1, 21, 'shyam_20240326115750.png', '2024-03-30', NULL),
+(67, 'Task for violin 21, 66 :)', 1, 21, 'class1_20240329135732.jpg', '2024-03-30', NULL),
 (68, 'violin 2', 1, 21, 'keyboardIn_20240326163700.jpg', '2024-03-17', NULL),
 (69, 'Vocal :)', 1, 25, 'vocalsIn_20240326164016.jpg', '2024-03-26', NULL);
 
@@ -210,7 +222,14 @@ INSERT INTO `comments` (`comment_id`, `user_parent_id`, `comment`, `course_paren
 (6, 3, 'I\'m Suresh', 2, '2024-03-27 14:44:26', 'Active'),
 (7, 5, 'hii', 1, '2024-03-27 15:57:00', 'Active'),
 (8, 5, 'Hii', 8, '2024-03-27 15:59:13', 'Active'),
-(9, 5, 'Hii', 9, '2024-03-27 16:00:40', 'Active');
+(9, 5, 'Hii', 9, '2024-03-27 16:00:40', 'Active'),
+(10, 17, 'Hi', 1, '2024-03-28 16:56:21', 'Active'),
+(11, 17, 'Hi', 2, '2024-03-28 16:59:50', 'Active'),
+(12, 5, 'Its piano', 6, '2024-03-28 18:47:10', 'Active'),
+(13, 5, 'HI', 1, '2024-03-28 19:57:53', 'Active'),
+(14, 5, '18:54 ', 2, '2024-03-29 18:54:17', 'Active'),
+(15, 5, 'hi', 2, '2024-03-29 18:54:57', 'Active'),
+(16, 5, 'Hii', 2, '2024-03-31 15:50:47', 'Active');
 
 -- --------------------------------------------------------
 
@@ -267,6 +286,32 @@ INSERT INTO `courses` (`course_id`, `course_name`, `course_desc`, `course_img`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `images`
+--
+
+CREATE TABLE `images` (
+  `image_id` int(11) NOT NULL,
+  `image_name` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `image_status` enum('Active','Jumbotron','Inactive') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `images`
+--
+
+INSERT INTO `images` (`image_id`, `image_name`, `image_path`, `image_status`) VALUES
+(1, 'Image 1', 'index1_2024-03-29_13-50-56.jpg', 'Active'),
+(2, 'Image 2', 'index2_2024-03-29_13-52-11.jpg', 'Active'),
+(3, 'Image 3', 'index3_2024-03-29_13-52-41.jpg', 'Active'),
+(4, 'Jumbotron 1', 'jumbotron1_2024-03-29_13-55-28.jpg', 'Jumbotron'),
+(5, 'Jumbotron 2', 'jumbotron7_2024-03-29_13-55-55.jpg', 'Jumbotron'),
+(6, 'Jumbotron 3', 'jumbotron11_2024-03-29_13-56-27.jpg', 'Jumbotron'),
+(7, 'Image 4', 'class11_2024-03-29_14-10-36.jpg', 'Inactive');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `interests`
 --
 
@@ -311,6 +356,39 @@ INSERT INTO `levels` (`level_id`, `level_name`, `level_status`) VALUES
 (2, 'Intermediate', 'Active'),
 (3, 'Expert', 'Active'),
 (6, 'Advanced', 'Active');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `news`
+--
+
+CREATE TABLE `news` (
+  `news_id` int(11) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `news_status` enum('Active','Inactive') NOT NULL DEFAULT 'Active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `news`
+--
+
+INSERT INTO `news` (`news_id`, `email`, `created_at`, `news_status`) VALUES
+(18, 'shyam777sps@gmail.com', '2024-03-29 21:04:02', 'Active'),
+(19, 'shyamsundar.p2019@vitstudent.ac.in', '2024-03-29 21:05:34', 'Active'),
+(20, 'shyamsundar.p2019@vitstudent.ac.in', '2024-03-29 21:06:58', 'Active'),
+(21, 'ram@gmail.com', '2024-03-29 21:08:54', 'Active'),
+(22, 'ram@gmail.com', '2024-03-29 21:08:59', 'Active'),
+(23, 'arun@gmail.com', '2024-03-29 21:11:20', 'Active'),
+(24, 'shyam777sps@gmail.com', '2024-03-29 21:12:59', 'Active'),
+(25, 'shyam777sps@gmail.com', '2024-03-29 21:13:28', 'Active'),
+(26, 'shyam777sps@gmail.com', '2024-03-29 21:14:28', 'Active'),
+(27, 'shyam777sps@gmail.com', '2024-03-29 21:16:00', 'Active'),
+(28, 'shyam777sps@gmail.com', '2024-03-29 21:16:09', 'Active'),
+(29, 'shyam777sps@gmail.com', '2024-03-29 21:16:21', 'Active'),
+(30, 'arun@gmail.com', '2024-03-30 12:07:31', 'Active'),
+(31, 'ram@gmail.com', '2024-03-31 15:53:09', 'Active');
 
 -- --------------------------------------------------------
 
@@ -367,11 +445,11 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`student_id`, `user_parent_id`, `phone_num`, `email`, `age_group_parent_id`, `course_parent_id`, `level_parent_id`, `emergency_contact`, `blood_group`, `address`, `pincode`, `city_parent_id`, `state_parent_id`, `country_parent_id`, `student_status`, `joined_date`) VALUES
-(1, 1, '9188103943', 'shyam27sps@gmail.com', 1, 1, 6, '9447196749', 'B+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 1, 1, 1, 'Active', '2024-02-01'),
+(1, 1, '9188103943', 'shyam27sps@gmail.com', 1, 1, 6, '9447196749', 'B+', 'ABC, India', '641016', 1, 1, 1, 'Active', '2024-02-01'),
 (3, 2, '8756545643', 'arun@gmail.com', 3, 1, 1, '8565667675', 'AB+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641012', 4, 4, 3, 'Active', '2024-02-15'),
 (4, 3, '7564566673', 'suresh@gmail.com', 3, 1, 2, '7566667874', 'A+', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', '641011', 6, 1, 1, 'Active', '2024-02-25'),
 (85, 17, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', '2024-03-26'),
-(86, 18, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', '2024-03-26');
+(90, 27, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', '2024-03-31');
 
 -- --------------------------------------------------------
 
@@ -396,7 +474,7 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`task_manager_id`, `task_parent_id`, `user_parent_id`, `remark`, `comment`, `file_path`, `grading`, `last_updated`, `submit_status`) VALUES
-(69, 67, 17, 'Submitted 21, 66 violin', 'Good', 'class10_20240326162933.jpg', '99.5', '2024-03-26 20:59:33', 'Graded & Completed');
+(73, 69, 17, 'Submitted by :)', 'Average', 'shyam_20240328200835.png', 'A3', '2024-03-31 15:52:20', 'Graded & Completed');
 
 -- --------------------------------------------------------
 
@@ -424,8 +502,8 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`teacher_id`, `user_parent_id`, `teacher_phone`, `teacher_email`, `teacher_address`, `course_parent_id`, `qualification`, `teacher_exp`, `contract_date`, `current_salary`, `join_date`, `teacher_status`) VALUES
-(1, 4, '95675765675', 'teacher@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 2, 'Music.tech', 2, '2025-02-22', 12000, '2024-02-24', 'Inactive'),
-(4, 5, '975744674', 'jennie@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 1, 'V.Tech', 7, '2024-03-31', 12000, '2024-03-17', 'Active'),
+(1, 4, '9188103943', 'teacher@gmail.com', 'ABC, Coimbatore', 2, 'Music.Tech', 3, '2025-02-22', 12000, '2024-02-24', 'Inactive'),
+(4, 5, '975744675', 'jennie@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 1, 'V.Tech', 7, '2024-03-31', 12000, '2024-03-17', 'Active'),
 (5, 18, '975744675', 'david@gmail.com', '54/2, BHARATHI PARK ROAD, SAI BABA COLONY , COIMBATORE - 641011', 3, 'D.Tech', 6, '2024-03-31', 30000, '2024-03-26', 'Active');
 
 -- --------------------------------------------------------
@@ -447,13 +525,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_password`, `user_type`, `user_status`) VALUES
-(1, 'Shyam', 'shy123', 'Student', 'Active'),
+(1, 'Shyam', '$2y$10$20qTB1J.JbJVhDgdySYCzuothfURsw/3Ds53fxRRBBqtTvo48dRkm', 'Student', 'Active'),
 (2, 'Arunesh', 'arun123', 'Student', 'Active'),
 (3, 'Suresh', 'sur123', 'Student', 'Active'),
 (4, 'Ann', 'ann123', 'Teacher', 'Active'),
 (5, 'Jennie', 'jenn123', 'Teacher', 'Active'),
 (17, 'Ramesh', 'ram123', 'Student', 'Active'),
-(18, 'David', 'da123', 'Teacher', 'Active');
+(18, 'David', 'da123', 'Teacher', 'Active'),
+(26, 'Karthik', '$2y$10$K0TE4YHrZqTL3tbWVWRtQ.JaEZBDNzkH9ykWT/46FnGGp1yaA6L9W', 'Student', 'Active'),
+(27, 'Shiva', 'shiv123', 'None', 'Active');
 
 --
 -- Indexes for dumped tables
@@ -520,6 +600,12 @@ ALTER TABLE `courses`
   ADD PRIMARY KEY (`course_id`);
 
 --
+-- Indexes for table `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`image_id`);
+
+--
 -- Indexes for table `interests`
 --
 ALTER TABLE `interests`
@@ -530,6 +616,12 @@ ALTER TABLE `interests`
 --
 ALTER TABLE `levels`
   ADD PRIMARY KEY (`level_id`);
+
+--
+-- Indexes for table `news`
+--
+ALTER TABLE `news`
+  ADD PRIMARY KEY (`news_id`);
 
 --
 -- Indexes for table `states`
@@ -593,25 +685,25 @@ ALTER TABLE `classes`
 -- AUTO_INCREMENT for table `class_comments`
 --
 ALTER TABLE `class_comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `class_rooms`
 --
 ALTER TABLE `class_rooms`
-  MODIFY `class_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `class_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT for table `class_tasks`
 --
 ALTER TABLE `class_tasks`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -626,6 +718,12 @@ ALTER TABLE `courses`
   MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `images`
+--
+ALTER TABLE `images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `interests`
 --
 ALTER TABLE `interests`
@@ -638,6 +736,12 @@ ALTER TABLE `levels`
   MODIFY `level_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `news`
+--
+ALTER TABLE `news`
+  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
 -- AUTO_INCREMENT for table `states`
 --
 ALTER TABLE `states`
@@ -647,13 +751,13 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_manager_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `task_manager_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `teachers`
@@ -665,7 +769,7 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
