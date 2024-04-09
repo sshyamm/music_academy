@@ -27,7 +27,7 @@ if (isset($_GET['task_id']) && isset($_GET['class_id'])) {
                             </thead>
                             <tbody>
                             <?php
-                            $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
+                            $directory = "/var/www/html/music_academy/admin/getForms/uploads/";
 
                             $sql_class_rooms = "SELECT cr.user_parent_id, u.user_name
                                                 FROM class_rooms cr

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remark'])) {
 
         $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
         $new_file_name = pathinfo($file_name, PATHINFO_FILENAME) . '_' . date('YmdHis') . '.' . $file_ext;
-        $upload_dir = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
+        $upload_dir = "/var/www/html/music_academy/admin/getForms/uploads/";
 
         if (!move_uploaded_file($file_tmp, $upload_dir . $new_file_name)) {
             echo json_encode(array("success" => false, "message" => "Failed to move uploaded file."));

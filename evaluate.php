@@ -31,7 +31,7 @@ require_once 'includes/config.php';
                             <p><strong>Task Description :</strong> <?php echo $task_details['task_desc']; ?></p>
                             <p><strong>Student Name :</strong> <?php echo $task_details['user_name']; ?></p>
                             <p><strong>Last Updated :</strong> <?php echo $task_details['last_updated']; ?></p>
-                            <?php if (!empty($task_details['file_path']) && file_exists("/opt/lampp/htdocs/music_academy/admin/getForms/uploads/" . $task_details['file_path'])) : ?>
+                            <?php if (!empty($task_details['file_path']) && file_exists("/var/www/html/music_academy/admin/getForms/uploads/" . $task_details['file_path'])) : ?>
                                 <p><strong>File :</strong> <a href="/music_academy/admin/getForms/uploads/<?php echo $task_details['file_path']; ?>" download><?php echo $task_details['file_path']; ?></a></p>
                             <?php else : ?>
                                 <p><strong>File :</strong> No File Submitted</p>

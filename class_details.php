@@ -213,7 +213,7 @@ $disableDropdowns = !is_null($actual_start_time) && !is_null($actual_end_time);
                             </thead>
                             <tbody>
                             <?php
-                            $directory = "/opt/lampp/htdocs/music_academy/admin/getForms/uploads/";
+                            $directory = "/var/www/html/music_academy/admin/getForms/uploads/";
 
                             if (is_dir($directory)) {
                                 $course_parent_id = $row['course_parent_id'];
