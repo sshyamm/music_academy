@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "phpmyadmin";
+$password = "root";
 $dbname = "music_academy";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
