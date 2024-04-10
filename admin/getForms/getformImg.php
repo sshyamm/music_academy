@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $image_path = isset($_FILES['image_path']['name']) ? $_FILES['image_path']['name'] : '';
             $image_status = $_POST['image_status'];
 
-            $uploadDir = '/opt/lampp/htdocs/music_academy/admin/getForms/img/';
+            $uploadDir = '/var/www/html/music_academy/admin/getForms/img/';
 
             $currentDateTime = date('Y-m-d_H-i-s');
             $image_path_with_datetime = pathinfo($image_path, PATHINFO_FILENAME) . '_' . $currentDateTime . '.' . pathinfo($image_path, PATHINFO_EXTENSION);
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $image_path = isset($_FILES['image_path']['name']) ? $_FILES['image_path']['name'] : '';
             $image_status = $_POST['image_status'];
 
-            $uploadDir = '/opt/lampp/htdocs/music_academy/admin/getForms/img/';
+            $uploadDir = '/var/www/html/music_academy/admin/getForms/img/';
 
             $currentDateTime = date('Y-m-d_H-i-s');
             $image_path_with_datetime = pathinfo($image_path, PATHINFO_FILENAME) . '_' . $currentDateTime . '.' . pathinfo($image_path, PATHINFO_EXTENSION);
