@@ -1,17 +1,5 @@
 {
-    "name": "shyam/music_academy",
-    "autoload": {
-        "psr-4": {
-            "Shyam\\MusicAcademy\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "shyam",
-            "email": "shyam27sps@gmail.com"
-        }
-    ],
     "require-dev": {
-        "phpunit/phpunit": "^11.1"
+        "phpunit/phpunit": "^9"
     }
 }
